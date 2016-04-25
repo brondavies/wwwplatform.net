@@ -1,0 +1,31 @@
+﻿@using wwwplatform.Models
+@model wwwplatform.Models.MailingList
+
+@{
+    ViewBag.Title = "New Message";
+    EmailMessage message = new EmailMessage();
+}
+
+<h2>New Message</h2>
+
+@using (Html.BeginForm("Send", "MailingLists", new { id = Model.Id }))
+{
+    @Html.AntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>To: @(Model.Name) Subscribers</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        @Html.Partial("_EmailMessage", message)
+
+        <div class="form-group">
+            <div class="col-md-12 pull-right">
+                <input type="submit" value="Send" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to list", "Index")
+</div>

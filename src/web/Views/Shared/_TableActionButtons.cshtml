@@ -1,0 +1,32 @@
+﻿@model wwwplatform.Models.Auditable
+@{
+    object routeValues;
+    //buttons can only be disabled
+    bool showEdit = ViewData["showEdit"] == null;
+    bool showDetails = ViewData["showDetails"] == null;
+    bool showDelete = ViewData["showDelete"] == null;
+    if (ViewData["Controller"] == null)
+    {
+        routeValues = new { id = Model.Id };
+    }
+    else
+    {
+        routeValues = new { id = Model.Id, controller = ViewData["Controller"] };
+    }
+}
+<div class="btn-group nowrap pull-left">
+    @if (showEdit)
+    {
+        @Html.ActionLink("Edit", "Edit", routeValues, new { @class = "btn btn-xs btn-primary" })
+    }
+
+    @if (showDetails)
+    {
+    @Html.ActionLink("Details", "Details", routeValues, new { @class = "btn btn-xs btn-info" })
+    }
+
+    @if (showDelete)
+    {
+        @Html.ActionLink("Delete", "Delete", routeValues, new { @class = "btn btn-xs btn-danger" })
+    }
+</div>

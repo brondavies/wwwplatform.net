@@ -1,0 +1,91 @@
+﻿@using wwwplatform.Models
+<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <title>@(Settings.SiteName) - @(ViewBag.Title)</title>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="description" content="@ViewBag.Description">
+    <meta name="author" content="@(ViewBag.Author ?? Settings.SiteOwner)">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="hostname" content="@(Settings.CanonicalHostName ?? Request.Url.Host)">
+    <meta name="og:type" content="@(ViewBag.PageType ?? "website")">
+    <meta name="og:url" content="@Request.RawUrl">
+    <meta name="og:title" content="@(ViewBag.Title ?? Settings.DefaultPageTitle)">
+    <meta name="og:image" content="@(ViewBag.Image ?? Settings.DefaultSiteImage)">
+    <meta name="og:description" content="@(ViewBag.Description ?? Settings.DefaultPageDescription)">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    @Styles.Render("~/assets/css")
+    <link href="http://fonts.googleapis.com/css?family=Lato:400,300" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet" type="text/css">
+    @Scripts.Render("~/scripts/modernizr")
+</head>
+<body class="fade">
+    <div id="pre_header" class="visible-lg"></div>
+    <div id="header" class="container">
+        <div class="row">
+            <!-- Logo -->
+            <div class="logo">
+                <a href="~/" title="Home">
+                    <img src="~/assets/img/banner_image.png" alt="@(Settings.SiteName)" />
+                </a>
+            </div>
+            <!-- End Logo -->
+            <!-- Top Menu -->
+            <div class="col-md-12">
+                <div id="hornav" class="pull-right visible-lg">
+                    @Html.Partial("_Nav")
+                </div>
+            </div>
+            <div class="clear"></div>
+            <!-- End Top Menu -->
+        </div>
+    </div>
+    <!-- === END HEADER === -->
+    <!-- === BEGIN CONTENT === -->
+    <div id="content" class="container">
+        @RenderBody()
+    </div>
+    <!-- === END CONTENT === -->
+    <!-- === BEGIN FOOTER === -->
+    @*@Html.Partial("_FooterExpanded")*@
+    <!-- Footer Menu -->
+    <div id="footer">
+        <div class="container">
+            <div class="row">
+                <div id="copyright" class="col-md-4">
+                    <p>&copy; @(DateTime.Now.Year) @(Settings.SiteOwner)</p>
+                </div>
+                <div id="footermenu" class="col-md-8">
+                    <ul class="list-unstyled list-inline pull-right">
+                        <li>
+                        </li>
+                        <li>
+                            @UserAdminLink()
+                        </li>
+                        <li>
+                            @PagesAdminLink()
+                        </li>
+                        <li>
+                            @MailingListAdminLink()
+                        </li>
+                        <li>
+                            @LoginLink()
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End Footer Menu -->
+    @Scripts.Render("~/scripts/substance")
+    @RenderSection("scripts", required: false)
+    @Html.RenderScripts()
+</body>
+</html>

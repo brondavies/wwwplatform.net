@@ -1,0 +1,17 @@
+﻿@model wwwplatform.Models.MailingList
+
+@{
+    ViewBag.Title = "Mailing Lists";
+    ViewBag.Id = Model.Id;
+}
+
+<h2>Mailing Lists</h2>
+
+<div>
+    <h4 class="inline">@Model.Name</h4>
+    @Html.Partial("_MailingListSubscribers", Model.Subscribers)
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

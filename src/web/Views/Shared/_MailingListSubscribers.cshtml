@@ -1,0 +1,43 @@
+﻿@model IEnumerable<wwwplatform.Models.MailingListSubscriber>
+
+<h4 class="inline">Subscribers</h4> @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class="btn btn-sm btn-success" })
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.FirstName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Email)
+        </th>
+        <th>
+            Enabled
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Enabled)
+            </td>
+            <td>
+                @Html.Partial("_TableActionButtons", item, new ViewDataDictionary { ["Controller"] = "MailingListSubscribers" })
+            </td>
+        </tr>
+    }
+
+</table>
