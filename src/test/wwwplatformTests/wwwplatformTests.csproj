@@ -131,6 +131,8 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTests.cs" />
+    <Compile Include="Controllers\WebFilesControllerTests.cs" />
+    <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="Extensions\System\StringTests.cs" />
     <Compile Include="Support\ControllerTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

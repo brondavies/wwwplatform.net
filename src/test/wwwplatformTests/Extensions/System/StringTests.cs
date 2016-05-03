@@ -1,13 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using wwwplatform.Shared.Extensions.System;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using wwwplatformTests.Support;
-using System.Web;
-using Moq;
 
 namespace wwwplatform.Shared.Extensions.System.Tests
 {
@@ -76,42 +68,5 @@ namespace wwwplatform.Shared.Extensions.System.Tests
             string nullString = null;
             Assert.IsNull(nullString.ToBase64String());
         }
-
-        #region Mock Objects
-
-        private HttpContextBase MockHttpContextWrapper()
-        {
-            var wrapper = new Mock<HttpContextBase>();
-            wrapper.Setup(x => x.Request).Returns(MockRequest());
-            wrapper.Setup(x => x.Response).Returns(MockResponse());
-            wrapper.Setup(x => x.Server).Returns(MockServer());
-
-            return wrapper.Object;
-        }
-
-        private HttpResponseBase MockResponse()
-        {
-            var Response = new Mock<HttpResponseBase>();
-            Response.Setup(x => x.ApplyAppPathModifier(It.IsAny<string>())).Returns("/app/path");
-            return Response.Object;
-        }
-
-        private HttpRequestBase MockRequest()
-        {
-            var Request = new Mock<HttpRequestBase>();
-            Uri uri;
-            Uri.TryCreate("http://localhost/", UriKind.Absolute, out uri);
-            Request.Setup(x => x.Url).Returns(uri);
-            return Request.Object;
-        }
-
-        private HttpServerUtilityBase MockServer()
-        {
-            var Server = new Mock<HttpServerUtilityBase>();
-            Server.Setup(x => x.MapPath(It.IsAny<string>())).Returns(@"C:\inetpub\wwwplatform.net");
-            return Server.Object;
-        }
-
-        #endregion
     }
 }

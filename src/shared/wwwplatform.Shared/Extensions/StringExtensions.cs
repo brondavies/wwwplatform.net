@@ -14,9 +14,9 @@ namespace wwwplatform.Extensions
             return _randomizer;
         }
 
-        public static string Random(int length)
+        public static string Random(int length = 32, int? seed = null)
         {
-            return RandomString(length);
+            return RandomString(length, seed);
         }
 
         private static string RandomString(int length = 32, int? seed = null)

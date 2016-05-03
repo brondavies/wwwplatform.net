@@ -29,8 +29,8 @@ namespace wwwplatform.Models
 
         public static string SiteOwner { get { return AppSetting("SiteOwner"); } }
 
-        public static string TempDir { get { return AppSetting("TempDir", "~/App_Data/temp".ResolveLocalPath()); } }
+        public static string TempDir { get { return AppSetting("TempDir") ?? "~/App_Data/temp".ResolveLocalPath(); } }
 
-        public static string UserFilesFolder { get { return AppSetting("TempDir", "~/UserFiles".ResolveLocalPath()); } }
+        public static string UserFilesDir { get { return AppSetting("UserFilesDir") ?? "~/UserFiles".ResolveLocalPath(); } }
     }
 }

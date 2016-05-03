@@ -3,6 +3,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Moq;
 using System;
 using System.Net;
+using System.Security.Principal;
+using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Models;
 using wwwplatformTests.Support;
@@ -17,6 +19,8 @@ namespace wwwplatform.Controllers.Tests
         {
             base.Initialize();
         }
+
+        #region Mock Objects
 
         protected ApplicationSignInManager MockApplicationSignInManager()
         {
@@ -41,5 +45,17 @@ namespace wwwplatform.Controllers.Tests
             context.Request.Setup(r => r.Url).Returns(new Uri("https://localhost/" + controllerName + "/" + action));
             return context;
         }
+
+        protected IPrincipal CreateMockUser(string username)
+        {
+            var user = new Mock<IPrincipal>();
+            var mockIdentity = new Mock<IIdentity>();
+            mockIdentity.Setup(i => i.Name).Returns(username);
+            user.Setup(u => u.Identity).Returns(mockIdentity.Object);
+            return user.Object;
+        }
+        
+        #endregion
+
     }
 }

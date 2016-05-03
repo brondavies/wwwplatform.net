@@ -51,83 +51,90 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Location")] WebFile webFile)
         {
-            UploadResults uploadResults = new UploadResults
+            UploadResults results = new UploadResults
             {
-                status = UploadResults.Failed,
-                message = "No file upload received."
+                file = webFile,
+                message = "No file upload received.",
+                status = UploadResults.Failed
             };
             try
             {
-                foreach (string name in Request.Files)
+                if (Request.Files.Count > 0)
                 {
-                    HttpPostedFileBase file = Request.Files[name];
-                    if (file != null && file.ContentLength > 0)
+                    HttpPostedFileBase uploadedFile = Request.Files[0];
+                    if (uploadedFile != null && uploadedFile.ContentLength > 0)
                     {
-                        if (ImageHelper.IsImageFile(file))
+                        if (ImageHelper.IsImageFile(uploadedFile))
                         {
-                            UploadImage(file, webFile);
+                            UploadImage(uploadedFile, results);
                         }
                         else
-                        if ((VideoHelper.IsVideoFile(file) || VideoHelper.IsAudioFile(file)))
+                        if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
                         {
-                            UploadVideoOrAudio(file, webFile);
+                            UploadVideoOrAudio(uploadedFile, results);
                         }
                         else
-                        if (DocumentHelper.IsDocumentFile(file))
+                        if (DocumentHelper.IsDocumentFile(uploadedFile))
                         {
-                            UploadDocument(file, webFile);
+                            UploadDocument(uploadedFile, results);
                         }
                         else
                         {
-                            uploadResults.status = UploadResults.Failed;
-                            uploadResults.message = "The file format was not recognized.";
+                            results.status = UploadResults.Failed;
+                            results.message = "The file format was not recognized or is not an allowed file type.";
                         }
                     }
                 }
                 if (ModelState.IsValid)
                 {
-                    db.WebFiles.Add(webFile);
+                    results.file = db.WebFiles.Add(results.file);
                     await db.SaveChangesAsync();
                 }
                 else
                 {
-                    uploadResults.status = UploadResults.Failed;
-                    uploadResults.message = ErrorsFromModelState(ModelState);
+                    results.status = UploadResults.Failed;
+                    results.message = ErrorsFromModelState(ModelState);
                 }
             }
             catch (Exception ex)
             {
-                uploadResults.status = UploadResults.Failed;
-                uploadResults.message = ex.Message;
+                results.status = UploadResults.Failed;
+                results.message = ex.Message;
             }
 
-            return View(uploadResults);
+            return View(results);
         }
 
-        private void UploadDocument(HttpPostedFileBase file, WebFile webFile)
+        private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
         {
             //TODO: Handle document conversion to PDF and thumbnailing
-            UploadImage(file, webFile);
+            UploadImage(file, uploadResults);
         }
 
-        private void UploadVideoOrAudio(HttpPostedFileBase file, WebFile webFile)
+        private void UploadVideoOrAudio(HttpPostedFileBase file, UploadResults uploadResults)
         {
             //TODO: Handle video conversion to MP4 and thumbnailing
-            UploadImage(file, webFile);
+            UploadImage(file, uploadResults);
         }
 
-        private void UploadImage(HttpPostedFileBase file, WebFile webFile)
+        private void UploadImage(HttpPostedFileBase file, UploadResults uploadResults)
         {
             string extension = Path.GetExtension(file.FileName).ToLower();
             string tempfilename = Extensions.String.Random(16);
-            string tempfile = Path.ChangeExtension(Path.Combine(Settings.TempDir, tempfilename), extension);
+            string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(Settings.TempDir), tempfilename), extension);
             file.SaveAs(tempfile);
 
             if (System.IO.File.Exists(tempfile))
             {
-                string FileUrl = FileStorage.Save(new FileInfo(tempfile));
-                webFile.Location = FileUrl;
-                webFile.Name = webFile.Name ?? Path.GetFileNameWithoutExtension(file.FileName);
+                string FileUrl = FileStorage.Save(new FileInfo(tempfile), HttpContext);
+                uploadResults.file.Location = FileUrl;
+                uploadResults.file.Name = uploadResults.file.Name ?? Path.GetFileNameWithoutExtension(file.FileName);
+                uploadResults.status = UploadResults.OK;
+            }
+            else
+            {
+                uploadResults.status = UploadResults.Failed;
+                uploadResults.message = "The file could not be saved.";
             }
         }
 

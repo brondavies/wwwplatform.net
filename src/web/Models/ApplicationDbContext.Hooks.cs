@@ -8,13 +8,38 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using System.Security.Principal;
 
 namespace wwwplatform.Models
 {
 
     public partial class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
+        private IPrincipal _CurrentUser;
+
+        public IPrincipal CurrentUser
+        {
+            get
+            {
+                return _CurrentUser ?? GetHttpContext().GetOwinContext().Request.User;
+            }
+            set
+            {
+                _CurrentUser = value;
+            }
+        }
+
+        private static HttpContextBase GetHttpContext()
+        {
+            if (HttpContext.Current != null)
+            {
+                return new HttpContextWrapper(HttpContext.Current);
+            }
+            return null;
+        }
+
         private DbContextHooks _triggers;
+
         public DbContextHooks Triggers
         {
             get
@@ -22,9 +47,9 @@ namespace wwwplatform.Models
                 if (_triggers == null)
                 {
                     _triggers = new DbContextHooks(this);
-                    _triggers.Add(new AuditableInsertHook());
-                    _triggers.Add(new AuditableUpdateHook());
-                    _triggers.Add(new AuditableDeleteHook());
+                    _triggers.Add(new AuditableInsertHook { User = CurrentUser });
+                    _triggers.Add(new AuditableUpdateHook { User = CurrentUser });
+                    _triggers.Add(new AuditableDeleteHook { User = CurrentUser });
                 }
                 return _triggers;
             }
@@ -48,9 +73,8 @@ namespace wwwplatform.Models
 
     internal class AuditFields
     {
-        internal static bool SetUpdatedByField(Auditable entity, HookEntityMetadata metadata)
+        internal static bool SetUpdatedByField(Auditable entity, HookEntityMetadata metadata, IPrincipal user)
         {
-            var user = GetHttpContext().GetOwinContext().Request.User;
             string updater = (user != null && user.Identity.IsAuthenticated) ? user.Identity.Name : null;
 
             if (String.IsNullOrEmpty(entity.UpdatedBy) || (updater != null && (
@@ -64,11 +88,6 @@ namespace wwwplatform.Models
                 return true;
             }
             return false;
-        }
-
-        private static HttpContextBase GetHttpContext()
-        {
-            return new HttpContextWrapper(HttpContext.Current);
         }
 
         internal static void SetCreatedAtField(Auditable entity)
@@ -88,12 +107,14 @@ namespace wwwplatform.Models
 
     public class AuditableInsertHook : PreInsertHook<Auditable>
     {
+        public IPrincipal User;
+
         public override void Hook(Auditable entity, HookEntityMetadata metadata)
         {
             EntityState state = metadata.CurrentContext.Entry(entity).State;
             if (state != EntityState.Detached && state != EntityState.Unchanged)
             {
-                AuditFields.SetUpdatedByField(entity, metadata);
+                AuditFields.SetUpdatedByField(entity, metadata, User);
                 AuditFields.SetCreatedAtField(entity);
             }
         }
@@ -101,12 +122,14 @@ namespace wwwplatform.Models
 
     public class AuditableUpdateHook : PreUpdateHook<Auditable>
     {
+        public IPrincipal User;
+
         public override void Hook(Auditable entity, HookEntityMetadata metadata)
         {
             EntityState state = metadata.CurrentContext.Entry(entity).State;
             if (state != EntityState.Detached && state != EntityState.Unchanged)
             {
-                AuditFields.SetUpdatedByField(entity, metadata);
+                AuditFields.SetUpdatedByField(entity, metadata, User);
                 AuditFields.SetUpdatedAtField(entity);
             }
         }
@@ -114,9 +137,11 @@ namespace wwwplatform.Models
 
     public class AuditableDeleteHook : PreDeleteHook<Auditable>
     {
+        public IPrincipal User;
+
         public override void Hook(Auditable entity, HookEntityMetadata metadata)
         {
-            AuditFields.SetUpdatedByField(entity, metadata);
+            AuditFields.SetUpdatedByField(entity, metadata, User);
             entity.DeletedAt = DateTime.UtcNow;
         }
     }

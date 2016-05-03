@@ -1,11 +1,4 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using wwwplatform.Controllers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using wwwplatform.Models;
 using System.Web.Mvc;
 
 namespace wwwplatform.Controllers.Tests
@@ -30,7 +23,7 @@ namespace wwwplatform.Controllers.Tests
         [TestMethod()]
         public void LoginTest()
         {
-            AccountController controller = new AccountController();
+            var controller = new AccountController();
             var context = CreateMockContext(controller, "Login");
             controller.UserManager = MockApplicationUserManager();
             var returnUrl = "/test";

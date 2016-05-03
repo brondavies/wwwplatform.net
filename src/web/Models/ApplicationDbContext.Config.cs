@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration;
 
 namespace wwwplatform.Models
 {
@@ -11,37 +13,31 @@ namespace wwwplatform.Models
         {
             modelBuilder.Ignore<Auditable>();
 
-            modelBuilder.Entity<WebFile>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
+            MapAuditable<WebFile>(modelBuilder);
 
-            modelBuilder.Entity<SitePage>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
+            MapAuditable<SitePage>(modelBuilder);
 
-            modelBuilder.Entity<EmailAddress>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
+            MapAuditable<EmailAddress>(modelBuilder);
 
-            modelBuilder.Entity<EmailMessage>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
+            MapAuditable<EmailMessage>(modelBuilder);
 
-            modelBuilder.Entity<MailingList>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
+            MapAuditable<MailingList>(modelBuilder);
 
-            modelBuilder.Entity<MailingListSubscriber>().Map(m =>
-            {
-                m.MapInheritedProperties();
-            });
-
+            MapAuditable<MailingListSubscriber>(modelBuilder);
+            
             base.OnModelCreating(modelBuilder);
+        }
+
+        private static EntityTypeConfiguration<T> MapAuditable<T>(DbModelBuilder modelBuilder) where T : Auditable
+        {
+            var mapping = modelBuilder.Entity<T>();
+            mapping.Map(m =>
+            {
+                m.MapInheritedProperties();
+            })
+            .Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+
+            return mapping;
         }
 
         public void Setup()

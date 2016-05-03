@@ -8,8 +8,8 @@ namespace wwwplatform.Models.ViewModels
 {
     public class UploadResults
     {
-        public static int OK = 0;
-        public static int Failed = 1;
+        public static int Failed = 0;
+        public static int OK = 1;
 
         public int status = 0;
         public string message;

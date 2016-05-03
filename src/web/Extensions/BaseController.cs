@@ -21,11 +21,15 @@ namespace wwwplatform.Extensions
     {
         private ApplicationDbContext _db;
 
-        protected ApplicationDbContext db
+        public ApplicationDbContext db
         {
             get
             {
                 return _db ?? GetDbContext();
+            }
+            set
+            {
+                _db = value;
             }
         }
 
@@ -59,7 +63,7 @@ namespace wwwplatform.Extensions
             }
             return errors;
         }
-        
+
         protected string ErrorsFromModelState(ModelStateDictionary modelState)
         {
             List<string> list = new List<string>();
@@ -70,6 +74,17 @@ namespace wwwplatform.Extensions
                 {
                     list.Add(error.ErrorMessage);
                 }
+            }
+            return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
+        }
+
+        protected string ErrorsFromException(Exception exception)
+        {
+            List<string> list = new List<string>();
+            while (exception != null && !string.IsNullOrEmpty(exception.Message))
+            {
+                list.Add(exception.Message);
+                exception = exception.InnerException;
             }
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
         }

@@ -24,6 +24,7 @@ public class MockControllerContext
         HttpContext.Setup(x => x.Request).Returns(Request.Object);
         HttpContext.Setup(x => x.Response).Returns(Response.Object);
         Response.Setup(x => x.Output).Returns(new StringWriter(responseBody));
+        Request.Setup(x => x.MapPath(It.IsAny<string>())).Returns(Path.GetFullPath("."));
 
         //apply context to controller
         RequestContext rc = new RequestContext(HttpContext.Object, new RouteData ());
