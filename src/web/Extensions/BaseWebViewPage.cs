@@ -73,7 +73,6 @@ namespace wwwplatform.Extensions
         }
 
         private const string __SimpleAntiForgeryToken = "__SimpleAntiForgeryToken";
-        private ApplicationUserManager _userManager;
 
         private MvcHtmlString CreateAntiForgeryField()
         {
@@ -108,25 +107,7 @@ namespace wwwplatform.Extensions
         {
             get
             {
-                var publicRoleId = PublicRole.Id;
-                var pages = db.ActiveSitePages
-                    .Where(p => p.HomePage == false && p.ShowInNavigation == true)
-                    .Where(p => p.PubDate < DateTime.UtcNow && p.ParentPageId == null);
-                if (User.Identity.IsAuthenticated) {
-                    var userId = User.Identity.GetUserId();
-                    var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
-                    var roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
-                    roles.Add(publicRoleId);
-                    pages = pages.Where(page => page.Permissions.Any(p => p.Grant &&
-                            (p.AppliesTo.Id == userId || roles.Contains(p.AppliesToRole.Id))
-                        ));
-                }
-                else
-                {
-                    pages = pages.Where(page => page.Permissions.Any(p => p.AppliesToRole.Id == publicRoleId));
-                }
-
-                return pages.OrderBy(p => p.Order).ToList();
+                return SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, true, true).ToList();
             }
         }
 
@@ -138,23 +119,32 @@ namespace wwwplatform.Extensions
             }
         }
 
+        private ApplicationRoleManager _roleManager;
         public ApplicationRoleManager RoleManager
         {
             get
             {
-                return Context.GetOwinContext().Get<ApplicationRoleManager>();
+                return _roleManager ?? GetRoleManager();
             }
+        }
+
+        private ApplicationRoleManager GetRoleManager()
+        {
+            _roleManager = DependencyResolver.Current.GetService<ApplicationRoleManager>()
+                ?? Context.GetOwinContext().GetUserManager<ApplicationRoleManager>();
+            return _roleManager;
         }
 
         #endregion
 
         #region User management
 
+        private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
         {
             get
             {
-                return _userManager ?? Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+                return _userManager ?? GetUserManager();
             }
             set
             {
@@ -162,14 +152,29 @@ namespace wwwplatform.Extensions
             }
         }
 
+        private ApplicationUserManager GetUserManager()
+        {
+            _userManager = DependencyResolver.Current.GetService<ApplicationUserManager>()
+                ?? Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            return _userManager;
+        }
+
         #endregion
 
+        private ApplicationDbContext _db;
         private ApplicationDbContext db
         {
             get
             {
-                return Context.GetOwinContext().Get<ApplicationDbContext>();
+                return _db ?? Context.GetOwinContext().Get<ApplicationDbContext>();
             }
+        }
+
+        private ApplicationDbContext GetApplicationDbContext()
+        {
+            _db = DependencyResolver.Current.GetService<ApplicationDbContext>()
+                ?? Context.GetOwinContext().GetUserManager<ApplicationDbContext>();
+            return _db;
         }
     }
 }

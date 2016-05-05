@@ -12,6 +12,7 @@ namespace wwwplatform.Shared.Extensions.System
         /// <returns>A new string with the absolute URL</returns>
         public static string ToAppPath(this string filename, HttpContextBase context = null)
         {
+            if (filename == null) { filename = "";  }
             string appPath = (context ?? new HttpContextWrapper(HttpContext.Current)).Server.MapPath("~");
             return filename.Replace(appPath, "").Replace("\\", "/");
         }

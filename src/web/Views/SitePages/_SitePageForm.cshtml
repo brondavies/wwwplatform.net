@@ -21,13 +21,16 @@
 }
 @helper RoleCheckbox(List<string> permissions, IdentityRole role)
 {
-    string format = "<input {1} name=\"permissions\" type=\"checkbox\" value=\"{0}\"> {2}";
-    WriteLiteral(String.Format(format, role.Id, permissions.Contains(role.Id) ? "checked=\"checked\"" : "", role.Name));
+    bool ischecked = permissions.Contains(role.Id);
+    string format = "<input {1} name=\"permissions\" type=\"checkbox\" autocomplete=\"off\" value=\"{0}\"><span class=\"fa fa-check\"></span>{2}";
+    WriteLiteral("<label class=\"btn btn-default"+(ischecked ? " active" : "")+"\">");
+    WriteLiteral(String.Format(format, role.Id, ischecked ? "checked=\"checked\"" : "", role.Name));
+    WriteLiteral("</label>");
 }
 @using (Html.BeginForm())
 {
     @SimpleAntiForgeryToken()
-    <div class="form-horizontal">
+    <div class="form-horizontal h5">
         <h4>@(Model.Name ?? "New Page")</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -43,34 +46,43 @@
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div>
         </div>
-        @if (Model.HomePage)
-        {
-            @Html.HiddenFor(model => model.HomePage)
-        }
-        else
-        {
-            <div class="form-group">
-                <div class="col-md-offset-2 col-md-10">
-                    <label>
-                        @Html.EditorFor(model => model.HomePage)
-                        Set as home page
-                    </label>
-                </div>
-            </div>
-        }
-        <div class="form-group">
-            @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
-            </div>
-        </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-sm-2">Display</label>
+            @if (Model.HomePage)
+            {
+                @Html.HiddenFor(model => model.HomePage)
+            }
+            else
+            {
+                <div class="col-sm-2">
+                    <label>
+                        @Html.EditorFor(model => model.HomePage)
+                        Set as home page
+                    </label>
+                </div>
+            }
+            <div class="col-sm-3">
+                <label>
+                    @Html.EditorFor(model => model.ShowInNavigation)
+                    Show in navigation
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-xs-2" })
+            <div class="col-xs-2">
+                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
             </div>
         </div>
 
@@ -98,25 +110,14 @@
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <label>
-                    @Html.EditorFor(model => model.ShowInNavigation)
-                    Show in navigation
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
             <label class = "control-label col-md-2">Permissions</label>
             <div class="col-md-10">
+                <div class="btn-group" data-toggle="buttons">
                 @foreach (var role in RoleManager.Roles)
                 {
-                <div class="checkbox-inline">
-                    <label>
-                        @RoleCheckbox(permissions, role)
-                    </label>
-                </div>
+                    @RoleCheckbox(permissions, role)
                 }
+                </div>
             </div>
         </div>
 

@@ -20,20 +20,9 @@ namespace wwwplatform.Migrations
             ContextKey = "wwwplatform.Models.ApplicationDbContext";
         }
 
+        //  This method will be called after migrating to the latest version.
         protected override void Seed(ApplicationDbContext context)
         {
-            //  This method will be called after migrating to the latest version.
-            if (0 == context.SitePages.Where(p => p.HomePage).Count())
-            {
-                context.SitePages.Add(new SitePage
-                {
-                    Description = "Default Home Page",
-                    HomePage = true,
-                    HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
-                    Name = "Home Page",
-                    PubDate = DateTime.UtcNow
-                });
-            }
             var RoleManager = (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
             foreach (var result in Roles.CreateAll(RoleManager))
             {
@@ -41,6 +30,25 @@ namespace wwwplatform.Migrations
                 {
                     throw new Exception(String.Join("\r\n", result.Errors.ToArray()));
                 }
+            }
+
+            if (!context.SitePages.Where(p => p.HomePage).Any())
+            {
+                var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
+                var homepage = context.SitePages.Add(new SitePage
+                {
+                    Description = "Default Home Page",
+                    HomePage = true,
+                    HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
+                    Name = "Home Page",
+                    Slug = "home-page",
+                    PubDate = DateTime.UtcNow
+                });
+                homepage.Permissions.Add(new Permission
+                {
+                    Grant = true,
+                    AppliesToRole = publicRole
+                });
             }
         }
 

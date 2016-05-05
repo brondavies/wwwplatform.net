@@ -18,6 +18,7 @@ namespace wwwplatform
             "~/Scripts/slimbox2.js",
             "~/Scripts/tinymce/jquery.tinymce.js",
             "~/Scripts/scripts.js",
+            "~/Scripts/bootstrap.js",
             "~/Scripts/custom.js"
             ));
 

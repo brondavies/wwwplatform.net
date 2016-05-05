@@ -200,6 +200,7 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.DBSets.cs" />
     <Compile Include="Models\Permission.cs" />
+    <Compile Include="Models\SitePage.methods.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.Config.cs">

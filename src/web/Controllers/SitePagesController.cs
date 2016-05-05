@@ -191,25 +191,8 @@ namespace wwwplatform.Controllers
         public async Task<ActionResult> Display(string slug)
         {
             string s = slug.ToLower();
-            SitePage sitePage;
-
-            string userId = Guid.Empty.ToString();
-            var publicRoleId = RoleManager.FindByName(Roles.Public).Id;
-            List<string> roles = new List<string>();
-            roles.Add(publicRoleId);
-
-            var pages = db.ActiveSitePages
-                .Where(p => p.Slug == s)
-                .Where(p => p.PubDate < DateTime.UtcNow);
-            if (User.Identity.IsAuthenticated)
-            {
-                userId = User.Identity.GetUserId();
-                var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
-                roles.AddRange(RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList());
-            }
-            sitePage = await pages.Where(page => page.Permissions.Any(p => p.Grant &&
-                    (p.AppliesTo.Id == userId || roles.Contains(p.AppliesToRole.Id))
-                )).FirstOrDefaultAsync();
+            var pages = SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, false, false);
+            var sitePage = await pages.Where(p => p.Slug == s).FirstOrDefaultAsync();
 
             if (sitePage == null)
             {

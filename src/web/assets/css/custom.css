@@ -10,3 +10,6 @@
 div.mce-panel {
     border-radius: 4px;
 }
+.btn.active .fa.fa-check:before {
+    color: black;
+}

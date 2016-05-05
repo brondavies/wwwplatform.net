@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace wwwplatform.Models
 {
     [Table(name: "SitePage")]
-    public class SitePage : Auditable
+    public partial class SitePage : Auditable
     {
         public SitePage() : base() {
             PubDate = DateTime.UtcNow;
@@ -57,17 +57,5 @@ namespace wwwplatform.Models
 
         [ForeignKey("ContentId")]
         public virtual ICollection<Permission> Permissions { get; set; }
-
-        internal void Update(SitePage sitePage)
-        {
-            Name = sitePage.Name;
-            Description = sitePage.Description;
-            PubDate = sitePage.PubDate;
-            HTMLBody = sitePage.HTMLBody;
-            Order = sitePage.Order;
-            ParentPageId = sitePage.ParentPageId;
-            ShowInNavigation = sitePage.ShowInNavigation;
-            HomePage = sitePage.HomePage;
-        }
     }
 }

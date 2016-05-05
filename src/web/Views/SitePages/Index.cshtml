@@ -1,4 +1,6 @@
-﻿@model IEnumerable<wwwplatform.Models.SitePage>
+﻿@using wwwplatform.Shared.Extensions.System;
+
+@model IEnumerable<wwwplatform.Models.SitePage>
 
 @{
     ViewBag.Title = "Pages";
@@ -29,10 +31,12 @@
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
+@foreach(var item in Model) {
     <tr>
         <td>
+            <a href="@(item.Slug.ToAppPath())">
             @Html.DisplayFor(modelItem => item.Name)
+            </a>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.PubDate)
