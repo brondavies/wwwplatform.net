@@ -5,16 +5,43 @@
 
 @using (Html.BeginScriptContext())
 {
-    Html.AddScriptFile("~/Scripts/tinymce/jquery.tinymce.js");
+    Html.AddScriptFile("~/Scripts/tinymce/tinymce.min.js");
     Html.AddScriptBlock(
 @<script type="text/javascript">
 
     $(function () {
 
-        $('#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)').tinymce({
+        tinymce.init({
+            selector: '#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)',
+            height: 500,
+            width: '100%',
+            theme: 'modern',
+            plugins: [
+              'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+              'searchreplace wordcount visualblocks visualchars code fullscreen',
+              'insertdatetime media nonbreaking save table contextmenu directionality',
+              'emoticons template paste textcolor colorpicker textpattern imagetools'
+            ],
+            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+            toolbar2: 'print preview media | forecolor backcolor emoticons',
+            image_advtab: true,
+            templates: [
+            ],
+            content_css: getContentCss()
+        });
+
+        function getContentCss() {
+            var css = [];
+            $('link[rel="stylesheet"], link[type="text/css"]').each(function (i, elm) {
+                css.push(elm.href);
+            });
+            return css;
+        }
+
+        @*$('#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)').tinymce({
 
             // Location of TinyMCE script
-            script_url: '@Url.Content("~/Scripts/tinymce/tiny_mce.js")',
+            script_url: '@Url.Content("~/Scripts/tinymce/tinymce.min.js")',
             theme: "advanced",
 
             height: "500",
@@ -42,7 +69,7 @@
             external_image_list_url: "lists/image_list.js",
             media_external_list_url: "lists/media_list.js"
 
-        });
+        });*@
 
     });
 

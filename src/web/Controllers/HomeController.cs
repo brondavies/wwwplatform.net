@@ -11,8 +11,17 @@ namespace wwwplatform.Controllers
     {
         public ActionResult Index()
         {
-            var page = db.ActiveSitePages.Where(p => p.HomePage == true).First();
+            var page = db.ActiveSitePages.Where(p => p.HomePage == true).FirstOrDefault();
+            if (page == null)
+            {
+                return RedirectToAction("Setup");
+            }
             return View(page);
+        }
+
+        public ActionResult Setup()
+        {
+            return View();
         }
 
         public ActionResult Uninstall()

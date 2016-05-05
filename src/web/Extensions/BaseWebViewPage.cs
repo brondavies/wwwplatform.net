@@ -8,6 +8,9 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using System.Web.Mvc.Html;
+using System.Security.Principal;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace wwwplatform.Extensions
 {
@@ -66,14 +69,16 @@ namespace wwwplatform.Extensions
 
         public MvcHtmlString SimpleAntiForgeryToken()
         {
-            return (MvcHtmlString)HttpContext.Current.Items[__SimpleAntiForgeryToken] ?? CreateAntiForgeryField();
+            return (MvcHtmlString)Context.Items[__SimpleAntiForgeryToken] ?? CreateAntiForgeryField();
         }
 
         private const string __SimpleAntiForgeryToken = "__SimpleAntiForgeryToken";
+        private ApplicationUserManager _userManager;
+
         private MvcHtmlString CreateAntiForgeryField()
         {
             var token = Html.AntiForgeryToken();
-            HttpContext.Current.Items[__SimpleAntiForgeryToken] = token;
+            Context.Items[__SimpleAntiForgeryToken] = token;
             return token;
         }
 
@@ -103,11 +108,57 @@ namespace wwwplatform.Extensions
         {
             get
             {
-                return db.ActiveSitePages
+                var publicRoleId = PublicRole.Id;
+                var pages = db.ActiveSitePages
                     .Where(p => p.HomePage == false && p.ShowInNavigation == true)
-                    .Where(p => p.PubDate < DateTime.UtcNow && p.ParentPageId == null)
-                    .OrderBy(p => p.Order)
-                    .ToList();
+                    .Where(p => p.PubDate < DateTime.UtcNow && p.ParentPageId == null);
+                if (User.Identity.IsAuthenticated) {
+                    var userId = User.Identity.GetUserId();
+                    var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
+                    var roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
+                    roles.Add(publicRoleId);
+                    pages = pages.Where(page => page.Permissions.Any(p => p.Grant &&
+                            (p.AppliesTo.Id == userId || roles.Contains(p.AppliesToRole.Id))
+                        ));
+                }
+                else
+                {
+                    pages = pages.Where(page => page.Permissions.Any(p => p.AppliesToRole.Id == publicRoleId));
+                }
+
+                return pages.OrderBy(p => p.Order).ToList();
+            }
+        }
+
+        public IdentityRole PublicRole
+        {
+            get
+            {
+                return RoleManager.FindByName(Roles.Public);
+            }
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return Context.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+        }
+
+        #endregion
+
+        #region User management
+
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? Context.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            set
+            {
+                _userManager = value;
             }
         }
 

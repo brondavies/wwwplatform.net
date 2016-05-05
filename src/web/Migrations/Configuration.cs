@@ -4,7 +4,11 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Web;
+using System.Web.Mvc;
 using wwwplatform.Models;
+
+using Microsoft.AspNet.Identity.Owin;
 
 namespace wwwplatform.Migrations
 {
@@ -29,6 +33,14 @@ namespace wwwplatform.Migrations
                     Name = "Home Page",
                     PubDate = DateTime.UtcNow
                 });
+            }
+            var RoleManager = (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
+            foreach (var result in Roles.CreateAll(RoleManager))
+            {
+                if (result != null)
+                {
+                    throw new Exception(String.Join("\r\n", result.Errors.ToArray()));
+                }
             }
         }
 

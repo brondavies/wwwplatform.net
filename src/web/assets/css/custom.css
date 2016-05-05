@@ -7,3 +7,6 @@
 .inline {
     display: inline-block;
 }
+div.mce-panel {
+    border-radius: 4px;
+}

@@ -1,0 +1,130 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+
+@model wwwplatform.Models.SitePage
+
+@{ 
+    List<string> permissions = new List<string>();
+    if (Model.Id > 0 && Model.Permissions != null)
+    {
+        foreach (var permission in Model.Permissions)
+        {
+            if (permission.AppliesToRole.Id != null)
+            {
+                permissions.Add(permission.AppliesToRole.Id);
+            }
+        }
+    }
+    else
+    {
+        permissions.Add(PublicRole.Id);
+    }
+}
+@helper RoleCheckbox(List<string> permissions, IdentityRole role)
+{
+    string format = "<input {1} name=\"permissions\" type=\"checkbox\" value=\"{0}\"> {2}";
+    WriteLiteral(String.Format(format, role.Id, permissions.Contains(role.Id) ? "checked=\"checked\"" : "", role.Name));
+}
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+    <div class="form-horizontal">
+        <h4>@(Model.Name ?? "New Page")</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (Model.Id > 0)
+        {
+            Html.HiddenFor(model => model.Id);
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+        @if (Model.HomePage)
+        {
+            @Html.HiddenFor(model => model.HomePage)
+        }
+        else
+        {
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <label>
+                        @Html.EditorFor(model => model.HomePage)
+                        Set as home page
+                    </label>
+                </div>
+            </div>
+        }
+        <div class="form-group">
+            @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PubDate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PubDate, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PubDate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ParentPage, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.ParentPageId, GetParentPageSelectList(Model.Id, Model.ParentPageId), new { @class = "form-control" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.HTMLBody, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.HTMLBody, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.HTMLBody, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <label>
+                    @Html.EditorFor(model => model.ShowInNavigation)
+                    Show in navigation
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class = "control-label col-md-2">Permissions</label>
+            <div class="col-md-10">
+                @foreach (var role in RoleManager.Roles)
+                {
+                <div class="checkbox-inline">
+                    <label>
+                        @RoleCheckbox(permissions, role)
+                    </label>
+                </div>
+                }
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+                @Html.ActionLink("Cancel", "Index")
+            </div>
+        </div>
+    </div>
+}

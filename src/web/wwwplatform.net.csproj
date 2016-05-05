@@ -175,6 +175,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\MailingListsController.cs" />
     <Compile Include="Controllers\MailingListSubscribersController.cs" />
     <Compile Include="Controllers\SitePagesController.cs" />
@@ -197,6 +198,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Models\ApplicationDbContext.DBSets.cs" />
+    <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.Config.cs">
@@ -596,6 +599,10 @@
     <Content Include="Views\WebFiles\Details.cshtml" />
     <Content Include="Views\WebFiles\Edit.cshtml" />
     <Content Include="Views\WebFiles\Index.cshtml" />
+    <Content Include="Views\Home\Setup.cshtml" />
+    <Content Include="Views\SitePages\_SitePageForm.cshtml" />
+    <Content Include="Views\Error\404.cshtml" />
+    <Content Include="Views\Error\500.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\MailingListSubscribers\" />

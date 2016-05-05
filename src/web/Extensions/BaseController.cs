@@ -20,6 +20,7 @@ namespace wwwplatform.Extensions
     public class BaseController : Controller
     {
         private ApplicationDbContext _db;
+        protected ApplicationUserManager _userManager;
 
         public ApplicationDbContext db
         {
@@ -36,7 +37,28 @@ namespace wwwplatform.Extensions
         private ApplicationDbContext GetDbContext()
         {
             _db = HttpContext.GetOwinContext().Get<ApplicationDbContext>();
+            _db.CurrentUser = HttpContext.User;
             return _db;
+        }
+
+        public ApplicationRoleManager RoleManager
+        {
+            get
+            {
+                return HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+        }
+        
+        public ApplicationUserManager UserManager
+        {
+            get
+            {
+                return _userManager ?? HttpContext.GetOwinContext().GetUserManager<ApplicationUserManager>();
+            }
+            set
+            {
+                _userManager = value;
+            }
         }
 
         protected virtual JsonResult OK()
@@ -89,11 +111,25 @@ namespace wwwplatform.Extensions
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
         }
 
+        protected new ActionResult HttpNotFound()
+        {
+            throw new HttpException(404, "Not found");
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                db.Dispose();
+                if (_userManager != null)
+                {
+                    _userManager.Dispose();
+                    _userManager = null;
+                }
+                if (_db != null)
+                {
+                    _db.Dispose();
+                    _db = null;
+                }
             }
             base.Dispose(disposing);
         }

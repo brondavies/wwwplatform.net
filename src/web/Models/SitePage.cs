@@ -14,7 +14,9 @@ namespace wwwplatform.Models
     [Table(name: "SitePage")]
     public class SitePage : Auditable
     {
-        public SitePage() : base() { }
+        public SitePage() : base() {
+            PubDate = DateTime.UtcNow;
+        }
 
         [Required]
         [MaxLength(150)]
@@ -52,6 +54,9 @@ namespace wwwplatform.Models
         
         [DisplayName("Set As Home Page")]
         public bool HomePage { get; set; }
+
+        [ForeignKey("ContentId")]
+        public virtual ICollection<Permission> Permissions { get; set; }
 
         internal void Update(SitePage sitePage)
         {

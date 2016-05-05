@@ -21,12 +21,26 @@ namespace wwwplatform.Models
         {
             get
             {
-                return _CurrentUser ?? GetHttpContext().GetOwinContext().Request.User;
+                return _CurrentUser ?? GetCurrentUser();
             }
             set
             {
                 _CurrentUser = value;
             }
+        }
+
+        private IPrincipal GetCurrentUser()
+        {
+            var httpcontext = GetHttpContext();
+            if (httpcontext != null)
+            {
+                var owincontext = httpcontext.GetOwinContext();
+                if (owincontext != null)
+                {
+                    return owincontext.Request.User;
+                }
+            }
+            return null;
         }
 
         private static HttpContextBase GetHttpContext()

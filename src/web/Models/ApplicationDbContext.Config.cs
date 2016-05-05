@@ -34,8 +34,8 @@ namespace wwwplatform.Models
             mapping.Map(m =>
             {
                 m.MapInheritedProperties();
-            })
-            .Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
+            });
+            mapping.Property(p => p.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             return mapping;
         }

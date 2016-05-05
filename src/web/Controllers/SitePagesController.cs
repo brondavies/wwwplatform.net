@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
@@ -10,6 +11,8 @@ using System.Web.Mvc;
 using wwwplatform.Models;
 using wwwplatform.Extensions;
 using System.Text.RegularExpressions;
+using wwwplatform.Shared.Extensions.System.Collections;
+using Microsoft.AspNet.Identity;
 
 namespace wwwplatform.Controllers
 {
@@ -50,11 +53,11 @@ namespace wwwplatform.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = AllowedFields)] SitePage sitePage)
+        public async Task<ActionResult> Create([Bind(Include = AllowedFields)] SitePage sitePage, string[] permissions)
         {
             if (ModelState.IsValid)
             {
-                PreparePage(sitePage);
+                PreparePage(sitePage, permissions);
                 db.SitePages.Add(sitePage);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
@@ -63,12 +66,18 @@ namespace wwwplatform.Controllers
             return View(sitePage);
         }
 
-        private void PreparePage(SitePage sitePage)
+        private void PreparePage(SitePage sitePage, string[] permissions = null)
         {
+            if (permissions == null)
+            {
+                permissions = new string[] { };
+            }
+
             sitePage.Name = sitePage.Name.Trim();
             Regex regex = new Regex("[^A-Z,^a-z,^0-9]");
             string cleanName = string.Join("-", regex.Replace(sitePage.Name, "-").Split("-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
             sitePage.Slug = cleanName;
+
             if (sitePage.HomePage)
             {
                 var allpages = db.ActiveSitePages.Where(p => p.Id != sitePage.Id && p.HomePage == true).ToList();
@@ -76,6 +85,28 @@ namespace wwwplatform.Controllers
                 {
                     page.HomePage = false;
                     db.Entry(page).State = EntityState.Modified;
+                }
+            }
+
+            var roles = RoleManager.Roles.ToList();
+            if (sitePage.Permissions == null)
+            {
+                sitePage.Permissions = new List<Permission>();
+            }
+            var removed = sitePage.Permissions.RemoveAll(p => !permissions.Contains(p.AppliesToRole.Id));
+            if (removed.Count() > 0)
+            {
+                db.Permissions.RemoveRange(removed);
+            }
+            foreach (var role in roles)
+            {
+                if (permissions.Contains(role.Id) && !sitePage.Permissions.Any(p => p.AppliesToRole.Id == role.Id))
+                {
+                    sitePage.Permissions.Add(db.Permissions.Add(new Permission
+                    {
+                        AppliesToRole = role,
+                        UpdatedBy = HttpContext.User.Identity.Name
+                    }));
                 }
             }
         }
@@ -110,7 +141,7 @@ namespace wwwplatform.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = AllowedFields)] SitePage sitePage)
+        public async Task<ActionResult> Edit([Bind(Include = AllowedFields)] SitePage sitePage, string[] permissions)
         {
             if (ModelState.IsValid)
             {
@@ -120,7 +151,7 @@ namespace wwwplatform.Controllers
                     return HttpNotFound();
                 }
                 actual.Update(sitePage);
-                PreparePage(actual);
+                PreparePage(actual, permissions);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
@@ -160,7 +191,26 @@ namespace wwwplatform.Controllers
         public async Task<ActionResult> Display(string slug)
         {
             string s = slug.ToLower();
-            SitePage sitePage = await db.ActiveSitePages.Where(p => p.Slug == s).FirstOrDefaultAsync();
+            SitePage sitePage;
+
+            string userId = Guid.Empty.ToString();
+            var publicRoleId = RoleManager.FindByName(Roles.Public).Id;
+            List<string> roles = new List<string>();
+            roles.Add(publicRoleId);
+
+            var pages = db.ActiveSitePages
+                .Where(p => p.Slug == s)
+                .Where(p => p.PubDate < DateTime.UtcNow);
+            if (User.Identity.IsAuthenticated)
+            {
+                userId = User.Identity.GetUserId();
+                var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
+                roles.AddRange(RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList());
+            }
+            sitePage = await pages.Where(page => page.Permissions.Any(p => p.Grant &&
+                    (p.AppliesTo.Id == userId || roles.Contains(p.AppliesToRole.Id))
+                )).FirstOrDefaultAsync();
+
             if (sitePage == null)
             {
                 return HttpNotFound();

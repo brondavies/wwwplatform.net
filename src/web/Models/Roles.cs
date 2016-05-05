@@ -14,6 +14,7 @@ namespace wwwplatform.Models
         public const string Editors = "Editors";
         public const string ListManagers = "ListManagers";
         public const string Users = "Users";
+        public const string Public = "Public";
 
         internal static IEnumerable<IdentityResult> CreateAll(ApplicationRoleManager RoleManager)
         {
@@ -21,6 +22,7 @@ namespace wwwplatform.Models
                 CreateRole(Roles.Administrators, RoleManager),
                 CreateRole(Roles.Editors, RoleManager),
                 CreateRole(Roles.ListManagers, RoleManager),
+                CreateRole(Roles.Public, RoleManager),
                 CreateRole(Roles.Users, RoleManager)
             };
         }
