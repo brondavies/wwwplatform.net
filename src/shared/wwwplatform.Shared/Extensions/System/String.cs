@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Web;
 
 namespace wwwplatform.Shared.Extensions.System
@@ -103,6 +104,18 @@ namespace wwwplatform.Shared.Extensions.System
         {
             if (string.IsNullOrEmpty(value)) { return value; }
             return Convert.ToBase64String(Encoding.ASCII.GetBytes(value), options);
+        }
+
+        /// <summary>
+        /// Returns a new string that has only alpha-numeric characters and dashes. Other characters are replaced with a single dash.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>A new simplified string</returns>
+        public static string CleanFileName(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) { return value; }
+            Regex regex = new Regex("[^a-zA-Z0-9]", RegexOptions.IgnoreCase);
+            return string.Join("-", regex.Replace(value, "-").Split("-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

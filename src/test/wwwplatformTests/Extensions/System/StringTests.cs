@@ -68,5 +68,30 @@ namespace wwwplatform.Shared.Extensions.System.Tests
             string nullString = null;
             Assert.IsNull(nullString.ToBase64String());
         }
+
+        [TestMethod]
+        public void CleanFileNameTest()
+        {
+            Assert.AreEqual("abcdefghijklmnopqrstuvwxyz1234567890",
+                "abcdefghijklmnopqrstuvwxyz1234567890".CleanFileName());
+
+            Assert.AreEqual("33af996c-5d1d-48e5-975c-5c93cbb96cd8",
+                "33af996c-5d1d-48e5-975c-5c93cbb96cd8".CleanFileName());
+
+            Assert.AreEqual("The-quick-brown-fox-jumps-over-the-lazy-dog",
+                "The quick brown fox jumps over the lazy dog.".CleanFileName());
+
+            Assert.AreEqual("x-3d-j5-929v-68b3",
+                "`-x,3d]j5+929v;68b3".CleanFileName());
+
+            Assert.AreEqual("AbcdeFghijkLmnopQRstuvwxyz1234567890",
+                "AbcdeFghijkLmnopQRstuvwxyz1234567890".CleanFileName());
+
+            Assert.AreEqual("a-bn-c-ds-g-hj-k-s-x-n-i-9-m-sd-df5",
+                "a!bn@c#ds$g%hj^k&*s(x)n+i_9:'m<sd>.df5".CleanFileName());
+
+            string nullString = null;
+            Assert.IsNull(nullString.CleanFileName());
+        }
     }
 }

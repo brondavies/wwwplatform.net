@@ -3,16 +3,13 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Models;
 using wwwplatform.Extensions;
-using System.Text.RegularExpressions;
 using wwwplatform.Shared.Extensions.System.Collections;
-using Microsoft.AspNet.Identity;
+using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Controllers
 {
@@ -74,9 +71,7 @@ namespace wwwplatform.Controllers
             }
 
             sitePage.Name = sitePage.Name.Trim();
-            Regex regex = new Regex("[^A-Z,^a-z,^0-9]");
-            string cleanName = string.Join("-", regex.Replace(sitePage.Name, "-").Split("-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
-            sitePage.Slug = cleanName;
+            sitePage.Slug = sitePage.Name.CleanFileName();
 
             if (sitePage.HomePage)
             {
@@ -93,18 +88,18 @@ namespace wwwplatform.Controllers
             {
                 sitePage.Permissions = new List<Permission>();
             }
-            var removed = sitePage.Permissions.RemoveAll(p => !permissions.Contains(p.AppliesToRole.Id));
+            var removed = sitePage.Permissions.RemoveAll(p => !permissions.Contains(p.AppliesToRole_Id));
             if (removed.Count() > 0)
             {
                 db.Permissions.RemoveRange(removed);
             }
             foreach (var role in roles)
             {
-                if (permissions.Contains(role.Id) && !sitePage.Permissions.Any(p => p.AppliesToRole.Id == role.Id))
+                if (permissions.Contains(role.Id) && !sitePage.Permissions.Any(p => p.AppliesToRole_Id == role.Id))
                 {
                     sitePage.Permissions.Add(db.Permissions.Add(new Permission
                     {
-                        AppliesToRole = role,
+                        AppliesToRole_Id = role.Id,
                         UpdatedBy = HttpContext.User.Identity.Name
                     }));
                 }
