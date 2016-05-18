@@ -34,6 +34,8 @@ namespace wwwplatform.Models
         
         [DisplayName("Applies to Role")]
         public virtual IdentityRole AppliesToRole { get; set; }
+
+        public string AppliesToRole_Id { get; set; }
         
         [DisplayName("Applies to User")]
         public virtual ApplicationUser AppliesTo { get; set; }

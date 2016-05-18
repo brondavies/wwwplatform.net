@@ -24,7 +24,8 @@ namespace wwwplatform.Migrations
         protected override void Seed(ApplicationDbContext context)
         {
             var RoleManager = (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
-            foreach (var result in Roles.CreateAll(RoleManager))
+            var results = Roles.CreateAll(RoleManager);
+            foreach (var result in results)
             {
                 if (result != null)
                 {
@@ -32,23 +33,32 @@ namespace wwwplatform.Migrations
                 }
             }
 
-            if (!context.SitePages.Where(p => p.HomePage).Any())
+            try
             {
-                var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
-                var homepage = context.SitePages.Add(new SitePage
+                if (!context.SitePages.Where(p => p.HomePage).Any())
                 {
-                    Description = "Default Home Page",
-                    HomePage = true,
-                    HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
-                    Name = "Home Page",
-                    Slug = "home-page",
-                    PubDate = DateTime.UtcNow
-                });
-                homepage.Permissions.Add(new Permission
-                {
-                    Grant = true,
-                    AppliesToRole = publicRole
-                });
+                    var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
+                    var homepage = context.SitePages.Add(new SitePage
+                    {
+                        Description = "Default Home Page",
+                        HomePage = true,
+                        HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
+                        Name = "Home Page",
+                        Slug = "home-page",
+                        PubDate = DateTime.UtcNow
+                    });
+                    homepage.Permissions = new List<Permission>();
+                    homepage.Permissions.Add(new Permission
+                    {
+                        Grant = true,
+                        AppliesToRole_Id = publicRole.Id
+                    });
+                    context.SaveChanges();
+                }
+            }
+            catch (Exception exception)
+            {
+                throw exception;
             }
         }
 
