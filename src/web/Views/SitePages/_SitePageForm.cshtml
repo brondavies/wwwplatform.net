@@ -8,9 +8,9 @@
     {
         foreach (var permission in Model.Permissions)
         {
-            if (permission.AppliesToRole.Id != null)
+            if (permission.AppliesToRole_Id != null)
             {
-                permissions.Add(permission.AppliesToRole.Id);
+                permissions.Add(permission.AppliesToRole_Id);
             }
         }
     }

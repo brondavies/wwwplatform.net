@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -31,6 +32,7 @@ namespace wwwplatformTests.Support
         public static void Initialize(TestContext context)
         {
             testContext = context;
+            AppDomain.CurrentDomain.SetData("DataDirectory", Path.GetFullPath(AppSetting("TempDir")));
         }
     }
 }
