@@ -12,13 +12,17 @@ namespace wwwplatform.Models
     {
         public const string Administrators = "Administrators";
         public const string Editors = "Editors";
-        public const string ListManagers = "ListManagers";
+        public const string ListManagers = "List Managers";
         public const string Users = "Users";
         public const string Public = "Public";
 
         internal static IEnumerable<IdentityResult> CreateAll(ApplicationRoleManager RoleManager)
         {
-            return new IdentityResult[] {
+            if (RoleManager.RoleExists("ListManagers"))
+            {
+                RoleManager.Delete(RoleManager.Roles.First(r => r.Name == "ListManagers"));
+            }
+                return new IdentityResult[] {
                 CreateRole(Roles.Administrators, RoleManager),
                 CreateRole(Roles.Editors, RoleManager),
                 CreateRole(Roles.ListManagers, RoleManager),
