@@ -11,6 +11,7 @@ namespace wwwplatform
             bundles.Add(new ScriptBundle("~/scripts/substance").Include(
                 "~/Scripts/jquery-{version}.js",
                 "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.cookie.js",
                 "~/Scripts/respond.*",
                 "~/Scripts/jquery.isotope.js",
                 "~/Scripts/jquery.slicknav.js",

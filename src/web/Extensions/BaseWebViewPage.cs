@@ -20,17 +20,19 @@ namespace wwwplatform.Extensions
 
         #region Role-based links
 
-        public IHtmlString LoginLink()
+        public IHtmlString LoginLink(string text = null, string className = null)
         {
             if (Request.IsAuthenticated)
             {
+                text = text ?? "Sign Out";
                 var form = Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" });
+                var attr = (className != null) ? "class=\"\"" + className : "";
                 Write(SimpleAntiForgeryToken());
-                WriteLiteral(@"<a href=""javascript:document.getElementById('logoutForm').submit()"">Sign out</a>");
+                WriteLiteral(string.Format("<a href=\"javascript:document.getElementById('logoutForm').submit()\" {0}>{1}</a>", attr, text));
                 form.EndForm();
                 return null;
             }
-            return Html.ActionLink("Sign in", "Login", "Account");
+            return Html.ActionLink(linkText: "Sign in", actionName: "Login", controllerName: "Account", routeValues:null, htmlAttributes: new { @class = className });
         }
 
         public IHtmlString PagesAdminLink()
@@ -53,11 +55,11 @@ namespace wwwplatform.Extensions
             return null;
         }
 
-        public IHtmlString MyAccountLink(string text = null)
+        public IHtmlString MyAccountLink(string text = null, string className = null)
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Html.ActionLink(text ?? "My Account", "Index", "Manage");
+                return Html.ActionLink(linkText: text ?? "My Account", actionName: "Index", controllerName: "Manage", routeValues: null, htmlAttributes: new { @class = className });
             }
 
             return null;

@@ -28,11 +28,16 @@
 </head>
 <body class="fade">
     <div id="pre_header" class="visible-lg">
-        <div class="pull-right">
+        <div class="pull-right text-right text-white">
             @if (Request.IsAuthenticated)
             {
-                <span>Logged in as</span>
-                @MyAccountLink(CurrentUser.FullName())
+                <span class="btn">Logged in as</span>
+                @MyAccountLink(CurrentUser.FullName(), "btn")
+            }
+            else
+            {
+                <span class="btn">Hello Guest!</span>
+                @LoginLink(null, "btn bold")
             }
         </div>
     </div>
@@ -54,6 +59,7 @@
             <div class="clear"></div>
             <!-- End Top Menu -->
         </div>
+        <div id="messages"></div>
     </div>
     <!-- === END HEADER === -->
     <!-- === BEGIN CONTENT === -->
@@ -85,9 +91,9 @@
                         </li>
                         @if (Request.IsAuthenticated)
                         {
-                        <li>
-                            @MyAccountLink()
-                        </li>
+                            <li>
+                                @MyAccountLink()
+                            </li>
                         }
                         <li>
                             @LoginLink()

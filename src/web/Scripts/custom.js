@@ -8,5 +8,27 @@
         }))
         .bootstrapSwitch();
 
+    var failureMessage = $.cookie('_failure');
+    if (failureMessage) {
+        $.removeCookie('_failure');
+        $('#messages, .messages').first().append(
+            $('p').html(failureMessage).addClass('bg-danger')
+        );
+    }
+    var successMessage = $.cookie('_success');
+    if (successMessage) {
+        $.removeCookie('_success');
+        $('#messages, .messages').first().append(
+            $('p').html(successMessage).addClass('bg-success')
+        );
+    }
+
+    $('#messages, .messages').click(function () {
+        $('p', this).animate({ opacity: 0 },
+            function () {
+                $(this).remove();
+            });
+    });
+
     $(document.body).addClass('in');
 })

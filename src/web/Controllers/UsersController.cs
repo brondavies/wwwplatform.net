@@ -7,12 +7,16 @@ using System.Web.Mvc;
 using System.Threading.Tasks;
 using System.Data.Entity;
 using wwwplatform.Models;
+using wwwplatform.Models.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace wwwplatform.Controllers
 {
     [Extensions.Authorize(Roles.Administrators)]
     public class UsersController : BaseController
     {
+        private const string AllowedFields = "Email,EmailConfirmed,FirstName,LastName,LockoutEnabled,LockoutEndDateUtc,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled";
+
         // GET: Users
         public async Task<ActionResult> Index()
         {
@@ -66,7 +70,7 @@ namespace wwwplatform.Controllers
 
         // POST: Users/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(string id, FormCollection collection)
+        public async Task<ActionResult> Edit(string id, [Bind(Include = AllowedFields)] UserEditorModel editor)
         {
             var user = await UserManager.FindByIdAsync(id);
             if (user == null)
@@ -75,13 +79,32 @@ namespace wwwplatform.Controllers
             }
             try
             {
-                // TODO: Add update logic here
+                user.Email = editor.Email;
+                user.EmailConfirmed = editor.EmailConfirmed;
+                user.FirstName = editor.FirstName;
+                user.LastName = editor.LastName;
+                user.LockoutEnabled = editor.LockoutEnabled;
+                user.LockoutEndDateUtc = editor.LockoutEndDateUtc;
+                user.PhoneNumber = editor.PhoneNumber;
+                user.PhoneNumberConfirmed = editor.PhoneNumberConfirmed;
+                user.TwoFactorEnabled = editor.TwoFactorEnabled;
+                //not allowed user.UserName = editor.UserName;
 
-                return RedirectToAction("Index");
+                var result = await UserManager.UpdateAsync(user);
+                if (result == IdentityResult.Success)
+                {
+                    SetSuccessMessage(string.Format("User information for {0} was saved successfully!", user.FullName()));
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    throw new Exception(string.Join("\r\n", result.Errors));
+                }
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                SetFailureMessage(e.Message);
+                return View(user);
             }
         }
 

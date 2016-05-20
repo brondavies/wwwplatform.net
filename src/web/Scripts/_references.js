@@ -2,6 +2,7 @@
 /// <reference path="bootstrap.js" />
 /// <reference path="bootstrap-switch.min.js" />
 /// <reference path="custom.js" />
+/// <reference path="jquery.cookie.js" />
 /// <reference path="jquery.isotope.js" />
 /// <reference path="jquery.slicknav.js" />
 /// <reference path="jquery.validate.min.js" />

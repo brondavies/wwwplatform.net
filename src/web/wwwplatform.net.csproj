@@ -245,6 +245,7 @@
     </Compile>
     <Compile Include="Models\ViewModels\SentEmailMessageModel.cs" />
     <Compile Include="Models\ViewModels\UploadResults.cs" />
+    <Compile Include="Models\ViewModels\UserEditorModel.cs" />
     <Compile Include="Models\WebFile.cs">
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
@@ -371,6 +372,8 @@
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
+    <Content Include="Scripts\jquery.cookie.min.js" />
+    <Content Include="Scripts\jquery.cookie.js" />
     <Content Include="Scripts\jquery.isotope.js" />
     <Content Include="Scripts\jquery.slicknav.js" />
     <Content Include="Scripts\jquery-2.2.3.min.map" />

@@ -98,6 +98,11 @@ body {
 .logo img {
   max-height: 90px;
 }
+@media only screen and (max-width: 1024px) {
+    .logo img {
+        max-height: 64px;
+    }
+}
 p.site-slogan {
   color: #b1a5bd;
   font-size: 11px;

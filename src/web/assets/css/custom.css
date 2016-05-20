@@ -13,3 +13,37 @@ div.mce-panel {
 .btn.active .fa.fa-check:before {
     color: black;
 }
+#header #messages {
+    bottom: -40px;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+}
+
+#messages p {
+    border-radius: 10px;
+    box-shadow: 0px 3px 6px rgba(0,0,0,0.33);
+    display: inline;
+    margin: 0 auto;
+    padding: 10px;
+    cursor: default;
+    text-align: center;
+}
+#messages p.bg-success {
+    border: 1px solid #67B847;
+}
+#messages p.bg-danger {
+    border: 1px solid #B64949;
+}
+.text-white {
+    color: #eee;
+}
+.text-white .btn {
+    color: #eee;
+}
+span.btn {
+    cursor: default;
+    padding-left: 0;
+    padding-right: 0;
+    pointer-events: none;
+}

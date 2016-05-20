@@ -111,6 +111,16 @@ namespace wwwplatform.Extensions
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
         }
 
+        protected void SetSuccessMessage(string message)
+        {
+            Response.SetCookie(new HttpCookie("_success", message));
+        }
+
+        protected void SetFailureMessage(string message)
+        {
+            Response.SetCookie(new HttpCookie("_failure", message));
+        }
+
         protected new ActionResult HttpNotFound()
         {
             throw new HttpException(404, "Not found");
