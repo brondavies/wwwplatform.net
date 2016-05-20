@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace wwwplatform.Models
 {
     [Table(name: "WebFile")]
-    public class WebFile : Auditable
+    public partial class WebFile : Auditable
     {
         [Required]
         public string Name { get; set; }

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace wwwplatform.Models
 {
     [Table(name: "MailingList")]
-    public class MailingList : Auditable
+    public partial class MailingList : Auditable
     {
         [Required]
         public string Name { get; set; }

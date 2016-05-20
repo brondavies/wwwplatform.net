@@ -25,7 +25,7 @@ namespace wwwplatform.Extensions
             if (Request.IsAuthenticated)
             {
                 var form = Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" });
-                Write(Html.AntiForgeryToken());
+                Write(SimpleAntiForgeryToken());
                 WriteLiteral(@"<a href=""javascript:document.getElementById('logoutForm').submit()"">Sign out</a>");
                 form.EndForm();
                 return null;
@@ -47,7 +47,17 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
             {
-                return Html.ActionLink("Manage Users", "Index", "Manage");
+                return Html.ActionLink("Manage Users", "Index", "Users");
+            }
+
+            return null;
+        }
+
+        public IHtmlString MyAccountLink(string text = null)
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Html.ActionLink(text ?? "My Account", "Index", "Manage");
             }
 
             return null;
@@ -101,6 +111,14 @@ namespace wwwplatform.Extensions
                 list.Add(item);
             });
             return list;
+        }
+
+        public ApplicationUser CurrentUser
+        {
+            get
+            {
+                return UserManager.FindById(User.Identity.GetUserId());
+            }
         }
 
         public List<SitePage> Pages

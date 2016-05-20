@@ -1,0 +1,89 @@
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Details";
+    var columns = new[] { new { sm = 4 }, new { sm = 8 } };
+    var labelAttributes = new { @class = "text-right" };
+    var label = "label";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>
+        @Model.FullName()
+        <span>(@Model.UserName)</span>
+    </h4>
+    <hr />
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add(Html.DisplayNameFor(model => model.FirstName)
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.FirstName))
+    
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add(Html.DisplayNameFor(model => model.LastName)
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.LastName))
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("User Name"
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.UserName))
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Email"
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.Email))
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Email Confirmed"
+        ).Column(
+            ).Add(Model.EmailConfirmed ? "Yes" : "No")
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Phone Number"
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.PhoneNumber))
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Phone Number Confirmed"
+        ).Column(
+            ).Add(Model.PhoneNumberConfirmed ? "Yes" : "No")
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Two-factor Authentication"
+        ).Column(
+            ).Add(Model.TwoFactorEnabled ? "Yes" : "No")
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Account Lockout"
+        ).Column(
+            ).Add(Model.LockoutEnabled ? "Yes" : "No")
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Account Lockout Ends"
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.LockoutEndDateUtc))
+
+    @Html.Row(columns
+        ).Column(label, labelAttributes
+            ).Add("Failed Access Attempts"
+        ).Column(
+            ).Add(Html.DisplayFor(model => model.AccessFailedCount))
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

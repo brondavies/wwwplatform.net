@@ -64,6 +64,7 @@ namespace wwwplatform.Migrations
 
         public void Uninstall(ApplicationDbContext context)
         {
+            //TODO: make this work for all database platforms
             string dropFK = @"SELECT distinct
                 'IF OBJECT_ID(''['+f.name+']'') IS NOT NULL ALTER TABLE [dbo].['+OBJECT_NAME(f.parent_object_id)+'] DROP CONSTRAINT ['+f.name+']' AS drop_sql
                 FROM sys.foreign_keys AS f 

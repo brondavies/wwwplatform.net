@@ -27,7 +27,15 @@
     @Scripts.Render("~/scripts/modernizr")
 </head>
 <body class="fade">
-    <div id="pre_header" class="visible-lg"></div>
+    <div id="pre_header" class="visible-lg">
+        <div class="pull-right">
+            @if (Request.IsAuthenticated)
+            {
+                <span>Logged in as</span>
+                @MyAccountLink(CurrentUser.FullName())
+            }
+        </div>
+    </div>
     <div id="header" class="container">
         <div class="row">
             <!-- Logo -->
@@ -75,6 +83,12 @@
                         <li>
                             @MailingListAdminLink()
                         </li>
+                        @if (Request.IsAuthenticated)
+                        {
+                        <li>
+                            @MyAccountLink()
+                        </li>
+                        }
                         <li>
                             @LoginLink()
                         </li>

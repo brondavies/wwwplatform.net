@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace wwwplatform.Models
 {
     [Table(name: "MailingListSubscriber")]
-    public class MailingListSubscriber : Auditable
+    public partial class MailingListSubscriber : Auditable
     {
         public MailingListSubscriber() :base()
         {

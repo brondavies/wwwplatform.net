@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace wwwplatform.Models
 {
     [Table(name: "EmailAddress")]
-    public class EmailAddress : Auditable
+    public partial class EmailAddress : Auditable
     {
         public EmailAddress() : base()
         {

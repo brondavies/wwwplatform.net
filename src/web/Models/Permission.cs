@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace wwwplatform.Models
 {
-    public class Permission
+    public partial class Permission
     {
         public Permission()
         {

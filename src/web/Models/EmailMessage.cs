@@ -10,7 +10,7 @@ using System.Web.Mvc;
 namespace wwwplatform.Models
 {
     [Table(name: "EmailMessage")]
-    public class EmailMessage : Auditable
+    public partial class EmailMessage : Auditable
     {
         [Required]
         public string Subject { get; set; }

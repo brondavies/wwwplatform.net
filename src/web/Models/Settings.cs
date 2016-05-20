@@ -32,5 +32,7 @@ namespace wwwplatform.Models
         public static string TempDir { get { return AppSetting("TempDir") ?? "~/App_Data/temp".ResolveLocalPath(); } }
 
         public static string UserFilesDir { get { return AppSetting("UserFilesDir") ?? "~/UserFiles".ResolveLocalPath(); } }
+
+        public static bool AllowUserRegistration { get { return Boolean.Parse(AppSetting("AllowUserRegistration", Boolean.FalseString)); } }
     }
 }

@@ -128,7 +128,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowUserRegistration)
             {
                 return HttpNotFound(); //disabled
             }
@@ -149,7 +149,7 @@ namespace wwwplatform.Controllers
 
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Username, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

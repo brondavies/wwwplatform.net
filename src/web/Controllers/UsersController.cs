@@ -4,21 +4,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Threading.Tasks;
+using System.Data.Entity;
+using wwwplatform.Models;
 
 namespace wwwplatform.Controllers
 {
+    [Extensions.Authorize(Roles.Administrators)]
     public class UsersController : BaseController
     {
         // GET: Users
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View();
+            var allusers = await db.Users.ToListAsync();
+            return View(allusers);
         }
 
         // GET: Users/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(string id)
         {
-            return View();
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
         }
 
         // GET: Users/Create
@@ -44,15 +54,25 @@ namespace wwwplatform.Controllers
         }
 
         // GET: Users/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(string id)
         {
-            return View();
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(user);
         }
 
         // POST: Users/Edit/5
         [HttpPost]
-        public ActionResult Edit(int id, FormCollection collection)
+        public async Task<ActionResult> Edit(string id, FormCollection collection)
         {
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
             try
             {
                 // TODO: Add update logic here
@@ -66,14 +86,14 @@ namespace wwwplatform.Controllers
         }
 
         // GET: Users/Delete/5
-        public ActionResult Delete(int id)
+        public ActionResult Delete(string id)
         {
             return View();
         }
 
         // POST: Users/Delete/5
         [HttpPost]
-        public ActionResult Delete(int id, FormCollection collection)
+        public ActionResult Delete(string id, FormCollection collection)
         {
             try
             {

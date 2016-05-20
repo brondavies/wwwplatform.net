@@ -1,0 +1,101 @@
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Edit";
+    var columns = new[] { new { md = 3 }, new { md = 9 } };
+    var labelAttributes = new { @class = "control-label" };
+    var label = new { @class = "control-label" };
+    var boot_switch = new { htmlAttributes = new { @class = "bootstrap-switch" } };
+    var yes_no = new { htmlAttributes = new { @class = "bootstrap-switch yes-no" } };
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+    
+    <div class="form-horizontal">
+        @Html.Row(columns
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">
+            @Model.FullName()
+            <span>(@Model.UserName)</span>
+        </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <input type="submit" value="Save" class="btn btn-default" />        
+            @Html.ActionLink("Cancel", "Index")
+            </span>
+        )
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.FirstName)
+        ).Column().Add(
+            Html.FormControlFor(model => model.FirstName)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.LastName)
+        ).Column().Add(
+            Html.FormControlFor(model => model.LastName)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.Email)
+        ).Column().Add(
+            Html.FormControlFor(model => model.Email)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.EmailConfirmed, "Email Confirmed")
+        ).Column().Add(
+            Html.FormControlFor(model => model.EmailConfirmed, yes_no)
+        )
+        
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.PhoneNumber, "Phone Number")
+        ).Column().Add(
+            Html.FormControlFor(model => model.PhoneNumber)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.PhoneNumberConfirmed, "Phone Number Confirmed")
+        ).Column().Add(
+            Html.FormControlFor(model => model.PhoneNumberConfirmed, yes_no)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.TwoFactorEnabled, "Two-factor Authentication")
+        ).Column().Add(
+            Html.FormControlFor(model => model.TwoFactorEnabled, boot_switch)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.LockoutEnabled, "Account Lockout")
+        ).Column().Add(
+            Html.FormControlFor(model => model.LockoutEnabled, yes_no)
+        )
+        
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.LockoutEndDateUtc, "Account Lockout Ends")
+        ).Column().Add(
+            Html.FormControlFor(model => model.LockoutEndDateUtc)
+        )
+    </div>
+}
