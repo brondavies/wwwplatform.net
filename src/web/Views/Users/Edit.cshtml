@@ -34,6 +34,9 @@
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
+        @Html.HiddenFor(model => model.UserName)
+        @Html.HiddenFor(model => model.Password)
+        @Html.HiddenFor(model => model.ConfirmPassword)
 
         @Html.FormGroup(columns
         ).Column(null, label).Add(
@@ -96,6 +99,15 @@
             Html.LabelFor(model => model.LockoutEndDateUtc)
         ).Column().Add(
             Html.FormControlFor(model => model.LockoutEndDateUtc)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.Label("Roles")
+        ).Column().Add(
+            @<div class="btn-group" data-toggle="buttons">
+                @RoleButtonGroup(Model.permissions, false)
+            </div>
         )
     </div>
 }

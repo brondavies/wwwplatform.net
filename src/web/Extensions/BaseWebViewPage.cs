@@ -180,6 +180,29 @@ namespace wwwplatform.Extensions
             return _userManager;
         }
 
+        public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true)
+        {
+            var publicRole = PublicRole;
+            foreach(var role in RoleManager.Roles)
+            {
+                if (role.Id != publicRole.Id || includePublic)
+                {
+                    RoleCheckbox(permissions, role);
+                }
+            }
+            return null;
+        }
+
+        public IHtmlString RoleCheckbox(IEnumerable<string> permissions, IdentityRole role)
+        {
+            bool ischecked = permissions.Contains(role.Id);
+            string format = "<input {1} name=\"permissions\" type=\"checkbox\" autocomplete=\"off\" value=\"{0}\"><span class=\"fa fa-check\"></span>{2}";
+            WriteLiteral("<label class=\"btn btn-default" + (ischecked ? " active" : "") + "\">");
+            WriteLiteral(string.Format(format, role.Id, ischecked ? "checked=\"checked\"" : "", role.Name));
+            WriteLiteral("</label>");
+            return null;
+        }
+
         #endregion
 
         private ApplicationDbContext _db;

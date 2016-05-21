@@ -133,9 +133,11 @@ namespace wwwplatform.Controllers
                 return HttpNotFound(); //disabled
             }
 
-            if (await CreateUser(model, true, true))
+            var usersRole = RoleManager.Roles.Where(r => r.Name == Roles.Users).First().Id;
+
+            if (await CreateUser(model, new[] { usersRole }, true, true))
             {
-                RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
             }
 
             // If we got this far, something failed, redisplay form

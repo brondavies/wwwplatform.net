@@ -19,14 +19,6 @@
         permissions.Add(PublicRole.Id);
     }
 }
-@helper RoleCheckbox(List<string> permissions, IdentityRole role)
-{
-    bool ischecked = permissions.Contains(role.Id);
-    string format = "<input {1} name=\"permissions\" type=\"checkbox\" autocomplete=\"off\" value=\"{0}\"><span class=\"fa fa-check\"></span>{2}";
-    WriteLiteral("<label class=\"btn btn-default"+(ischecked ? " active" : "")+"\">");
-    WriteLiteral(String.Format(format, role.Id, ischecked ? "checked=\"checked\"" : "", role.Name));
-    WriteLiteral("</label>");
-}
 @using (Html.BeginForm())
 {
     @SimpleAntiForgeryToken()
@@ -98,10 +90,7 @@
             <label class="control-label col-md-2">Permissions</label>
             <div class="col-md-10">
                 <div class="btn-group" data-toggle="buttons">
-                    @foreach (var role in RoleManager.Roles)
-                    {
-                        @RoleCheckbox(permissions, role)
-                    }
+                    @RoleButtonGroup(permissions)
                 </div>
             </div>
         </div>

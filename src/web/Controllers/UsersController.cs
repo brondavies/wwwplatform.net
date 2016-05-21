@@ -38,7 +38,10 @@ namespace wwwplatform.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View(new UserEditorModel());
+            var model = new UserEditorModel();
+            var usersRole = RoleManager.Roles.First(r => r.Name == Roles.Users);
+            model.permissions = new string[] { usersRole.Id };
+            return View(model);
         }
 
         // POST: Users/Create
@@ -48,7 +51,7 @@ namespace wwwplatform.Controllers
         {
             try
             {
-                if (await CreateUser(editor, false, false))
+                if (await CreateUser(editor, permissions, false, false))
                 {
                     SetSuccessMessage(string.Format("User {0} was created successfully!", editor.FullName()));
                     return RedirectToAction("Index");
@@ -58,6 +61,7 @@ namespace wwwplatform.Controllers
             {
                 SetFailureMessage(e.Message);
             }
+            editor.permissions = permissions;
             return View(editor);
         }
 
@@ -93,12 +97,13 @@ namespace wwwplatform.Controllers
                 user.PhoneNumber = editor.PhoneNumber;
                 user.PhoneNumberConfirmed = editor.PhoneNumberConfirmed;
                 user.TwoFactorEnabled = editor.TwoFactorEnabled;
-                //not allowed user.UserName = editor.UserName;
+
+                ApplyUserRoles(user, permissions);
 
                 var result = await UserManager.UpdateAsync(user);
                 if (result == IdentityResult.Success)
                 {
-                    SetSuccessMessage(string.Format("User information for {0} was saved successfully!", user.FullName()));
+                    SetSuccessMessage("User information for {0} was saved successfully!", user.FullName());
                     return RedirectToAction("Index");
                 }
                 else
@@ -110,7 +115,9 @@ namespace wwwplatform.Controllers
             {
                 SetFailureMessage(e.Message);
             }
-            return View(user);
+
+            editor.permissions = permissions;
+            return View(editor);
         }
 
         // GET: Users/Delete/5

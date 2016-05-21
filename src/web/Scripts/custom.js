@@ -12,14 +12,14 @@
     if (failureMessage) {
         $.removeCookie('_failure');
         $('#messages, .messages').first().append(
-            $('p').html(failureMessage).addClass('bg-danger')
+            $('<p></p>').html(failureMessage).addClass('bg-danger text-danger')
         );
     }
     var successMessage = $.cookie('_success');
     if (successMessage) {
         $.removeCookie('_success');
         $('#messages, .messages').first().append(
-            $('p').html(successMessage).addClass('bg-success')
+            $('<p></p>').html(successMessage).addClass('bg-success text-success')
         );
     }
 

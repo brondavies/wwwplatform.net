@@ -25,6 +25,17 @@ namespace wwwplatform.Models.ViewModels
             PhoneNumberConfirmed = user.PhoneNumberConfirmed;
             TwoFactorEnabled = user.TwoFactorEnabled;
             UserName = user.UserName;
+            //required but not used for edit
+            ConfirmPassword =
+            Password = "**********";
+            if (user.Id != null)
+            {
+                permissions = user.Roles.Select(r => r.RoleId).ToArray();
+            }
+            else
+            {
+                permissions = new string[] { }; 
+            }
         }
         
         public string Id { get; set; }
@@ -51,5 +62,7 @@ namespace wwwplatform.Models.ViewModels
         {
             return (FirstName + " " + LastName).Trim();
         }
+
+        public string[] permissions { get; set; }
     }
 }

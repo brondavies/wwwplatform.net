@@ -77,9 +77,18 @@
 
         @Html.FormGroup(columns
         ).Column(null, label).Add(
-            Html.LabelFor(model => model.PhoneNumber, "Phone Number")
+            Html.LabelFor(model => model.PhoneNumber)
         ).Column().Add(
             Html.FormControlFor(model => model.PhoneNumber)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.Label("Roles")
+        ).Column().Add(
+            @<div class="btn-group" data-toggle="buttons">
+                @RoleButtonGroup(Model.permissions, false)
+            </div>
         )
     </div>
 }
