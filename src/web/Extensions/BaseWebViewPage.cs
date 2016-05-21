@@ -17,7 +17,7 @@ namespace wwwplatform.Extensions
     public abstract class BaseWebViewPage<T> : WebViewPage<T>
     {
         public readonly FormMethod POST = FormMethod.Post;
-
+        
         #region Role-based links
 
         public IHtmlString LoginLink(string text = null, string className = null)
@@ -96,6 +96,7 @@ namespace wwwplatform.Extensions
         #endregion
 
         #region Site pages
+
         public IEnumerable<SelectListItem> GetParentPageSelectList(long Id, long? selected)
         {
             var otherpages = db.ActiveSitePages.Where(p => p.HomePage == false && p.Id != Id).ToList();
@@ -115,19 +116,23 @@ namespace wwwplatform.Extensions
             return list;
         }
 
-        public ApplicationUser CurrentUser
-        {
-            get
-            {
-                return UserManager.FindById(User.Identity.GetUserId());
-            }
-        }
-
         public List<SitePage> Pages
         {
             get
             {
                 return SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, true, true).ToList();
+            }
+        }
+
+        #endregion
+
+        #region User management
+
+        public ApplicationUser CurrentUser
+        {
+            get
+            {
+                return UserManager.FindById(User.Identity.GetUserId());
             }
         }
 
@@ -154,10 +159,6 @@ namespace wwwplatform.Extensions
                 ?? Context.GetOwinContext().GetUserManager<ApplicationRoleManager>();
             return _roleManager;
         }
-
-        #endregion
-
-        #region User management
 
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager

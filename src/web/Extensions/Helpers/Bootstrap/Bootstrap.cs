@@ -14,22 +14,22 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
     {
         #region BootstrapRow
 
-        public static BootstrapRow Row(this HtmlHelper htmlHelper, object[] columnSizes = null)
+        public static BootstrapRow Row(this HtmlHelper htmlHelper, IEnumerable<object> columnSizes = null)
         {
             return RowHelper(htmlHelper, new RouteValueDictionary(), BootstrapColumnSizes.Convert(columnSizes), null);
         }
 
-        public static BootstrapRow Row(this HtmlHelper htmlHelper, object[] columnSizes, object[] columnOffsets = null)
+        public static BootstrapRow Row(this HtmlHelper htmlHelper, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets = null)
         {
             return RowHelper(htmlHelper, new RouteValueDictionary(), BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }
 
-        public static BootstrapRow Row(this HtmlHelper htmlHelper, object htmlAttributes, object[] columnSizes, object[] columnOffsets = null)
+        public static BootstrapRow Row(this HtmlHelper htmlHelper, object htmlAttributes, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets = null)
         {
             return RowHelper(htmlHelper, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }
 
-        public static BootstrapRow Row(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, object[] columnSizes, object[] columnOffsets = null)
+        public static BootstrapRow Row(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets = null)
         {
             return RowHelper(htmlHelper, htmlAttributes, BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }
@@ -69,22 +69,22 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
 
         #region BootstrapFormGroup
 
-        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, object[] columnSizes)
+        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, IEnumerable<object> columnSizes)
         {
             return FormGroupHelper(htmlHelper, new RouteValueDictionary(), BootstrapColumnSizes.Convert(columnSizes), null);
         }
 
-        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, object[] columnSizes, object[] columnOffsets)
+        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets)
         {
             return FormGroupHelper(htmlHelper, new RouteValueDictionary(), BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }
 
-        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, object htmlAttributes, object[] columnSizes, object[] columnOffsets = null)
+        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, object htmlAttributes, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets = null)
         {
             return FormGroupHelper(htmlHelper, HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes), BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }
 
-        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, object[] columnSizes, object[] columnOffsets = null)
+        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, IEnumerable<object> columnSizes, IEnumerable<object> columnOffsets = null)
         {
             return FormGroupHelper(htmlHelper, htmlAttributes, BootstrapColumnSizes.Convert(columnSizes), BootstrapColumnOffsets.Convert(columnOffsets));
         }

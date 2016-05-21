@@ -15,32 +15,18 @@ using wwwplatform.Extensions;
 namespace wwwplatform.Controllers
 {
     [Extensions.Authorize]
-    public class AccountController : BaseController
+    public class AccountController : BaseAccountController
     {
-        private ApplicationSignInManager _signInManager;
-
         public AccountController()
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
         }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            set
-            {
-                _signInManager = value;
-            }
-        }
-
+        
         //
         // GET: /Account/Login
         [AllowAnonymous]
@@ -147,30 +133,9 @@ namespace wwwplatform.Controllers
                 return HttpNotFound(); //disabled
             }
 
-            if (ModelState.IsValid)
+            if (await CreateUser(model, true, true))
             {
-                var user = new ApplicationUser { UserName = model.Username, Email = model.Email, FirstName = model.FirstName, LastName = model.LastName };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
-                {
-                    if (ModelState.IsValid)
-                    {
-                        UserManager.AddToRole(user.Id, Roles.Administrators);
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                        // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                        // Send an email with this link
-                        string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                        await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                        return RedirectToAction("Index", "Home");
-                    }
-                }
-                else
-                {
-                    AddErrors(result);
-                }
+                RedirectToAction("Index", "Home");
             }
 
             // If we got this far, something failed, redisplay form
@@ -432,20 +397,6 @@ namespace wwwplatform.Controllers
             return View();
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                if (_signInManager != null)
-                {
-                    _signInManager.Dispose();
-                    _signInManager = null;
-                }
-            }
-
-            base.Dispose(disposing);
-        }
-
         #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
@@ -455,14 +406,6 @@ namespace wwwplatform.Controllers
             get
             {
                 return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
             }
         }
 

@@ -10,6 +10,7 @@ using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
 using Microsoft.AspNet.Identity;
+using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Models
 {
@@ -25,6 +26,11 @@ namespace wwwplatform.Models
             ParentPageId = sitePage.ParentPageId;
             ShowInNavigation = sitePage.ShowInNavigation;
             HomePage = sitePage.HomePage;
+        }
+
+        public string AppRelativeUrl()
+        {
+            return "~/".ResolveUrl() + Slug;
         }
 
         internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false)

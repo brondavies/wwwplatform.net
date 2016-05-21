@@ -13,9 +13,9 @@ using Microsoft.AspNet.Identity;
 namespace wwwplatform.Controllers
 {
     [Extensions.Authorize(Roles.Administrators)]
-    public class UsersController : BaseController
+    public class UsersController : BaseAccountController
     {
-        private const string AllowedFields = "Email,EmailConfirmed,FirstName,LastName,LockoutEnabled,LockoutEndDateUtc,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled";
+        private const string AllowedFields = "ConFirmPassword,Email,EmailConfirmed,FirstName,LastName,LockoutEnabled,LockoutEndDateUtc,Password,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,UserName";
 
         // GET: Users
         public async Task<ActionResult> Index()
@@ -38,23 +38,27 @@ namespace wwwplatform.Controllers
         // GET: Users/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new UserEditorModel());
         }
 
         // POST: Users/Create
         [HttpPost]
-        public ActionResult Create(FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Create([Bind(Include = AllowedFields)] UserEditorModel editor, string[] permissions)
         {
             try
             {
-                // TODO: Add insert logic here
-
-                return RedirectToAction("Index");
+                if (await CreateUser(editor, false, false))
+                {
+                    SetSuccessMessage(string.Format("User {0} was created successfully!", editor.FullName()));
+                    return RedirectToAction("Index");
+                }
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                SetFailureMessage(e.Message);
             }
+            return View(editor);
         }
 
         // GET: Users/Edit/5
@@ -65,12 +69,13 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
-            return View(user);
+            return View(new UserEditorModel(user));
         }
 
         // POST: Users/Edit/5
         [HttpPost]
-        public async Task<ActionResult> Edit(string id, [Bind(Include = AllowedFields)] UserEditorModel editor)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Edit(string id, [Bind(Include = AllowedFields)] UserEditorModel editor, string[] permissions)
         {
             var user = await UserManager.FindByIdAsync(id);
             if (user == null)
@@ -104,30 +109,54 @@ namespace wwwplatform.Controllers
             catch(Exception e)
             {
                 SetFailureMessage(e.Message);
-                return View(user);
             }
+            return View(user);
         }
 
         // GET: Users/Delete/5
-        public ActionResult Delete(string id)
+        public async Task<ActionResult> Delete(string id)
         {
-            return View();
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            if (user.Id == User.Identity.GetUserId())
+            {
+                SetFailureMessage("You cannot delete your own user account.");
+                return RedirectToAction("Index");
+            }
+            return View(user);
         }
 
         // POST: Users/Delete/5
         [HttpPost]
-        public ActionResult Delete(string id, FormCollection collection)
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Delete(string id, FormCollection collection)
         {
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
             try
             {
-                // TODO: Add delete logic here
-
-                return RedirectToAction("Index");
+                var result = await UserManager.DeleteAsync(user);
+                if (result.Succeeded)
+                {
+                    SetSuccessMessage("User {0} deleted successfully!", user.FullName());
+                    return RedirectToAction("Index");
+                }
+                else
+                {
+                    AddErrors(result);
+                }
             }
-            catch
+            catch(Exception e)
             {
-                return View();
+                SetFailureMessage(e.Message);
             }
+            return View(user);
         }
     }
 }

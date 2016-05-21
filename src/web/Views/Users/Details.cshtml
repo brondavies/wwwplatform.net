@@ -3,13 +3,13 @@
 @model wwwplatform.Models.ApplicationUser
 
 @{
-    ViewBag.Title = "Details";
+    ViewBag.Title = "User Details - " + Model.FullName();
     var columns = new[] { new { sm = 4 }, new { sm = 8 } };
     var labelAttributes = new { @class = "text-right" };
     var label = "label";
 }
 
-<h2>Details</h2>
+<h2>User Details</h2>
 
 <div>
     <h4>

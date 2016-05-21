@@ -1,0 +1,85 @@
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.ViewModels.UserEditorModel
+
+@{
+    ViewBag.Title = "Create User";
+    var columns = new[] { new { sm = 3 }, new { sm = 9 } };
+    var labelAttributes = new { @class = "control-label" };
+    var label = new { @class = "control-label" };
+    var boot_switch = new { htmlAttributes = new { @class = "bootstrap-switch" } };
+    var yes_no = new { htmlAttributes = new { @class = "bootstrap-switch yes-no" } };
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.Row(columns
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">
+            New User
+        </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Index")
+        </span>
+        )
+        <hr />
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.UserName)
+        ).Column().Add(
+            Html.FormControlFor(model => model.UserName)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.Password)
+        ).Column().Add(
+            Html.FormControlFor(model => model.Password)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.ConfirmPassword)
+        ).Column().Add(
+            Html.FormControlFor(model => model.ConfirmPassword)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.FirstName)
+        ).Column().Add(
+            Html.FormControlFor(model => model.FirstName)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.LastName)
+        ).Column().Add(
+            Html.FormControlFor(model => model.LastName)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.Email)
+        ).Column().Add(
+            Html.FormControlFor(model => model.Email)
+        )
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.PhoneNumber, "Phone Number")
+        ).Column().Add(
+            Html.FormControlFor(model => model.PhoneNumber)
+        )
+    </div>
+}

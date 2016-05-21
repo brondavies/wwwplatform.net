@@ -1,11 +1,11 @@
 ﻿@model wwwplatform.Models.MailingList
 
 @{
-    ViewBag.Title = "Mailing Lists";
+    ViewBag.Title = "Mailing List Details - " + Model.Name;
     ViewBag.Id = Model.Id;
 }
 
-<h2>Mailing Lists</h2>
+<h2>Mailing List Details</h2>
 
 <div>
     <h4 class="inline">@Model.Name</h4>

@@ -1,7 +1,7 @@
 ﻿@model wwwplatform.Models.MailingListSubscriber
 
 @{
-    ViewBag.Title = "Add Subscriber";
+    ViewBag.Title = "Add Subscriber - " + Model.MailingList.Name;
 
     var listId = Model.MailingList.Id;
 }

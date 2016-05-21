@@ -1,23 +1,55 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace wwwplatform.Models.ViewModels
 {
-    public class UserEditorModel
+    [NotMapped]
+    public class UserEditorModel : RegisterViewModel
     {
-        public string Email { get; set; }
-        public bool EmailConfirmed { get; set; }
-        public string FirstName { get; set; }
+        public UserEditorModel() { }
+        public UserEditorModel(ApplicationUser user)
+        {
+            Id = user.Id;
+            Email = user.Email;
+            EmailConfirmed = user.EmailConfirmed;
+            FirstName = user.FirstName;
+            LastName = user.LastName;
+            LockoutEnabled = user.LockoutEnabled;
+            LockoutEndDateUtc = user.LockoutEndDateUtc;
+            PhoneNumber = user.PhoneNumber;
+            PhoneNumberConfirmed = user.PhoneNumberConfirmed;
+            TwoFactorEnabled = user.TwoFactorEnabled;
+            UserName = user.UserName;
+        }
+        
         public string Id { get; set; }
-        public string LastName { get; set; }
+        
+        [Display(Name = "Email Confirmed")]
+        public bool EmailConfirmed { get; set; }
+        
+        [Display(Name = "Account Lockout")]
         public bool LockoutEnabled { get; set; }
+
+        [Display(Name = "Account Lockout Ends")]
         public DateTime? LockoutEndDateUtc { get; set; }
+
+        [Display(Name = "Phone Number")]
         public string PhoneNumber { get; set; }
+
+        [Display(Name = "Phone Number Confirmed")]
         public bool PhoneNumberConfirmed { get; set; }
+
+        [Display(Name = "Two-factor Authentication")]
         public bool TwoFactorEnabled { get; set; }
-        //public string UserName { get; set; }
+
+        public string FullName()
+        {
+            return (FirstName + " " + LastName).Trim();
+        }
     }
 }

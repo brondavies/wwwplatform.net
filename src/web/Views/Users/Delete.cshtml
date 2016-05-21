@@ -1,0 +1,57 @@
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.ApplicationUser
+
+@{
+    ViewBag.Title = "Delete User - " + Model.FullName();
+    var columns = new[] { new { sm = 4 }, new { sm = 8 } };
+    var labelAttributes = new { @class = "text-right" };
+    var label = "label";
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.Row(columns.Reverse()
+         ).Column(
+         ).Add(
+            @<h4>Are you sure you want to delete this user?</h4>
+         ).Column(htmlAttributes: new { @class = "text-right" }
+         ).Add(@<span>
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Index")
+        </span>
+         )
+        <hr />
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.Row(columns
+         ).Column(label, labelAttributes
+             ).Add(Html.DisplayNameFor(model => model.FirstName)
+         ).Column(
+             ).Add(Html.DisplayFor(model => model.FirstName))
+
+        @Html.Row(columns
+         ).Column(label, labelAttributes
+             ).Add(Html.DisplayNameFor(model => model.LastName)
+         ).Column(
+             ).Add(Html.DisplayFor(model => model.LastName))
+
+        @Html.Row(columns
+         ).Column(label, labelAttributes
+             ).Add("User Name"
+         ).Column(
+             ).Add(Html.DisplayFor(model => model.UserName))
+
+        @Html.Row(columns
+         ).Column(label, labelAttributes
+             ).Add("Email"
+         ).Column(
+             ).Add(Html.DisplayFor(model => model.Email))
+
+    </div>
+}

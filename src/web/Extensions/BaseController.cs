@@ -73,7 +73,7 @@ namespace wwwplatform.Extensions
             return Json(new { status = Response.StatusCode, errors = errors }, JsonRequestBehavior.AllowGet);
         }
 
-        private Dictionary<string, string[]> GetErrorsFromModelState(ModelStateDictionary modelState)
+        protected Dictionary<string, string[]> GetErrorsFromModelState(ModelStateDictionary modelState)
         {
             var errors = new Dictionary<string, string[]>();
             foreach (var item in modelState)
@@ -111,19 +111,42 @@ namespace wwwplatform.Extensions
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
         }
 
+        private const string failureCookie = "_failure";
+        private const string successCookie = "_success";
+
         protected void SetSuccessMessage(string message)
         {
-            Response.SetCookie(new HttpCookie("_success", message));
+            Response.SetCookie(new HttpCookie(successCookie, message));
+        }
+
+        protected void SetSuccessMessage(string message, params object[] args)
+        {
+            Response.SetCookie(new HttpCookie(successCookie, string.Format(message, args)));
         }
 
         protected void SetFailureMessage(string message)
         {
-            Response.SetCookie(new HttpCookie("_failure", message));
+            Response.SetCookie(new HttpCookie(failureCookie, message));
+        }
+
+        protected void SetFailureMessage(string message, params object[] args)
+        {
+            Response.SetCookie(new HttpCookie(failureCookie, string.Format(message, args)));
         }
 
         protected new ActionResult HttpNotFound()
         {
             throw new HttpException(404, "Not found");
+        }
+
+        protected override void OnActionExecuted(ActionExecutedContext filterContext)
+        {
+            base.OnActionExecuted(filterContext);
+            if (!ModelState.IsValid && !Response.HeadersWritten)
+            {
+                var errors = ErrorsFromModelState(ModelState);
+                SetFailureMessage(errors);
+            }
         }
 
         protected override void Dispose(bool disposing)

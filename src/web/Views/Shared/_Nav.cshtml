@@ -6,7 +6,7 @@
     @* if (showhome)? <li><a href="~/">Home</a></li>*@
     @foreach (var p in pages)
     {
-        <li><a href="@p.Slug">@p.Name</a></li>
+        <li><a href="@p.AppRelativeUrl()">@p.Name</a></li>
     }
     @*<li>
         <span>Menu with sub-menus</span>

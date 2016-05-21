@@ -2,7 +2,7 @@
 @model wwwplatform.Models.MailingList
 
 @{
-    ViewBag.Title = "New Message";
+    ViewBag.Title = "New Message - " + Model.Name;
     EmailMessage message = new EmailMessage();
 }
 
