@@ -12,10 +12,22 @@
 <h2>User Details</h2>
 
 <div>
-    <h4>
+    @Html.Row(columns
+        ).Column(
+        ).Add(
+    @<h4 class="no-margin">
         @Model.FullName()
         <span>(@Model.UserName)</span>
     </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("Reset Password", "ResetPassword", new { id = Model.Id }, new { @class = "btn btn-default" })
+            </div>
+            @Html.ActionLink("Cancel", "Index")
+            </span>
+        )
     <hr />
     @Html.Row(columns
         ).Column(label, labelAttributes
@@ -83,7 +95,3 @@
         ).Column(
             ).Add(Html.DisplayFor(model => model.AccessFailedCount))
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using wwwplatform.Extensions.Attributes;
 
 namespace wwwplatform.Models
 {
@@ -28,14 +29,14 @@ namespace wwwplatform.Models
     public class SetPasswordViewModel
     {
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [PasswordLengthValidation]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [ConfirmPasswordValidation]
         public string ConfirmPassword { get; set; }
     }
 
@@ -47,15 +48,34 @@ namespace wwwplatform.Models
         public string OldPassword { get; set; }
 
         [Required]
-        [StringLength(100, ErrorMessage = "The {0} must be at least {2} characters long.", MinimumLength = 6)]
+        [PasswordLengthValidation]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
 
         [DataType(DataType.Password)]
         [Display(Name = "Confirm new password")]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [ConfirmPasswordValidation]
         public string ConfirmPassword { get; set; }
+    }
+
+    public class AdminResetPasswordViewModel
+    {
+        [Required]
+        [PasswordLengthValidation]
+        [DataType(DataType.Password)]
+        [Display(Name = "New password")]
+        public string NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Confirm new password")]
+        [ConfirmPasswordValidation]
+        public string ConfirmPassword { get; set; }
+
+        public string UserId { get; set; }
+
+        [Display(Name = "User name")]
+        public string UserName { get; set; }
     }
 
     public class AddPhoneNumberViewModel

@@ -183,6 +183,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
+    <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
+    <Compile Include="Extensions\Attributes\UsernameLengthValidationAttribute.cs" />
     <Compile Include="Extensions\BaseAccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\MailingListsController.cs" />
@@ -548,6 +551,7 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
     <Content Include="Views\Users\Create.cshtml" />
     <Content Include="Views\Users\Delete.cshtml" />
+    <Content Include="Views\Users\ResetPassword.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />

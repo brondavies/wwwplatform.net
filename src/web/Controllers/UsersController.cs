@@ -165,5 +165,54 @@ namespace wwwplatform.Controllers
             }
             return View(user);
         }
+        
+        // GET: Users/Edit/5
+        public async Task<ActionResult> ResetPassword(string id)
+        {
+            var user = await UserManager.FindByIdAsync(id);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+            return View(new AdminResetPasswordViewModel { UserId = user.Id, UserName = user.UserName });
+        }
+
+        // POST: Users/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ResetPassword(AdminResetPasswordViewModel model)
+        {
+            var user = await UserManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                return HttpNotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var token = UserManager.GeneratePasswordResetToken(user.Id);
+                    var result = await UserManager.ResetPasswordAsync(user.Id, token, model.NewPassword);
+
+                    if (result == IdentityResult.Success)
+                    {
+                        SetSuccessMessage("Password was updated for {0} successfully!", user.UserName);
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        throw new Exception(string.Join("\r\n", result.Errors));
+                    }
+                }
+                catch (Exception e)
+                {
+                    SetFailureMessage(e.Message);
+                }
+            }
+            model.UserName = user.UserName;
+
+            return View(model);
+        }
     }
 }

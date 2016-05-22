@@ -8,16 +8,20 @@
         }))
         .bootstrapSwitch();
 
-    var failureMessage = $.cookie('_failure');
+    var failure = '_failure';
+    var success = '_success';
+    var failureMessage = $.cookie(failure);
     if (failureMessage) {
-        $.removeCookie('_failure');
+        $.removeCookie(failure);
+        $.removeCookie(failure, { path: '/' });
         $('#messages, .messages').first().append(
             $('<p></p>').html(failureMessage).addClass('bg-danger text-danger')
         );
     }
-    var successMessage = $.cookie('_success');
+    var successMessage = $.cookie(success);
     if (successMessage) {
-        $.removeCookie('_success');
+        $.removeCookie(success);
+        $.removeCookie(success, { path: '/' });
         $('#messages, .messages').first().append(
             $('<p></p>').html(successMessage).addClass('bg-success text-success')
         );
