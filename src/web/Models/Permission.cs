@@ -31,7 +31,10 @@ namespace wwwplatform.Models
         public bool Deny { get; set; }
 
         public long ContentId { get; set; }
-        
+
+        [Range(1, 3)] //TODO: update if other content types are added
+        public PermissionContentType ContentType { get; set; }
+
         [DisplayName("Applies to Role")]
         public virtual IdentityRole AppliesToRole { get; set; }
 
@@ -39,5 +42,7 @@ namespace wwwplatform.Models
         
         [DisplayName("Applies to User")]
         public virtual ApplicationUser AppliesTo { get; set; }
+
+        public string AppliesTo_Id { get; set; }
     }
 }

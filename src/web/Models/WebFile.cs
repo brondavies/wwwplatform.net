@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace wwwplatform.Models
@@ -12,5 +13,8 @@ namespace wwwplatform.Models
         public string Description { get; set; }
 
         public string Location { get; set; }
+
+        [ForeignKey("ContentId")]
+        public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

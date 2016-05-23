@@ -51,6 +51,7 @@ namespace wwwplatform.Migrations
                     homepage.Permissions.Add(new Permission
                     {
                         Grant = true,
+                        ContentType = PermissionContentType.Page,
                         AppliesToRole_Id = publicRole.Id
                     });
                     context.SaveChanges();

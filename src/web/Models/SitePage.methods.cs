@@ -57,14 +57,18 @@ namespace wwwplatform.Models
                     var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
                     var roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
                     roles.Add(publicRoleId);
-                    pages = pages.Where(page => page.Permissions.Any(p => p.Grant &&
-                            (p.AppliesTo.Id == userId || roles.Contains(p.AppliesToRole.Id))
+                    pages = pages.Where(page => page.Permissions.Any(p => p.Grant && 
+                        p.ContentType == PermissionContentType.Page &&
+                            (p.AppliesTo_Id == userId || roles.Contains(p.AppliesToRole_Id))
                         ));
                 }
             }
             else
             {
-                pages = pages.Where(page => page.Permissions.Any(p => p.AppliesToRole.Id == publicRoleId));
+                pages = pages.Where(page => page.Permissions.Any(
+                    p => p.Grant && 
+                    p.ContentType == PermissionContentType.Page &&
+                    p.AppliesToRole_Id == publicRoleId));
             }
 
             return pages.OrderBy(p => p.ParentPageId).OrderBy(p => p.Order);
