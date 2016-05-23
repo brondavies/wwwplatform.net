@@ -8,22 +8,47 @@ using System.Threading.Tasks;
 using System.Web;
 using wwwplatform.Models;
 using System.Web.Mvc;
+using Microsoft.Owin.Security;
 
 namespace wwwplatform.Extensions
 {
     public class BaseAccountController : BaseController
     {
+        // Used for XSRF protection when adding external logins
+        protected const string XsrfKey = "XsrfId";
+
         private ApplicationSignInManager _signInManager;
-        
+        private IAuthenticationManager _authenticationManager;
+
         public ApplicationSignInManager SignInManager
         {
             get
             {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                if (_signInManager == null)
+                {
+                    _signInManager = HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
+                }
+                return _signInManager;
             }
             set
             {
                 _signInManager = value;
+            }
+        }
+        
+        public IAuthenticationManager AuthenticationManager
+        {
+            get
+            {
+                if (_authenticationManager == null)
+                {
+                    _authenticationManager = HttpContext.GetOwinContext().Authentication;
+                }
+                return _authenticationManager;
+            }
+            set
+            {
+                _authenticationManager = value;
             }
         }
 

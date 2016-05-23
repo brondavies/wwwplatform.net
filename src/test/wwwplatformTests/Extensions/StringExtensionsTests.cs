@@ -3,10 +3,10 @@ using wwwplatform.Extensions;
 
 namespace wwwplatform.Extensions.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class StringExtensionsTests
     {
-        [TestMethod()]
+        [TestMethod]
         public void RandomTest()
         {
             Assert.AreEqual(32, String.Random().Length);

@@ -59,6 +59,11 @@ namespace wwwplatformTests.Support
             return Server.Object;
         }
 
+        protected string NewGuid()
+        {
+            return Guid.NewGuid().ToString();
+        }
+
         #endregion
     }
 }

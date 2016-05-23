@@ -31,7 +31,7 @@ namespace wwwplatform.Controllers.Tests
             base.Initialize();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateTest()
         {
             var controller = new WebFilesController();
@@ -62,43 +62,43 @@ namespace wwwplatform.Controllers.Tests
             Assert.AreEqual(model.status, UploadResults.OK);
         }
         /* TODO: finish unimplemented tests
-        [TestMethod()]
+        [TestMethod]
         public void IndexTest()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DetailsTest()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void CreateTest1()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void EditTest()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void EditTest1()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DeleteTest()
         {
             Assert.Fail();
         }
 
-        [TestMethod()]
+        [TestMethod]
         public void DeleteConfirmedTest()
         {
             Assert.Fail();

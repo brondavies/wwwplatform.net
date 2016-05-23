@@ -128,7 +128,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowUserRegistration)
             {
                 return HttpNotFound(); //disabled
             }
@@ -176,7 +176,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -191,10 +191,10 @@ namespace wwwplatform.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -206,7 +206,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -218,7 +218,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -232,7 +232,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -260,7 +260,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -400,16 +400,6 @@ namespace wwwplatform.Controllers
         }
 
         #region Helpers
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
 
         private ActionResult RedirectToLocal(string returnUrl)
         {

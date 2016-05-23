@@ -21,7 +21,8 @@ namespace wwwplatform.Extensions
     public class BaseController : Controller
     {
         private ApplicationDbContext _db;
-        protected ApplicationUserManager _userManager;
+        private ApplicationUserManager _userManager;
+        private ApplicationRoleManager _roleManager;
 
         public ApplicationDbContext db
         {
@@ -46,7 +47,11 @@ namespace wwwplatform.Extensions
         {
             get
             {
-                return HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+                return _roleManager ?? HttpContext.GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            set
+            {
+                _roleManager = value;
             }
         }
         

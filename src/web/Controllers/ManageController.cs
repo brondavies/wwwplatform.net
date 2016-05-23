@@ -12,10 +12,8 @@ using wwwplatform.Extensions;
 namespace wwwplatform.Controllers
 {
     [System.Web.Mvc.Authorize]
-    public class ManageController : BaseController
+    public class ManageController : BaseAccountController
     {
-        private ApplicationSignInManager _signInManager;
-
         public ManageController()
         {
         }
@@ -25,19 +23,7 @@ namespace wwwplatform.Controllers
             UserManager = userManager;
             SignInManager = signInManager;
         }
-
-        public ApplicationSignInManager SignInManager
-        {
-            get
-            {
-                return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
-            }
-            private set
-            {
-                _signInManager = value;
-            }
-        }
-
+        
         //
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
@@ -309,25 +295,7 @@ namespace wwwplatform.Controllers
         }
 
 #region Helpers
-        // Used for XSRF protection when adding external logins
-        private const string XsrfKey = "XsrfId";
-
-        private IAuthenticationManager AuthenticationManager
-        {
-            get
-            {
-                return HttpContext.GetOwinContext().Authentication;
-            }
-        }
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError("", error);
-            }
-        }
-
+        
         private bool HasPassword()
         {
             var user = UserManager.FindById(User.Identity.GetUserId());

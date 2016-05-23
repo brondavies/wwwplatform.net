@@ -3,7 +3,7 @@ using wwwplatformTests.Support;
 
 namespace wwwplatform.Shared.Extensions.System.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class StringTests : TestBase
     {
         [TestMethod]

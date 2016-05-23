@@ -16,7 +16,7 @@ namespace wwwplatform.Models
         public const string Users = "Users";
         public const string Public = "Public";
 
-        internal static IEnumerable<IdentityResult> CreateAll(ApplicationRoleManager RoleManager)
+        public static IEnumerable<IdentityResult> CreateAll(ApplicationRoleManager RoleManager)
         {
             if (RoleManager.RoleExists("ListManagers"))
             {

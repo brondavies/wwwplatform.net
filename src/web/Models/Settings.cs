@@ -14,7 +14,11 @@ namespace wwwplatform.Models
         {
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
         }
-        
+
+        public static bool AllowForgotPassword { get { return Boolean.Parse(AppSetting("AllowForgotPassword", Boolean.FalseString)); } }
+
+        public static bool AllowUserRegistration { get { return Boolean.Parse(AppSetting("AllowUserRegistration", Boolean.FalseString)); } }
+
         public static string CanonicalHostName { get { return AppSetting("CanonicalHostName"); } }
 
         public static string DefaultPageDescription { get { return AppSetting("DefaultPageDescription"); } }
@@ -32,7 +36,5 @@ namespace wwwplatform.Models
         public static string TempDir { get { return AppSetting("TempDir") ?? "~/App_Data/temp".ResolveLocalPath(); } }
 
         public static string UserFilesDir { get { return AppSetting("UserFilesDir") ?? "~/UserFiles".ResolveLocalPath(); } }
-
-        public static bool AllowUserRegistration { get { return Boolean.Parse(AppSetting("AllowUserRegistration", Boolean.FalseString)); } }
     }
 }
