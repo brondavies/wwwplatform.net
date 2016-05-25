@@ -14,7 +14,7 @@ namespace wwwplatform.Models
             UpdatedAt = DateTime.UtcNow;
         }
 
-        [Key]
+        [Key, Column(Order = 0)]
         public long Id { get; set; }
 
         [DisplayName("Updated By")]

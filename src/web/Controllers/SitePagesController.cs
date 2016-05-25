@@ -100,7 +100,6 @@ namespace wwwplatform.Controllers
                     sitePage.Permissions.Add(db.Permissions.Add(new Permission
                     {
                         AppliesToRole_Id = role.Id,
-                        ContentType = PermissionContentType.Page,
                         UpdatedBy = HttpContext.User.Identity.Name
                     }));
                 }

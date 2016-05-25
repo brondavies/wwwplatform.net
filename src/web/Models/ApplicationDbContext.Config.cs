@@ -24,7 +24,19 @@ namespace wwwplatform.Models
             MapAuditable<MailingList>(modelBuilder);
 
             MapAuditable<MailingListSubscriber>(modelBuilder);
-            
+
+            //Setup Entities with permissions
+
+            modelBuilder.Entity<WebFile>()
+                .HasMany(m => m.Permissions)
+                .WithOptional()
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SitePage>()
+                .HasMany(m => m.Permissions)
+                .WithOptional()
+                .WillCascadeOnDelete(false);
+                
             base.OnModelCreating(modelBuilder);
         }
 

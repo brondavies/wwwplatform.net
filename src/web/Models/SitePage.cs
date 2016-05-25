@@ -17,7 +17,7 @@ namespace wwwplatform.Models
         public SitePage() : base() {
             PubDate = DateTime.UtcNow;
         }
-
+        
         [Required]
         [MaxLength(150)]
         public string Name { get; set; }
@@ -38,7 +38,7 @@ namespace wwwplatform.Models
         [MaxLength(150)]
         public string Slug { get; set; }
 
-        public Nullable<long> ParentPageId { get; set; }
+        public virtual long? ParentPageId { get; set; }
 
         [ForeignKey("ParentPageId")]
         [DisplayName("Parent Page")]
@@ -54,8 +54,7 @@ namespace wwwplatform.Models
         
         [DisplayName("Set As Home Page")]
         public bool HomePage { get; set; }
-
-        [ForeignKey("ContentId")]
+        
         public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

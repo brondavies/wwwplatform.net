@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,7 +17,7 @@ namespace wwwplatform.Models
             Grant = true;
         }
 
-        [Key]
+        [Key, Column(Order = 0)]
         public long Id { get; set; }
 
         [DisplayName("Updated By")]
@@ -30,19 +31,16 @@ namespace wwwplatform.Models
         [DefaultValue(false)]
         public bool Deny { get; set; }
 
-        public long ContentId { get; set; }
-
-        [Range(1, 3)] //TODO: update if other content types are added
-        public PermissionContentType ContentType { get; set; }
-
         [DisplayName("Applies to Role")]
+        [ForeignKey("AppliesToRole_Id")]
         public virtual IdentityRole AppliesToRole { get; set; }
 
-        public string AppliesToRole_Id { get; set; }
+        public virtual string AppliesToRole_Id { get; set; }
         
         [DisplayName("Applies to User")]
+        [ForeignKey("AppliesTo_Id")]
         public virtual ApplicationUser AppliesTo { get; set; }
 
-        public string AppliesTo_Id { get; set; }
+        public virtual string AppliesTo_Id { get; set; }
     }
 }

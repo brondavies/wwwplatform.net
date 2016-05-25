@@ -13,8 +13,7 @@ namespace wwwplatform.Models
         public string Description { get; set; }
 
         public string Location { get; set; }
-
-        [ForeignKey("ContentId")]
+        
         public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

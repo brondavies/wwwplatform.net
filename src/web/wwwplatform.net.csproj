@@ -216,10 +216,13 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
-    <Compile Include="Models\ApplicationDbContext.DBSets.cs" />
+    <Compile Include="Models\ApplicationDbContext.DBSets.cs">
+      <DependentUpon>ApplicationDbContext.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Permission.cs" />
-    <Compile Include="Models\PermissionContentType.cs" />
-    <Compile Include="Models\SitePage.methods.cs" />
+    <Compile Include="Models\SitePage.methods.cs">
+      <DependentUpon>SitePage.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.Config.cs">
