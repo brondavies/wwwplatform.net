@@ -47,6 +47,9 @@ span.btn {
     padding-right: 0;
     pointer-events: none;
 }
+.js-uploader {
+    position: relative;
+}
 .js-uploader .file-input {
     cursor: pointer;
     height: 36px;
@@ -54,6 +57,16 @@ span.btn {
     margin: 0;
     opacity: 0;
     padding: 0;
-    width: 100%;
+    position:absolute;
+    top: 0;
+    width: 215px;
     z-index: 2;
+}
+.SitePages_Create .modal-backdrop,
+.SitePages_Edit .modal-backdrop {
+    z-index: 65536;
+}
+.SitePages_Create .modal,
+.SitePages_Edit .modal {
+    z-index: 65537;
 }

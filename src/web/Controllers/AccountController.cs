@@ -132,10 +132,10 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound(); //disabled
             }
+            var defaultRoleName = Request.IsLocal ? Roles.Administrators : Roles.Users;
+            var defaultRole = RoleManager.Roles.Where(r => r.Name == defaultRoleName).First().Id;
 
-            var usersRole = RoleManager.Roles.Where(r => r.Name == Roles.Users).First().Id;
-
-            if (await CreateUser(model, new[] { usersRole }, true, true))
+            if (await CreateUser(model, new[] { defaultRole }, true, true))
             {
                 return RedirectToAction("Index", "Home");
             }

@@ -17,7 +17,17 @@ namespace wwwplatform.Extensions
     public abstract class BaseWebViewPage<T> : WebViewPage<T>
     {
         public readonly FormMethod POST = FormMethod.Post;
-        
+
+        private string _PageCssClass;
+        /// <summary>
+        /// A CSS class that can be set at the page level by any view
+        /// </summary>
+        public string PageCssClass
+        {
+            get { return _PageCssClass ?? string.Format("{0}_{1}", Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]); }
+            set { _PageCssClass = value; }
+        }
+
         #region Role-based links
 
         public IHtmlString LoginLink(string text = null, string className = null)
@@ -32,7 +42,7 @@ namespace wwwplatform.Extensions
                 form.EndForm();
                 return null;
             }
-            return Html.ActionLink(linkText: "Sign in", actionName: "Login", controllerName: "Account", routeValues:null, htmlAttributes: new { @class = className });
+            return Html.ActionLink(linkText: "Sign in", actionName: "Login", controllerName: "Account", routeValues: null, htmlAttributes: new { @class = className });
         }
 
         public IHtmlString PagesAdminLink()
@@ -101,7 +111,7 @@ namespace wwwplatform.Extensions
         {
             var otherpages = db.ActiveSitePages.Where(p => p.HomePage == false && p.Id != Id).ToList();
             List<SelectListItem> list = new List<SelectListItem>();
-            list.Add(new SelectListItem { Text = "None", Value="", Selected = !selected.HasValue });
+            list.Add(new SelectListItem { Text = "None", Value = "", Selected = !selected.HasValue });
             otherpages.ForEach((SitePage p) =>
             {
                 var item = new SelectListItem();
@@ -183,7 +193,7 @@ namespace wwwplatform.Extensions
         public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true)
         {
             var publicRole = PublicRole;
-            foreach(var role in RoleManager.Roles)
+            foreach (var role in RoleManager.Roles)
             {
                 if (role.Id != publicRole.Id || includePublic)
                 {

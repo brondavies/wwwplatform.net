@@ -13,7 +13,7 @@
             <div class="modal-body">
                 <input type="hidden" data-role="file-url" />
                 <div class="js-uploader">
-                    <a class="btn btn-primary fake-file" href="#">Select a file</a>
+                    <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
                     <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
                 </div>
             </div>
@@ -32,9 +32,9 @@
 @<script type="text/javascript">
 
     $(function () {
-
+        var mceFieldName = '@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)';
         tinymce.init({
-            selector: '#@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)',
+            selector: '#' + mceFieldName,
             height: 500,
             width: '100%',
             theme: 'modern',
@@ -55,9 +55,11 @@
             file_picker_types: 'file image media'
         });
 
+        $('#SelectFile_' + mceFieldName).remove().appendTo(document.body);
+        
         function selectFile(callback, value, meta) {
         //deprecated - function selectFile(field_name, url, type, win) {
-            var modal = $('#SelectFile_' + '@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)');
+            var modal = $('#SelectFile_' + mceFieldName);
             modal.modal('show')
                 .one('shown.bs.modal', function (e) {
                     // display user's file list

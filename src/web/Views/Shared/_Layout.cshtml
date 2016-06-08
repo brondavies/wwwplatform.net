@@ -26,7 +26,7 @@
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:400,300" rel="stylesheet" type="text/css">
     @Scripts.Render("~/scripts/modernizr")
 </head>
-<body class="fade">
+<body class="fade @(PageCssClass)">
     <div id="pre_header" class="visible-lg">
         <div class="pull-right text-right text-white">
             @if (Request.IsAuthenticated)
