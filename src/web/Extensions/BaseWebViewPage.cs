@@ -11,6 +11,7 @@ using System.Web.Mvc.Html;
 using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
+using Newtonsoft.Json;
 
 namespace wwwplatform.Extensions
 {
@@ -27,6 +28,15 @@ namespace wwwplatform.Extensions
             get { return _PageCssClass ?? string.Format("{0}_{1}", Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]); }
             set { _PageCssClass = value; }
         }
+
+        #region Helpers
+
+        public IHtmlString ToJson(object model)
+        {
+            return Html.Raw(JsonConvert.SerializeObject(model));
+        }
+
+        #endregion
 
         #region Role-based links
 

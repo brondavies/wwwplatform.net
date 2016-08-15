@@ -1,0 +1,19 @@
+﻿@model wwwplatform.Models.ViewModels.UploadResults
+
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Uploaded</title>
+</head>
+<body>
+    @Scripts.Render("~/scripts/substance")
+    <script>
+        parent.$(parent).trigger(
+            'newfile.upload',
+            @ToJson(Model));
+    </script>
+</body>
+</html>

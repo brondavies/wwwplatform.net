@@ -72,6 +72,21 @@ namespace wwwplatform.Extensions
             return Json(new { status = 200 }, JsonRequestBehavior.AllowGet);
         }
 
+        protected virtual ActionResult Auto(object model, string viewName = null)
+        {
+            if (HttpContext.Request.AcceptTypes.Contains("application/json") ||
+                HttpContext.Request.AcceptTypes.Contains("text/javascript") ||
+                HttpContext.Request.ContentType.EndsWith("json"))
+            {
+                return Json(model, JsonRequestBehavior.AllowGet);
+            }
+            if (string.IsNullOrEmpty(viewName))
+            {
+                return View(model);
+            }
+            return View(viewName, model);
+        }
+
         protected virtual ActionResult ErrorResult(ModelStateDictionary modelState)
         {
             Response.StatusCode = (int) HttpStatusCode.BadRequest;

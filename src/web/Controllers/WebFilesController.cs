@@ -22,7 +22,7 @@ namespace wwwplatform.Controllers
         // GET: WebFiles
         public async Task<ActionResult> Index()
         {
-            return View(await db.ActiveWebFiles.ToListAsync());
+            return Auto(await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).ToListAsync());
         }
 
         // GET: WebFiles/Details/5
@@ -32,12 +32,12 @@ namespace wwwplatform.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            WebFile webFile = await db.ActiveWebFiles.FindAsync(id);
+            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).FindAsync(id);
             if (webFile == null)
             {
                 return HttpNotFound();
             }
-            return View(webFile);
+            return Auto(webFile);
         }
 
         // GET: WebFiles/Create
@@ -89,6 +89,8 @@ namespace wwwplatform.Controllers
                 {
                     results.file = db.WebFiles.Add(results.file);
                     await db.SaveChangesAsync();
+                    results.status = UploadResults.OK;
+                    results.message = null;  //"File uploaded successfully.";
                 }
                 else
                 {
@@ -102,7 +104,7 @@ namespace wwwplatform.Controllers
                 results.message = ex.Message;
             }
 
-            return View(results);
+            return Auto(results, "Created");
         }
 
         private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
@@ -145,12 +147,12 @@ namespace wwwplatform.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            WebFile webFile = await db.ActiveWebFiles.FindAsync(id);
+            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).FindAsync(id);
             if (webFile == null)
             {
                 return HttpNotFound();
             }
-            return View(webFile);
+            return Auto(webFile);
         }
 
         // POST: WebFiles/Edit/5
@@ -164,7 +166,7 @@ namespace wwwplatform.Controllers
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(webFile);
+            return Auto(webFile);
         }
 
         // GET: WebFiles/Delete/5
@@ -179,7 +181,7 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
-            return View(webFile);
+            return Auto(webFile);
         }
 
         // POST: WebFiles/Delete/5

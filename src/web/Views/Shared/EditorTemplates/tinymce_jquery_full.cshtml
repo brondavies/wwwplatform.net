@@ -1,93 +1,125 @@
 ﻿
+@{
+    var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+}
+
 @Html.TextArea(string.Empty, /* Name suffix */
     ViewData.TemplateInfo.FormattedModelValue /* Initial value */
 )
-
-<div id="SelectFile_@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)" class="modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select or Upload File</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" data-role="file-url" />
-                <div class="js-uploader">
-                    <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
-                    <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 @using (Html.BeginScriptContext())
 {
     Html.AddScriptFile("~/Scripts/tinymce/tinymce.min.js");
     Html.AddScriptBlock(
-@<script type="text/javascript">
+        @<div id="SelectFile_@fieldName" class="modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Select or Upload File</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" data-role="file-url" />
+                        <div class="file-table">
+                            <table class="file-list"></table>
+                        </div>
+                        <div class="js-uploader">
+                            <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
+                            <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
+                                <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
+                                @SimpleAntiForgeryToken()
+                                <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
+                            </form>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+    Html.AddScriptBlock(
+        @<script type="text/javascript">
 
-    $(function () {
-        var mceFieldName = '@ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty)';
-        tinymce.init({
-            selector: '#' + mceFieldName,
-            height: 500,
-            width: '100%',
-            theme: 'modern',
-            plugins: [
-              'advlist autolink lists link image charmap print preview hr anchor pagebreak',
-              'searchreplace wordcount visualblocks visualchars code fullscreen',
-              'insertdatetime media nonbreaking save table contextmenu directionality',
-              'emoticons template paste textcolor colorpicker textpattern imagetools'
-            ],
-            toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
-            toolbar2: 'print preview media | forecolor backcolor emoticons',
-            image_advtab: true,
-            templates: [],
-            content_css: getContentCss(),
-            //deprecated - file_browser_callback: selectFile,
-            //deprecated - file_browser_callback_types: 'file image media',
-            file_picker_callback: selectFile,
-            file_picker_types: 'file image media'
-        });
-
-        $('#SelectFile_' + mceFieldName).remove().appendTo(document.body);
-        
-        function selectFile(callback, value, meta) {
-        //deprecated - function selectFile(field_name, url, type, win) {
-            var modal = $('#SelectFile_' + mceFieldName);
-            modal.modal('show')
-                .one('shown.bs.modal', function (e) {
-                    // display user's file list
-                    $.getJSON('@Url.Action("List", "WebFiles")', function (files) {
-                        // files = [{id:, name:, preview:, url:}]
-                    });
-                    $('[type="file"]', modal).change(function (event) {
-                        console.log(event);
-                    });
-                })
-                .one('hidden.bs.modal', function (e) {
-                    // file selected?
-                    var result = $('[data-role="file-url"]', modal).val();
-                    //win.document.getElementById(field_name).value = result;
-                    callback(result, { alt: 'description' })
+            $(function () {
+                var mceFieldName = '@fieldName';
+                tinymce.init({
+                    selector: '#' + mceFieldName,
+                    height: 500,
+                    width: '100%',
+                    theme: 'modern',
+                    plugins: [
+                      'advlist autolink lists link image charmap print preview hr anchor pagebreak',
+                      'searchreplace wordcount visualblocks visualchars code fullscreen',
+                      'insertdatetime media nonbreaking save table contextmenu directionality',
+                      'emoticons template paste textcolor colorpicker textpattern imagetools'
+                    ],
+                    toolbar1: 'insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image',
+                    toolbar2: 'print preview media | forecolor backcolor emoticons',
+                    image_advtab: true,
+                    templates: [],
+                    content_css: getContentCss(),
+                    //deprecated - file_browser_callback: selectFile,
+                    //deprecated - file_browser_callback_types: 'file image media',
+                    file_picker_callback: selectFile,
+                    file_picker_types: 'file image media'
                 });
-        }
 
-        function getContentCss() {
-            var css = [];
-            $('link[rel="stylesheet"], link[type="text/css"]').each(function (i, elm) {
-                css.push(elm.href);
+                $('#SelectFile_' + mceFieldName).remove().appendTo(document.body);
+
+                function selectFile(callback, value, meta) {
+                    //deprecated - function selectFile(field_name, url, type, win) {
+                    var modal = $('#SelectFile_' + mceFieldName);
+                    modal.modal('show')
+                        .one('shown.bs.modal', function (e) {
+                            // display user's file list
+                            $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
+                                // files = [{id:, name:, preview:, url:}]
+                                $('table.file-list', modal).DataTable({
+                                    data: files,
+                                    columns: [
+                                        { title: "Name" },
+                                        { title: "Preview" },
+                                        { title: "Url" }
+                                    ],
+                                    language: {
+                                        emptyTable: 'Uploaded files will be listed here.'
+                                    }
+                                });
+                            });
+                            $('[type="file"]', modal).change(function (event) {
+                                $(event.target).closest('form').submit();
+                            });
+                        })
+                        .one('hidden.bs.modal', function (e) {
+                            // file selected?
+                            var result = $('[data-role="file-url"]', modal).val();
+                            //win.document.getElementById(field_name).value = result;
+                            callback(result, { alt: 'description' })
+                        });
+                }
+
+                $(window).bind('newfile.upload', function (event, data) {
+                    var modal = $('#SelectFile_' + mceFieldName);
+                    if (data.status) {
+                        $('[data-role="file-url"]', modal).val(data.file.url);
+                        modal.modal('hide');
+                    } else if (data.message) {
+                        alert(data.message);
+                    }
+                });
+
+                function getContentCss() {
+                    var css = [];
+                    $('link[rel="stylesheet"], link[type="text/css"]').each(function (i, elm) {
+                        css.push(elm.href);
+                    });
+                    return css;
+                }
+
             });
-            return css;
-        }
 
-    });
-
-</script>
-);
+        </script>
+    );
 }

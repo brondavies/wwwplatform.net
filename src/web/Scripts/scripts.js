@@ -38,7 +38,7 @@ $(window).load(function() {
 
 /* Image Hover  - Add hover class on hover */
 $(document).ready(function(){
-    if (Modernizr.touch) {
+    if (typeof(Modernizr)!=='undefined' && Modernizr.touch) {
         // show the close overlay button
         $(".close-overlay").removeClass("hidden");
         // handle the adding of hover class when clicked
