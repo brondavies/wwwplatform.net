@@ -95,6 +95,16 @@ namespace wwwplatform.Extensions
             return null;
         }
 
+        public IHtmlString SharedFoldersLink()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                return Html.ActionLink("Shared Folders", "Index", "SharedFolders");
+            }
+
+            return null;
+        }
+
         #endregion
 
         #region Simple Anti Forgery Token

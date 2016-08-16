@@ -14,7 +14,7 @@ using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Models
 {
-    public partial class SitePage : Auditable
+    public partial class SitePage : Auditable, Permissible
     {
         internal void Update(SitePage sitePage)
         {
@@ -35,8 +35,7 @@ namespace wwwplatform.Models
 
         internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false)
         {
-            var publicRoleId = RoleManager.FindByName(Roles.Public).Id;
-            var pages = db.ActiveSitePages;
+            var pages = Permission.GetPermissible<SitePage>(db, User, UserManager, RoleManager);
             if (showInNavigation)
             {
                 pages = pages.Where(p => p.HomePage == false && p.ShowInNavigation == true);
@@ -48,25 +47,6 @@ namespace wwwplatform.Models
             if (published)
             {
                 pages = pages.Where(p => p.PubDate < DateTime.UtcNow);
-            }
-            if (User.Identity.IsAuthenticated)
-            {
-                if (!User.IsInRole(Roles.Administrators))
-                {
-                    var userId = User.Identity.GetUserId();
-                    var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
-                    var roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
-                    roles.Add(publicRoleId);
-                    pages = pages.Where(page => page.Permissions.Any(p => p.Grant &&
-                            (p.AppliesTo_Id == userId || roles.Contains(p.AppliesToRole_Id))
-                        ));
-                }
-            }
-            else
-            {
-                pages = pages.Where(page => page.Permissions.Any(
-                    p => p.Grant && 
-                    p.AppliesToRole_Id == publicRoleId));
             }
 
             return pages.OrderBy(p => p.ParentPageId).OrderBy(p => p.Order);

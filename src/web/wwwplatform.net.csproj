@@ -184,6 +184,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\SharedFoldersController.cs" />
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\SerializerAttribute.cs" />
@@ -221,9 +222,17 @@
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Permissible.cs" />
+    <Compile Include="Models\Permission.methods.cs">
+      <DependentUpon>Permission.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\SharedFolder.cs" />
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\Serializers\AuditableSerializer.cs" />
     <Compile Include="Models\Serializers\DynamicContractResolver.cs" />
+    <Compile Include="Models\SharedFolder.methods.cs">
+      <DependentUpon>SharedFolder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\SitePage.methods.cs">
       <DependentUpon>SitePage.cs</DependentUpon>
     </Compile>
@@ -261,7 +270,9 @@
     <Compile Include="Models\WebFile.cs">
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\WebFile.methods.cs" />
+    <Compile Include="Models\WebFile.methods.cs">
+      <DependentUpon>WebFile.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -812,6 +823,7 @@
     <Content Include="Views\Users\Delete.cshtml" />
     <Content Include="Views\Users\ResetPassword.cshtml" />
     <Content Include="Views\WebFiles\Created.cshtml" />
+    <Content Include="Views\SharedFolders\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />

@@ -15,10 +15,11 @@ using wwwplatform.Extensions.Helpers;
 using wwwplatform.Models.ViewModels;
 using wwwplatform.Extensions.Attributes;
 using wwwplatform.Models.Serializers;
+using Microsoft.AspNet.Identity;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators)]
+    [Extensions.Authorize]
     [Serializer(typeof(AuditableSerializer))]
     public class WebFilesController : BaseController
     {
@@ -28,7 +29,9 @@ namespace wwwplatform.Controllers
             return Auto(await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).ToListAsync());
         }
 
-        [OutputCache(Location = System.Web.UI.OutputCacheLocation.ServerAndClient, Duration = int.MaxValue)]
+        // GET: WebFiles/Details/5
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3600)]
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -43,8 +46,6 @@ namespace wwwplatform.Controllers
             string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
             string contentType = ContentTypeHelper.GetContentType(webFile.Location);
-            //Response.Headers["Content-Disposition"] = "inline;filename=" + filename;
-            //return new FileStreamResult(System.IO.File.OpenRead(filepath), contentType);
             return File(filepath, contentType, filename);
         }
 
@@ -72,7 +73,7 @@ namespace wwwplatform.Controllers
                     HttpPostedFileBase uploadedFile = Request.Files[0];
                     if (uploadedFile != null && uploadedFile.ContentLength > 0)
                     {
-                        ModelState["Name"].Errors.Clear();
+                        ModelState["Name"]?.Errors?.Clear();
                         if (ImageHelper.IsImageFile(uploadedFile))
                         {
                             UploadImage(uploadedFile, results);
@@ -97,6 +98,7 @@ namespace wwwplatform.Controllers
                 if (ModelState.IsValid)
                 {
                     results.file = db.WebFiles.Add(results.file);
+                    Permission.Apply(db, User, RoleManager, results.file, new string[] { RoleManager.FindByName(Roles.Users)?.Id }); //default permissions
                     await db.SaveChangesAsync();
                     results.status = UploadResults.OK;
                     results.message = null;  //"File uploaded successfully.";

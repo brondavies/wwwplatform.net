@@ -15,6 +15,8 @@ namespace wwwplatform.Models
 
             MapAuditable<WebFile>(modelBuilder);
 
+            MapAuditable<SharedFolder>(modelBuilder);
+
             MapAuditable<SitePage>(modelBuilder);
 
             MapAuditable<EmailAddress>(modelBuilder);
@@ -25,7 +27,17 @@ namespace wwwplatform.Models
 
             MapAuditable<MailingListSubscriber>(modelBuilder);
 
+            modelBuilder.Entity<SharedFolder>()
+                .HasMany(m => m.Files)
+                .WithOptional()
+                .WillCascadeOnDelete(false);
+
             //Setup Entities with permissions
+
+            modelBuilder.Entity<SharedFolder>()
+                .HasMany(m => m.Permissions)
+                .WithOptional()
+                .WillCascadeOnDelete(false);
 
             modelBuilder.Entity<WebFile>()
                 .HasMany(m => m.Permissions)

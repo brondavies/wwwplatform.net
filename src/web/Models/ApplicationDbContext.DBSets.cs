@@ -14,6 +14,7 @@ namespace wwwplatform.Models
         public DbSet<Permission> Permissions { get; set; }
         public DbSet<SitePage> SitePages { get; set; }
         public DbSet<WebFile> WebFiles { get; set; }
+        public DbSet<SharedFolder> SharedFolders { get; set; }
 
         public DbQuery<T> Active<T>() where T : Auditable
         {
@@ -26,6 +27,7 @@ namespace wwwplatform.Models
         public IQueryable<MailingListSubscriber> ActiveMailingListSubscribers { get { return Active<MailingListSubscriber>(); } }
         public IQueryable<SitePage> ActiveSitePages { get { return Active<SitePage>(); } }
         public IQueryable<WebFile> ActiveWebFiles { get { return Active<WebFile>(); } }
+        public IQueryable<SharedFolder> ActiveSharedFolders { get { return Active<SharedFolder>(); } }
 
         public DbSet<Auditable> Auditables { get; set; }
     }

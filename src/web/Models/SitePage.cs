@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace wwwplatform.Models
 {
     [Table(name: "SitePage")]
-    public partial class SitePage : Auditable
+    public partial class SitePage : Auditable, Permissible
     {
         public SitePage() : base() {
             PubDate = DateTime.UtcNow;

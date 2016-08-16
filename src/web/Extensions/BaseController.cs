@@ -79,9 +79,7 @@ namespace wwwplatform.Extensions
 
         protected virtual ActionResult Auto(object model, string viewName = null)
         {
-            if (HttpContext.Request.AcceptTypes.Contains("application/json") ||
-                HttpContext.Request.AcceptTypes.Contains("text/javascript") ||
-                HttpContext.Request.ContentType.EndsWith("json"))
+            if (ClientAcceptsJson())
             {
                 return Content(Serialize(model), "application/json");
             }
@@ -90,6 +88,15 @@ namespace wwwplatform.Extensions
                 return View(model);
             }
             return View(viewName, model);
+        }
+
+        private bool ClientAcceptsJson()
+        {
+            bool accept = (HttpContext.Request.AcceptTypes != null) && (
+                HttpContext.Request.AcceptTypes.Contains("application/json") ||
+                HttpContext.Request.AcceptTypes.Contains("text/javascript"));
+            accept = accept || (HttpContext.Request.ContentType?.EndsWith("json")).GetValueOrDefault();
+            return accept;        
         }
 
         private string Serialize(object model)

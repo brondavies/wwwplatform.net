@@ -65,11 +65,6 @@ namespace wwwplatform.Controllers
 
         private void PreparePage(SitePage sitePage, string[] permissions = null)
         {
-            if (permissions == null)
-            {
-                permissions = new string[] { };
-            }
-
             sitePage.Name = sitePage.Name.Trim();
             sitePage.Slug = sitePage.Name.CleanFileName();
 
@@ -83,27 +78,7 @@ namespace wwwplatform.Controllers
                 }
             }
 
-            var roles = RoleManager.Roles.ToList();
-            if (sitePage.Permissions == null)
-            {
-                sitePage.Permissions = new List<Permission>();
-            }
-            var removed = sitePage.Permissions.RemoveAll(p => !permissions.Contains(p.AppliesToRole_Id));
-            if (removed.Count() > 0)
-            {
-                db.Permissions.RemoveRange(removed);
-            }
-            foreach (var role in roles)
-            {
-                if (permissions.Contains(role.Id) && !sitePage.Permissions.Any(p => p.AppliesToRole_Id == role.Id))
-                {
-                    sitePage.Permissions.Add(db.Permissions.Add(new Permission
-                    {
-                        AppliesToRole_Id = role.Id,
-                        UpdatedBy = HttpContext.User.Identity.Name
-                    }));
-                }
-            }
+            Permission.Apply(db, User, RoleManager, sitePage, permissions);
         }
 
         // GET: SitePages/Edit/5

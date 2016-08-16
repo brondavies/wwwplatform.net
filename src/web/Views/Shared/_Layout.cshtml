@@ -92,6 +92,9 @@
                         @if (Request.IsAuthenticated)
                         {
                             <li>
+                                @SharedFoldersLink()
+                            </li>
+                            <li>
                                 @MyAccountLink()
                             </li>
                         }

@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Security.Principal;
 
 namespace wwwplatform.Models
 {
@@ -19,7 +20,7 @@ namespace wwwplatform.Models
 
         [Key, Column(Order = 0)]
         public long Id { get; set; }
-
+        
         [DisplayName("Updated By")]
         [Display(AutoGenerateField = false)]
         [ScaffoldColumn(false)]

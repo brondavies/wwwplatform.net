@@ -37,8 +37,10 @@ namespace wwwplatform.Controllers.Tests
             var controller = new WebFilesController();
             var context = CreateMockContext(controller, "Create");
             controller.db = db;
+            controller.RoleManager = CreateRoleManager();
             var mockUser = CreateMockUser("jethro");
             db.CurrentUser = mockUser;
+            context.HttpContext.Setup(r => r.User).Returns(mockUser); //(new Mock<IPrincipal>().Object);
             var mockFile = new Mock<HttpPostedFileBase>();
             mockFile.Setup(f => f.ContentLength).Returns(100);
             mockFile.Setup(f => f.FileName).Returns("test_web_file.png");
