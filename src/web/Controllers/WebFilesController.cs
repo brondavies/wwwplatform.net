@@ -13,10 +13,13 @@ using wwwplatform.Shared.Helpers;
 using System.IO;
 using wwwplatform.Extensions.Helpers;
 using wwwplatform.Models.ViewModels;
+using wwwplatform.Extensions.Attributes;
+using wwwplatform.Models.Serializers;
 
 namespace wwwplatform.Controllers
 {
     [Extensions.Authorize(Roles.Administrators)]
+    [Serializer(typeof(AuditableSerializer))]
     public class WebFilesController : BaseController
     {
         // GET: WebFiles
@@ -25,7 +28,7 @@ namespace wwwplatform.Controllers
             return Auto(await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).ToListAsync());
         }
 
-        // GET: WebFiles/Details/5
+        [OutputCache(Location = System.Web.UI.OutputCacheLocation.ServerAndClient, Duration = int.MaxValue)]
         public async Task<ActionResult> Details(long? id)
         {
             if (id == null)
@@ -37,7 +40,12 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
-            return Auto(webFile);
+            string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
+            string filepath = Server.MapPath(webFile.Location);
+            string contentType = ContentTypeHelper.GetContentType(webFile.Location);
+            //Response.Headers["Content-Disposition"] = "inline;filename=" + filename;
+            //return new FileStreamResult(System.IO.File.OpenRead(filepath), contentType);
+            return File(filepath, contentType, filename);
         }
 
         // GET: WebFiles/Create
@@ -64,6 +72,7 @@ namespace wwwplatform.Controllers
                     HttpPostedFileBase uploadedFile = Request.Files[0];
                     if (uploadedFile != null && uploadedFile.ContentLength > 0)
                     {
+                        ModelState["Name"].Errors.Clear();
                         if (ImageHelper.IsImageFile(uploadedFile))
                         {
                             UploadImage(uploadedFile, results);
@@ -130,7 +139,7 @@ namespace wwwplatform.Controllers
             {
                 string FileUrl = FileStorage.Save(new FileInfo(tempfile), HttpContext);
                 uploadResults.file.Location = FileUrl;
-                uploadResults.file.Name = uploadResults.file.Name ?? Path.GetFileNameWithoutExtension(file.FileName);
+                uploadResults.file.Name = Extensions.String.Coalesce(uploadResults.file.Name, Path.GetFileNameWithoutExtension(file.FileName));
                 uploadResults.status = UploadResults.OK;
             }
             else

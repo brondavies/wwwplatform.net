@@ -18,7 +18,7 @@ namespace wwwplatform.Extensions.Helpers
             string folder = Path.Combine(Path.GetFullPath(Settings.UserFilesDir), date);
             Directory.CreateDirectory(folder);
             string newfile = file.CopyTo(Path.Combine(folder, file.Name)).FullName;
-            return newfile.ToAppPath(context);
+            return "/" + newfile.ToAppPath(context);
         }
     }
 }

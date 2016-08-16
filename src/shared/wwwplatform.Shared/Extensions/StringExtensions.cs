@@ -8,15 +8,27 @@ namespace wwwplatform.Extensions
         private static Random _randomizer;
         private static Random randomizer { get { return _randomizer ?? GetRandomizer(); } }
 
+        public static string Random(int length = 32, int? seed = null)
+        {
+            return RandomString(length, seed);
+        }
+
+        public static string Coalesce(params string[] strings)
+        {
+            foreach(string s in strings)
+            {
+                if (!string.IsNullOrEmpty(s))
+                {
+                    return s;
+                }
+            }
+            return null;
+        }
+
         private static Random GetRandomizer()
         {
             _randomizer = new Random();
             return _randomizer;
-        }
-
-        public static string Random(int length = 32, int? seed = null)
-        {
-            return RandomString(length, seed);
         }
 
         private static string RandomString(int length = 32, int? seed = null)

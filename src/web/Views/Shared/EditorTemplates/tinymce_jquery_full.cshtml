@@ -20,7 +20,11 @@
                     <div class="modal-body">
                         <input type="hidden" data-role="file-url" />
                         <div class="file-table">
-                            <table class="file-list"></table>
+                            <table class="table table-striped clickable file-list">
+                                <thead>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
                         </div>
                         <div class="js-uploader">
                             <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
@@ -29,6 +33,7 @@
                                 @SimpleAntiForgeryToken()
                                 <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
                             </form>
+                            <div class="spinner"></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -60,6 +65,7 @@
                     image_advtab: true,
                     templates: [],
                     content_css: getContentCss(),
+                    convert_urls: false,
                     //deprecated - file_browser_callback: selectFile,
                     //deprecated - file_browser_callback_types: 'file image media',
                     file_picker_callback: selectFile,
@@ -74,40 +80,61 @@
                     modal.modal('show')
                         .one('shown.bs.modal', function (e) {
                             // display user's file list
+                            $('[data-role="file-url"]', modal).val('');
+                            @*var filedropzone = new Dropzone('#SelectFile_' + mceFieldName, {
+                                addRemoveLinks: true,
+                                maxFiles: 1,
+                                url: '/WebFiles/Create'
+                            });
+                            filedropzone.on('sending', function (file, xhr, formData) {
+                                formData['__RequestVerificationToken'] = $('input[name="__RequestVerificationToken"]').val();
+                            });
+                            filedropzone.on('success', function (response) {
+                                debugger;
+                            });*@
+
                             $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
-                                // files = [{id:, name:, preview:, url:}]
-                                $('table.file-list', modal).DataTable({
-                                    data: files,
-                                    columns: [
-                                        { title: "Name" },
-                                        { title: "Preview" },
-                                        { title: "Url" }
+                                // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
+                                var datatable = $('table.file-list', modal).DataTable({
+                                    columnDefs: [
+                                        { title: 'Name', data: 'Name', targets: 0 },
+                                        { title: 'Url', data: 'Location', targets: 1 }
                                     ],
+                                    data: files,
+                                    info: false,
                                     language: {
                                         emptyTable: 'Uploaded files will be listed here.'
-                                    }
+                                    },
+                                    paging: false, //(files.length > 10),
+                                    retrieve: true
+                                });
+                                $('table.file-list', modal).one('click', 'tr', function (event) {
+                                    $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + datatable.row(this).data().Id);
+                                    modal.modal('hide');
                                 });
                             });
                             $('[type="file"]', modal).change(function (event) {
                                 $(event.target).closest('form').submit();
+                                $('.js-uploader').addClass('uploading');
                             });
                         })
                         .one('hidden.bs.modal', function (e) {
                             // file selected?
                             var result = $('[data-role="file-url"]', modal).val();
                             //win.document.getElementById(field_name).value = result;
-                            callback(result, { alt: 'description' })
+                            callback(result, { alt: '' })
                         });
                 }
 
                 $(window).bind('newfile.upload', function (event, data) {
                     var modal = $('#SelectFile_' + mceFieldName);
                     if (data.status) {
-                        $('[data-role="file-url"]', modal).val(data.file.url);
+                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
                         modal.modal('hide');
                     } else if (data.message) {
-                        alert(data.message);
+                        bootbox.alert(data.message);
                     }
+                    $('.js-uploader').removeClass('uploading');
                 });
 
                 function getContentCss() {

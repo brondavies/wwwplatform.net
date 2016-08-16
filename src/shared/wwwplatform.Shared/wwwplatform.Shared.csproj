@@ -44,6 +44,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\System\Collections\GenericExtensions.cs" />
     <Compile Include="Extensions\System\String.cs" />
+    <Compile Include="Helpers\ContentTypeHelper.cs" />
     <Compile Include="Helpers\DocumentHelper.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\VideoHelper.cs" />

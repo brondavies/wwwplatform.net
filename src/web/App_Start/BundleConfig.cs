@@ -20,8 +20,10 @@ namespace wwwplatform
                 "~/Scripts/scripts.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/bootstrap-switch.js",
+                //"~/Scripts/dropzone/dropzone.js",
                 "~/Scripts/jquery.dataTables.js",
                 "~/Scripts/dataTables.bootstrap.js",
+                "~/Scripts/bootbox.js",
                 "~/Scripts/custom.js"
             ));
 
@@ -34,6 +36,8 @@ namespace wwwplatform
                 "~/assets/css/nexus.css",
                 "~/assets/css/responsive.css",
                 "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
+                //"~/Scripts/dropzone/basic.css",
+                //"~/Scripts/dropzone/dropzone.css",
                 "~/Content/jquery.dataTables.css",
                 "~/Content/dataTables.bootstrap.css",
                 "~/assets/css/custom.css"

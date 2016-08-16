@@ -74,6 +74,7 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Activities" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web.DynamicData" />
@@ -185,6 +186,7 @@
   <ItemGroup>
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
+    <Compile Include="Extensions\Attributes\SerializerAttribute.cs" />
     <Compile Include="Extensions\Attributes\UsernameLengthValidationAttribute.cs" />
     <Compile Include="Extensions\BaseAccountController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -220,6 +222,8 @@
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Permission.cs" />
+    <Compile Include="Models\Serializers\AuditableSerializer.cs" />
+    <Compile Include="Models\Serializers\DynamicContractResolver.cs" />
     <Compile Include="Models\SitePage.methods.cs">
       <DependentUpon>SitePage.cs</DependentUpon>
     </Compile>
@@ -523,6 +527,8 @@
     <Content Include="Content\jquery.dataTables.min.css" />
     <Content Include="Content\jquery.dataTables_themeroller.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
+    <Content Include="Scripts\bootbox.js" />
+    <Content Include="Scripts\bootbox.min.js" />
     <Content Include="Scripts\bootstrap-switch.js" />
     <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\bootstrap.min.js" />
@@ -617,6 +623,14 @@
     <Content Include="Scripts\DataTables\responsive.jqueryui.min.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.js" />
     <Content Include="Scripts\DataTables\responsive.semanticui.min.js" />
+    <Content Include="Scripts\dropzone\basic.css" />
+    <Content Include="Scripts\dropzone\basic.min.css" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.js" />
+    <Content Include="Scripts\dropzone\dropzone-amd-module.min.js" />
+    <Content Include="Scripts\dropzone\dropzone.css" />
+    <Content Include="Scripts\dropzone\dropzone.js" />
+    <Content Include="Scripts\dropzone\dropzone.min.css" />
+    <Content Include="Scripts\dropzone\dropzone.min.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
     <Content Include="Scripts\jquery.cookie.min.js" />

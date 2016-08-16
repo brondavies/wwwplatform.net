@@ -70,3 +70,37 @@ span.btn {
 .SitePages_Edit .modal {
     z-index: 65537;
 }
+table.clickable>tbody>tr {
+    cursor: pointer;
+}
+table.clickable>tbody>tr:hover {
+    background-color: rgba(204,216,255,0.5);
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button {
+    padding: 0;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    border-color: transparent;
+    background: none;
+}
+.js-uploader.uploading form {
+    visibility: hidden;
+}
+.js-uploader .spinner {
+    display:none;
+}
+.js-uploader.uploading .spinner {
+    animation: animatedBackground 8s linear infinite;
+    background-image: linear-gradient(to right, #fff, rgba(187, 187, 255, 0.5), #fff);
+    border: 1px solid rgba(187, 187, 255, 0.3);
+    bottom: 0;
+    display:initial;
+    left: 10px;
+    position: absolute;
+    right: 10px;
+    top: 8px;
+}
+@keyframes animatedBackground {
+    0% { background-position: 0 0; }
+    100% { background-position: 1096px 0; }
+}

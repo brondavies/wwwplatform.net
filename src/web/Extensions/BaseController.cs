@@ -15,6 +15,10 @@ using System.Net;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Web.Routing;
+using wwwplatform.Models.Serializers;
+using Newtonsoft.Json;
+using System.Web.Caching;
+using Newtonsoft.Json.Serialization;
 
 namespace wwwplatform.Extensions
 {
@@ -23,6 +27,7 @@ namespace wwwplatform.Extensions
         private ApplicationDbContext _db;
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
+        private AuditableSerializer _auditableSerializer;
 
         public ApplicationDbContext db
         {
@@ -78,13 +83,64 @@ namespace wwwplatform.Extensions
                 HttpContext.Request.AcceptTypes.Contains("text/javascript") ||
                 HttpContext.Request.ContentType.EndsWith("json"))
             {
-                return Json(model, JsonRequestBehavior.AllowGet);
+                return Content(Serialize(model), "application/json");
             }
             if (string.IsNullOrEmpty(viewName))
             {
                 return View(model);
             }
             return View(viewName, model);
+        }
+
+        private string Serialize(object model)
+        {
+            var serializer = GetExecutingControllerSerializer();
+            if (serializer == null)
+            {
+                return JsonConvert.SerializeObject(model);
+                //serializer = GetFromCacheOrDefault<DefaultContractResolver>("AuditableSerializer");
+            }
+            JsonSerializerSettings settings = new JsonSerializerSettings { ContractResolver = serializer };
+            return JsonConvert.SerializeObject(model, settings);
+        }
+
+        private DefaultContractResolver GetExecutingControllerSerializer()
+        {
+            var controllerDescriptor = new ReflectedControllerDescriptor(ControllerContext.Controller.GetType());
+            var action = RouteData.GetRequiredString("action");
+            var actionDescriptor = controllerDescriptor.FindAction(ControllerContext, action);
+            Attributes.SerializerAttribute attribute = (Attributes.SerializerAttribute)
+                (actionDescriptor.GetCustomAttributes(typeof(Attributes.SerializerAttribute), true).FirstOrDefault() ??
+                 controllerDescriptor.GetCustomAttributes(typeof(Attributes.SerializerAttribute), true).FirstOrDefault());
+            //return (DefaultContractResolver) Activator.CreateInstance(attribute.Serializer, true);
+            if (attribute != null)
+            {
+                return GetFromCacheOrDefault<DefaultContractResolver>(attribute.Serializer);
+            }
+            return null;
+        }
+
+        private T GetFromCacheOrDefault<T>(Type type)
+        {
+            string key = type.GetType().Name;
+            T result = (T)HttpContext.Cache[key];
+            if (result == null)
+            {
+                result = (T)Activator.CreateInstance(type, true);
+                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+            }
+            return result;
+        }
+
+        private T GetFromCacheOrDefault<T>(string key)
+        {
+            T result = (T)HttpContext.Cache[key];
+            if (result == null)
+            {
+                result = (T)Activator.CreateInstance(typeof(T), true);
+                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+            }
+            return result;
         }
 
         protected virtual ActionResult ErrorResult(ModelStateDictionary modelState)
