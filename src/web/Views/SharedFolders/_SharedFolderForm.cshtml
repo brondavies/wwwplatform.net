@@ -1,0 +1,68 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+
+@model wwwplatform.Models.SharedFolder
+
+@{
+    List<string> permissions = new List<string>();
+    if (Model.Id > 0 && Model.Permissions != null)
+    {
+        foreach (var permission in Model.Permissions)
+        {
+            if (permission.AppliesToRole_Id != null)
+            {
+                permissions.Add(permission.AppliesToRole_Id);
+            }
+        }
+    }
+    else
+    {
+        permissions.Add(PublicRole.Id);
+    }
+}
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-sm-9">
+                <h4 class="no-margin">@(Model.Name ?? "New Shared Folder")</h4>
+            </div>
+            <div class="col-sm-3 text-right">
+                <input type="submit" value="Save" class="btn btn-default" />
+                @Html.ActionLink("Cancel", "Index")
+            </div>
+        </div>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @if (Model.Id > 0)
+        {
+            Html.HiddenFor(model => model.Id);
+        }
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="control-label col-md-2">Permissions</label>
+            <div class="col-md-10">
+                <div class="btn-group" data-toggle="buttons">
+                    @RoleButtonGroup(permissions)
+                </div>
+            </div>
+        </div>
+
+    </div>
+}

@@ -1,4 +1,6 @@
-﻿@model IEnumerable<wwwplatform.Models.MailingListSubscriber>
+﻿@using wwwplatform.Models.ViewModels;
+
+@model IEnumerable<wwwplatform.Models.MailingListSubscriber>
 
 <h4 class="inline">Subscribers</h4> @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class="btn btn-sm btn-success" })
 
@@ -35,7 +37,7 @@
                 @Html.DisplayFor(modelItem => item.Enabled)
             </td>
             <td>
-                @Html.Partial("_TableActionButtons", item, new ViewDataDictionary { ["Controller"] = "MailingListSubscribers" })
+                @Html.Partial("_TableActionButtons", item, new TableActionOptions { Controller = "MailingListSubscribers" })
             </td>
         </tr>
     }

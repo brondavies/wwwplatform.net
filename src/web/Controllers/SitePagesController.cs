@@ -46,8 +46,6 @@ namespace wwwplatform.Controllers
         }
 
         // POST: SitePages/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Create([Bind(Include = AllowedFields)] SitePage sitePage, string[] permissions)
@@ -61,24 +59,6 @@ namespace wwwplatform.Controllers
             }
 
             return View(sitePage);
-        }
-
-        private void PreparePage(SitePage sitePage, string[] permissions = null)
-        {
-            sitePage.Name = sitePage.Name.Trim();
-            sitePage.Slug = sitePage.Name.CleanFileName();
-
-            if (sitePage.HomePage)
-            {
-                var allpages = db.ActiveSitePages.Where(p => p.Id != sitePage.Id && p.HomePage == true).ToList();
-                foreach (var page in allpages)
-                {
-                    page.HomePage = false;
-                    db.Entry(page).State = EntityState.Modified;
-                }
-            }
-
-            Permission.Apply(db, User, RoleManager, sitePage, permissions);
         }
 
         // GET: SitePages/Edit/5
@@ -107,8 +87,6 @@ namespace wwwplatform.Controllers
         }
 
         // POST: SitePages/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit([Bind(Include = AllowedFields)] SitePage sitePage, string[] permissions)
@@ -170,6 +148,24 @@ namespace wwwplatform.Controllers
             }
 
             return View(sitePage);
+        }
+
+        private void PreparePage(SitePage sitePage, string[] permissions = null)
+        {
+            sitePage.Name = sitePage.Name.Trim();
+            sitePage.Slug = sitePage.Name.CleanFileName();
+
+            if (sitePage.HomePage)
+            {
+                var allpages = db.ActiveSitePages.Where(p => p.Id != sitePage.Id && p.HomePage == true).ToList();
+                foreach (var page in allpages)
+                {
+                    page.HomePage = false;
+                    db.Entry(page).State = EntityState.Modified;
+                }
+            }
+
+            Permission.Apply(db, User, RoleManager, sitePage, permissions);
         }
     }
 }

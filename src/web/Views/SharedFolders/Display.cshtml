@@ -1,0 +1,65 @@
+﻿@using wwwplatform.Models.ViewModels;
+
+@model wwwplatform.Models.SharedFolder
+
+@{
+    ViewBag.Title = Model.Name;
+    var isFolderOwner = Model.UpdatedBy == User.Identity.Name || User.IsInRole(wwwplatform.Models.Roles.Administrators);
+}
+
+<h2>@ViewBag.Title</h2>
+
+<section class="h3 text-right">
+    <div class="btn-group">
+        @Html.ActionLink("Upload", "Create", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+    </div>
+</section>
+@if (Model.Files.Count() == 0)
+{
+    <section class="jumbotron text-center"><h3 class="text-muted">No files to display</h3></section>
+}
+else
+{
+    <table class="table table-striped clickable">
+        <thead>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Description
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    Uploaded By
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Files)
+            {
+                <tr onclick="window.open('/WebFiles/@(item.Id)', true)">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedBy)
+                    </td>
+                    <td>
+                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isFolderOwner || item.IsOwner(User), showEdit = item.IsOwner(User), Controller = "WebFiles" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

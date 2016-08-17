@@ -265,6 +265,7 @@
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\SentEmailMessageModel.cs" />
+    <Compile Include="Models\ViewModels\TableActionOptions.cs" />
     <Compile Include="Models\ViewModels\UploadResults.cs" />
     <Compile Include="Models\ViewModels\UserEditorModel.cs" />
     <Compile Include="Models\WebFile.cs">
@@ -824,6 +825,10 @@
     <Content Include="Views\Users\ResetPassword.cshtml" />
     <Content Include="Views\WebFiles\Created.cshtml" />
     <Content Include="Views\SharedFolders\Index.cshtml" />
+    <Content Include="Views\SharedFolders\Create.cshtml" />
+    <Content Include="Views\SharedFolders\_SharedFolderForm.cshtml" />
+    <Content Include="Views\SharedFolders\Delete.cshtml" />
+    <Content Include="Views\SharedFolders\Display.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />

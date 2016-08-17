@@ -15,5 +15,10 @@ namespace wwwplatform.Models
             var files = Permission.GetPermissible<WebFile>(db, User, UserManager, RoleManager);
             return files.OrderBy(f => f.Name);
         }
+
+        public bool IsOwner(IPrincipal User)
+        {
+            return UpdatedBy == User.Identity.Name;
+        }
     }
 }

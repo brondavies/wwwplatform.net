@@ -10,6 +10,9 @@ namespace wwwplatform.Models
         [Required]
         public string Name { get; set; }
 
+        [MaxLength(150)]
+        public string Slug { get; set; }
+
         public string Description { get; set; }
 
         public virtual ICollection<WebFile> Files { get; set; }

@@ -15,5 +15,11 @@ namespace wwwplatform.Models
             var folders = Permission.GetPermissible<SharedFolder>(db, User, UserManager, RoleManager);
             return folders.OrderBy(f => f.Name);
         }
+
+        internal void Update(SharedFolder folder)
+        {
+            Name = folder.Name;
+            Description = folder.Description;
+        }
     }
 }

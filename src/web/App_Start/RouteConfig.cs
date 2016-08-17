@@ -22,6 +22,12 @@ namespace wwwplatform
              );
 
             routes.MapRoute(
+                 name: "Folders",
+                 url: "Shared/{slug}",
+                 defaults: new { controller = "SharedFolders", action = "Display" }
+             );
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
