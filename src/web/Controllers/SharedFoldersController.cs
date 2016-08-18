@@ -72,7 +72,8 @@ namespace wwwplatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                SharedFolder actual = await db.ActiveSharedFolders.FindAsync(sharedFolder.Id);
+                SharedFolder actual = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager, true)
+                    .FindAsync(sharedFolder.Id);
                 if (actual == null)
                 {
                     return HttpNotFound();
@@ -124,6 +125,23 @@ namespace wwwplatform.Controllers
             }
 
             return View(folder);
+        }
+
+        // POST: SharedFolders/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddFiles(long id, long[] files)
+        {
+            SharedFolder folder = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager).FindAsync(id);
+            if (folder == null)
+            {
+                return HttpNotFound();
+            }
+            var webfiles = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).Where(f => files.Contains(f.Id)).ToListAsync();
+            foreach (var wf in webfiles) folder.Files.Add(wf);
+            await db.SaveChangesAsync();
+
+            return Json(new { status = "OK" });
         }
 
         private void PrepareFolder(SharedFolder sharedFolder, string[] permissions)

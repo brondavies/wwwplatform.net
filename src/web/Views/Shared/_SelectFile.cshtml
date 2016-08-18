@@ -1,0 +1,119 @@
+﻿@model wwwplatform.Models.ViewModels.SelectFileOptions
+
+@{
+    var fieldName = Model.name;
+}
+<div id="SelectFile_@fieldName" class="text-left h5 modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select or Upload File</h4>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" data-role="file-url" />
+                <input type="hidden" data-role="file-id" />
+                <div class="file-table">
+                    <table class="table table-striped clickable file-list">
+                        <thead>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                <div class="js-uploader">
+                    <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
+                    <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
+                        <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
+                        @SimpleAntiForgeryToken()
+                        <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
+                    </form>
+                    <div class="spinner"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptBlock(
+        @<script type="text/javascript">
+            $(function () {
+                var selectFileName = '@fieldName';
+                $(window).bind('selectfile.show', function (event, options) {
+                    var callback = options.callback;
+                    var eventName = options.eventName;
+                    var meta = options.meta;
+                    var value = options.value;
+                    var modal = $('#SelectFile_' + selectFileName);
+                    modal.modal('show')
+                        .one('shown.bs.modal', function (e) {
+                            // display user's file list
+                            $('[data-role="file-id"]', modal).val('');
+                            $('[data-role="file-url"]', modal).val('');
+                            @*var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
+                                addRemoveLinks: true,
+                                maxFiles: 1,
+                                url: '/WebFiles/Create'
+                            });
+                            filedropzone.on('sending', function (file, xhr, formData) {
+                                formData['__RequestVerificationToken'] = $('input[name="__RequestVerificationToken"]').val();
+                            });
+                            filedropzone.on('success', function (response) {
+                                debugger;
+                            });*@
+
+                            $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
+                                // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
+                                var datatable = $('table.file-list', modal).DataTable({
+                                    columnDefs: [
+                                        { title: 'Name', data: 'Name', targets: 0 },
+                                        { title: 'Url', data: 'Location', targets: 1 }
+                                    ],
+                                    data: files,
+                                    info: false,
+                                    language: {
+                                        emptyTable: 'Uploaded files will be listed here.'
+                                    },
+                                    paging: false, //(files.length > 10),
+                                    retrieve: true
+                                });
+                                $('table.file-list', modal).one('click', 'tr', function (event) {
+                                    var id = datatable.row(this).data().Id;
+                                    $('[data-role="file-id"]', modal).val(id);
+                                    $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);
+                                    modal.modal('hide');
+                                });
+                            });
+                            $('[type="file"]', modal).change(function (event) {
+                                $(event.target).closest('form').submit();
+                                $('.js-uploader').addClass('uploading');
+                            });
+                        })
+                        .one('hidden.bs.modal', function (e) {
+                            // file selected?
+                            var id = $('[data-role="file-id"]', modal).val();
+                            var url = $('[data-role="file-url"]', modal).val();
+                            callback && callback(result, { alt: '' });
+                            eventName && $(window).trigger(eventName, { id: id, url: url, alt: '' });
+                        });
+                });
+
+                $(window).bind('newfile.upload', function (event, data) {
+                    var modal = $('#SelectFile_' + selectFileName);
+                    if (data.status) {
+                        $('[data-role="file-id"]', modal).val(data.file.Id);
+                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
+                        modal.modal('hide');
+                    } else if (data.message) {
+                        bootbox.alert(data.message);
+                    }
+                    $('.js-uploader').removeClass('uploading');
+                });
+            });
+        </script>
+        );
+}

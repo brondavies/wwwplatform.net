@@ -12,6 +12,7 @@ using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
+using wwwplatform.Models.ViewModels;
 
 namespace wwwplatform.Extensions
 {
@@ -103,6 +104,18 @@ namespace wwwplatform.Extensions
             }
 
             return null;
+        }
+
+        public IHtmlString UploadDialogButton(string name, string text, string eventName = null)
+        {
+            if (string.IsNullOrEmpty(eventName))
+            {
+                eventName = name + ".selected";
+            }
+            var script = "$(window).trigger('selectfile.show', {eventName: '" + eventName + "'});";
+
+            WriteLiteral("<a href=\"#\" class=\"btn btn-default\" onclick=\"" + script + "\">" + text + "</a>");
+            return Html.Partial("_SelectFile", new SelectFileOptions { name = name });
         }
 
         #endregion

@@ -1,4 +1,5 @@
-﻿
+﻿@using wwwplatform.Models.ViewModels;
+
 @{
     var fieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
 }
@@ -10,38 +11,8 @@
 {
     Html.AddScriptFile("~/Scripts/tinymce/tinymce.min.js");
     Html.AddScriptBlock(
-        @<div id="SelectFile_@fieldName" class="modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Select or Upload File</h4>
-                    </div>
-                    <div class="modal-body">
-                        <input type="hidden" data-role="file-url" />
-                        <div class="file-table">
-                            <table class="table table-striped clickable file-list">
-                                <thead>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                        </div>
-                        <div class="js-uploader">
-                            <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
-                            <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
-                                <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
-                                @SimpleAntiForgeryToken()
-                                <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
-                            </form>
-                            <div class="spinner"></div>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">OK</button>
-                    </div>
-                </div>
-            </div>
+        @<div>
+            @Html.Partial("_SelectFile", new SelectFileOptions { name = fieldName });
         </div>
     );
     Html.AddScriptBlock(
@@ -66,76 +37,17 @@
                     templates: [],
                     content_css: getContentCss(),
                     convert_urls: false,
-                    //deprecated - file_browser_callback: selectFile,
-                    //deprecated - file_browser_callback_types: 'file image media',
                     file_picker_callback: selectFile,
                     file_picker_types: 'file image media'
                 });
 
-                $('#SelectFile_' + mceFieldName).remove().appendTo(document.body);
-
                 function selectFile(callback, value, meta) {
-                    //deprecated - function selectFile(field_name, url, type, win) {
-                    var modal = $('#SelectFile_' + mceFieldName);
-                    modal.modal('show')
-                        .one('shown.bs.modal', function (e) {
-                            // display user's file list
-                            $('[data-role="file-url"]', modal).val('');
-                            @*var filedropzone = new Dropzone('#SelectFile_' + mceFieldName, {
-                                addRemoveLinks: true,
-                                maxFiles: 1,
-                                url: '/WebFiles/Create'
-                            });
-                            filedropzone.on('sending', function (file, xhr, formData) {
-                                formData['__RequestVerificationToken'] = $('input[name="__RequestVerificationToken"]').val();
-                            });
-                            filedropzone.on('success', function (response) {
-                                debugger;
-                            });*@
-
-                            $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
-                                // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
-                                var datatable = $('table.file-list', modal).DataTable({
-                                    columnDefs: [
-                                        { title: 'Name', data: 'Name', targets: 0 },
-                                        { title: 'Url', data: 'Location', targets: 1 }
-                                    ],
-                                    data: files,
-                                    info: false,
-                                    language: {
-                                        emptyTable: 'Uploaded files will be listed here.'
-                                    },
-                                    paging: false, //(files.length > 10),
-                                    retrieve: true
-                                });
-                                $('table.file-list', modal).one('click', 'tr', function (event) {
-                                    $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + datatable.row(this).data().Id);
-                                    modal.modal('hide');
-                                });
-                            });
-                            $('[type="file"]', modal).change(function (event) {
-                                $(event.target).closest('form').submit();
-                                $('.js-uploader').addClass('uploading');
-                            });
-                        })
-                        .one('hidden.bs.modal', function (e) {
-                            // file selected?
-                            var result = $('[data-role="file-url"]', modal).val();
-                            //win.document.getElementById(field_name).value = result;
-                            callback(result, { alt: '' })
-                        });
+                    $(window).trigger('selectfile.show', {
+                        callback: callback,
+                        value: value,
+                        meta: meta
+                    });
                 }
-
-                $(window).bind('newfile.upload', function (event, data) {
-                    var modal = $('#SelectFile_' + mceFieldName);
-                    if (data.status) {
-                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
-                        modal.modal('hide');
-                    } else if (data.message) {
-                        bootbox.alert(data.message);
-                    }
-                    $('.js-uploader').removeClass('uploading');
-                });
 
                 function getContentCss() {
                     var css = [];

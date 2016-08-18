@@ -10,9 +10,13 @@ namespace wwwplatform.Models
 {
     public partial class SharedFolder : Auditable
     {
-        internal static IQueryable<SharedFolder> GetAvailableFolders(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager)
+        internal static IQueryable<SharedFolder> GetAvailableFolders(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool owned = false)
         {
             var folders = Permission.GetPermissible<SharedFolder>(db, User, UserManager, RoleManager);
+            if (owned && !User.IsInRole(Roles.Administrators))
+            {
+                folders = folders.Where(f => f.UpdatedBy == User.Identity.Name);
+            }
             return folders.OrderBy(f => f.Name);
         }
 

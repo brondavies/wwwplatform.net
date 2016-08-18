@@ -45,7 +45,7 @@ else
                     @Html.DisplayFor(modelItem => item.Description)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Files.Count())
+                    @item.Files.Count()
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.UpdatedAt)
