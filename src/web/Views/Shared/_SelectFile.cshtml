@@ -71,7 +71,7 @@
                                 var datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
                                         { title: 'Name', data: 'Name', targets: 0 },
-                                        { title: 'Url', data: 'Location', targets: 1 }
+                                        { title: 'Date', data: 'UpdatedAt', targets: 1 }
                                     ],
                                     data: files,
                                     info: false,
@@ -81,7 +81,7 @@
                                     paging: false, //(files.length > 10),
                                     retrieve: true
                                 });
-                                $('table.file-list', modal).one('click', 'tr', function (event) {
+                                $('table.file-list', modal).one('click', 'tbody>tr', function (event) {
                                     var id = datatable.row(this).data().Id;
                                     $('[data-role="file-id"]', modal).val(id);
                                     $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);

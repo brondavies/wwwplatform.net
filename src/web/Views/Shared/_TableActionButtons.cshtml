@@ -5,6 +5,7 @@
     bool showEdit = ViewData["showEdit"] == null;
     bool showDetails = ViewData["showDetails"] == null;
     bool showDelete = ViewData["showDelete"] == null;
+    string detailLabel = (string)ViewData["detailLabel"] ?? "Details";
     if (ViewData["Controller"] == null)
     {
         routeValues = new { id = Model.Id };
@@ -22,7 +23,7 @@
 
     @if (showDetails)
     {
-    @Html.ActionLink("Details", "Details", routeValues, new { @class = "btn btn-xs btn-info" })
+    @Html.ActionLink(detailLabel, "Details", routeValues, new { @class = "btn btn-xs btn-info" })
     }
 
     @if (showDelete)

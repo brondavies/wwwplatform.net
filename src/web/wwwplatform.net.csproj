@@ -218,10 +218,6 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201608182344011_hahahah.cs" />
-    <Compile Include="Migrations\201608182344011_hahahah.Designer.cs">
-      <DependentUpon>201608182344011_hahahah.cs</DependentUpon>
-    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
@@ -848,11 +844,6 @@
       <Project>{7cafd3d2-3fc8-452d-8465-2dc05c6341bf}</Project>
       <Name>wwwplatform.Shared</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Migrations\201608182344011_hahahah.resx">
-      <DependentUpon>201608182344011_hahahah.cs</DependentUpon>
-    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

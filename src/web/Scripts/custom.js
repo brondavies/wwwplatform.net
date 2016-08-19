@@ -34,5 +34,14 @@
             });
     });
 
+    $('.auto-datatable').DataTable();
+
+    $(document).on('click', '[data-href]', function (event) {
+        var href = $(this).data('href');
+        if (event.target.tagName != 'A' && href) {
+            window.open(href, '_blank', true);
+        }
+    });
+
     $(document.body).addClass('in');
 })

@@ -24,7 +24,7 @@
 }
 else
 {
-    <table class="table table-striped clickable">
+    <table class="table table-striped auto-datatable clickable">
         <thead>
             <tr>
                 <th>
@@ -39,13 +39,13 @@ else
                 <th>
                     Uploaded By
                 </th>
-                <th></th>
+                <th class="disable-sorting"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Files)
             {
-                <tr onclick="window.open('/WebFiles/Details/@(item.Id)', true)">
+                <tr data-href="/WebFiles/Details/@(item.Id)?v=1">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -59,7 +59,7 @@ else
                         @Html.DisplayFor(modelItem => item.UpdatedBy)
                     </td>
                     <td>
-                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isFolderOwner || item.IsOwner(User), showEdit = item.IsOwner(User), Controller = "WebFiles" })
+                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isFolderOwner || item.IsOwner(User), showEdit = item.IsOwner(User), detailLabel = "Download", Controller = "WebFiles" })
                     </td>
                 </tr>
             }

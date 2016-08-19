@@ -32,7 +32,7 @@ namespace wwwplatform.Controllers
         // GET: WebFiles/Details/5
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3600)]
-        public async Task<ActionResult> Details(long? id)
+        public async Task<ActionResult> Details(long? id, int v = 0)
         {
             if (id == null)
             {
@@ -43,10 +43,13 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
+            string inline = (v == 1) ? "inline" : "attachment";
             string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
             string contentType = ContentTypeHelper.GetContentType(webFile.Location);
-            return File(filepath, contentType, filename);
+            Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
+            return File(System.IO.File.OpenRead(filepath), contentType);
+            //return File(filepath, contentType, filename);
         }
 
         // GET: WebFiles/Create

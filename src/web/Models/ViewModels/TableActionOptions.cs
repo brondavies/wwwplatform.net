@@ -20,6 +20,12 @@ namespace wwwplatform.Models.ViewModels
             set { if (!value) this["showDetails"] = value; }
         }
 
+        public string detailLabel
+        {
+            get { return this["detailLabel"] as string; }
+            set { this["detailLabel"] = value; }
+        }
+
         public bool showEdit
         {
             get { return this["showEdit"] == null; }
