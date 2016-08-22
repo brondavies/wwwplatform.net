@@ -55,8 +55,8 @@ namespace wwwplatform.Controllers
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
 
-            SharedFolder sharedFolder;
-            sharedFolder = await db.ActiveSharedFolders.FindAsync(id.Value);
+            var sharedFolders = SharedFolder.GetEditableFolders(db, User);
+            var sharedFolder = await sharedFolders.FindAsync(id.Value);
             
             if (sharedFolder == null)
             {
@@ -72,8 +72,8 @@ namespace wwwplatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                SharedFolder actual = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager, true)
-                    .FindAsync(sharedFolder.Id);
+                var sharedFolders = SharedFolder.GetEditableFolders(db, User);
+                SharedFolder actual = await sharedFolders.FindAsync(sharedFolder.Id);
                 if (actual == null)
                 {
                     return HttpNotFound();
@@ -93,7 +93,8 @@ namespace wwwplatform.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            SharedFolder sharedFolder = await db.ActiveSharedFolders.FindAsync(id);
+            var sharedFolders = SharedFolder.GetEditableFolders(db, User);
+            SharedFolder sharedFolder = await sharedFolders.FindAsync(id.Value);
             if (sharedFolder == null)
             {
                 return HttpNotFound();
@@ -106,7 +107,8 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            SharedFolder sharedFolder = await db.ActiveSharedFolders.FindAsync(id);
+            var sharedFolders = SharedFolder.GetEditableFolders(db, User);
+            SharedFolder sharedFolder = await sharedFolders.FindAsync(id);
             db.SharedFolders.Remove(sharedFolder);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");
@@ -123,6 +125,9 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
+
+            var ids = folder.Files?.Select(f => f.Id) ?? new List<long>();
+            folder.Files = WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).Where(f => ids.Contains(f.Id)).ToList();
 
             return View(folder);
         }

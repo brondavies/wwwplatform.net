@@ -13,6 +13,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 using wwwplatform.Models.ViewModels;
+using System.Data.Entity;
 
 namespace wwwplatform.Extensions
 {
@@ -163,7 +164,7 @@ namespace wwwplatform.Extensions
         {
             get
             {
-                return SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, true, true).ToList();
+                return SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, true, true).Include(p => p.SubPages).ToList();
             }
         }
 
@@ -184,6 +185,14 @@ namespace wwwplatform.Extensions
             get
             {
                 return RoleManager.FindByName(Roles.Public);
+            }
+        }
+
+        public IdentityRole UsersRole
+        {
+            get
+            {
+                return RoleManager.FindByName(Roles.Users);
             }
         }
 

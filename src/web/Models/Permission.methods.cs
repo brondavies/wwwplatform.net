@@ -19,9 +19,13 @@ namespace wwwplatform.Models
             {
                 if (!User.IsInRole(Roles.Administrators))
                 {
+                    List<string> roles = new List<string>();
                     var userId = User.Identity.GetUserId();
-                    var roleNames = UserManager.GetRoles(User.Identity.GetUserId());
-                    var roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
+                    var roleNames = UserManager.GetRoles(userId);
+                    if (roleNames != null && roleNames.Count() > 0)
+                    {
+                        roles = RoleManager.Roles.Where(r => roleNames.Contains(r.Name)).Select(r => r.Id).ToList();
+                    }
                     roles.Add(publicRoleId);
                     items = items.Where(m => m.Permissions.Any(p => p.Grant &&
                             (p.AppliesTo_Id == userId || roles.Contains(p.AppliesToRole_Id))

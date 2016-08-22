@@ -1,0 +1,18 @@
+﻿@model wwwplatform.Models.SitePage
+
+@{ 
+    var subpages = Model.SubPages;
+}
+
+<a href="@Model.AppRelativeUrl()">@Model.Name</a>
+@if (subpages.Count() > 0)
+{
+    <ul>
+        @foreach (var p in subpages)
+        {
+            <li>
+                @Html.Partial("_PageNavigation", p)
+            </li>
+        }
+    </ul>
+}

@@ -1,7 +1,11 @@
-﻿@model IEnumerable<wwwplatform.Models.SharedFolder>
+﻿@using wwwplatform.Models.ViewModels;
+
+@model IEnumerable<wwwplatform.Models.SharedFolder>
 
 @{
     ViewBag.Title = "Shared Folders";
+
+    var IsAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
 }
 
 <h2>@ViewBag.Title</h2>
@@ -18,43 +22,45 @@
 }
 else
 {
-    <table class="table">
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                Files
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UpdatedAt)
-            </th>
-            <th></th>
-        </tr>
-
-        @foreach (var item in Model)
-        {
+    <table class="table clickable">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    @item.Files.Count()
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UpdatedAt)
-                </td>
-                <td>
-                    @Html.Partial("_TableActionButtons", item)
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th class="text-right">
+                    Files
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedAt)
+                </th>
+                <th></th>
             </tr>
-        }
-
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-href="/Shared/@(item.Slug)" data-target="_top">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td class="text-right">
+                        @item.Files.Count()
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                    </td>
+                    <td>
+                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = IsAdmin || item.IsOwner(User), showEdit = IsAdmin || item.IsOwner(User), showDetails = false })
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }

@@ -749,6 +749,8 @@
     <Content Include="Scripts\tinymce\tinymce.js" />
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="Views\SharedFolders\Edit.cshtml" />
+    <Content Include="Views\Shared\_PageNavigation.cshtml" />
     <None Include="Views\Shared\_SelectFile.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

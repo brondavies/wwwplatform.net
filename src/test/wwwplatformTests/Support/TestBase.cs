@@ -64,6 +64,18 @@ namespace wwwplatformTests.Support
             return Guid.NewGuid().ToString();
         }
 
+        static Random randomizer = new Random();
+        static char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+        protected string RandomString(int length = 16)
+        {
+            string result = "";
+            while (result.Length < length)
+            {
+                result += chars[randomizer.Next(0, chars.Length)];
+            }
+            return result;
+        }
+
         #endregion
     }
 }

@@ -25,5 +25,20 @@ namespace wwwplatform.Models
             Name = folder.Name;
             Description = folder.Description;
         }
+
+        public bool IsOwner(IPrincipal User)
+        {
+            return UpdatedBy == User.Identity.Name;
+        }
+
+        internal static IQueryable<SharedFolder> GetEditableFolders(ApplicationDbContext db, IPrincipal User)
+        {
+            var sharedFolders = db.ActiveSharedFolders;
+            if (!User.IsInRole(Roles.Administrators))
+            {
+                sharedFolders = sharedFolders.Where(f => f.UpdatedBy == User.Identity.Name);
+            }
+            return sharedFolders;
+        }
     }
 }

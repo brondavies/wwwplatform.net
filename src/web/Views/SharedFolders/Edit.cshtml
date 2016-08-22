@@ -1,0 +1,8 @@
+﻿@model wwwplatform.Models.SharedFolder
+
+@{
+    ViewBag.Title = "Shared Folders - " + Model.Name;
+}
+
+<h2>Shared Folders</h2>
+@Html.Partial("_SharedFolderForm", Model)

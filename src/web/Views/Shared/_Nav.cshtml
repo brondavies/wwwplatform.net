@@ -6,7 +6,9 @@
     @* if (showhome)? <li><a href="~/">Home</a></li>*@
     @foreach (var p in pages)
     {
-        <li><a href="@p.AppRelativeUrl()">@p.Name</a></li>
+        <li>
+            @Html.Partial("_PageNavigation", p)
+        </li>
     }
     <li>
         @SharedFoldersLink()

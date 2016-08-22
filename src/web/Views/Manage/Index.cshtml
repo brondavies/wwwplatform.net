@@ -1,6 +1,12 @@
-﻿@model wwwplatform.Models.IndexViewModel
+﻿@using Microsoft.Owin.Security;
+
+@model wwwplatform.Models.IndexViewModel
+
 @{
     ViewBag.Title = "Manage";
+
+    var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
+    var externalConfigured = (loginProviders.Count() > 0);
 }
 
 <h2>@ViewBag.Title</h2>
@@ -23,11 +29,14 @@
             }
             ]
         </dd>
-        <dt>External Logins:</dt>
-        <dd>
-            @Model.Logins.Count [
-            @Html.ActionLink("Manage", "ManageLogins") ]
-        </dd>
+        @if (externalConfigured)
+        {
+            <dt>External Logins:</dt>
+            <dd>
+                @Model.Logins.Count [
+                @Html.ActionLink("Manage", "ManageLogins") ]
+            </dd>
+        }
         @*
             Phone Numbers can used as a second factor of verification in a two-factor authentication system.
 
@@ -52,12 +61,12 @@
                 }
                 ]
             </dd>
+            See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a> for details on setting up this ASP.NET application to support two-factor authentication.
         *@
         <dt>Two-Factor Authentication:</dt>
         <dd>
             <p>
-                There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication.
+                There are no two-factor authentication providers configured.
             </p>
             @*@if (Model.TwoFactor)
                 {

@@ -15,7 +15,7 @@ using System.Security.Principal;
 
 namespace wwwplatform.Controllers.Tests
 {
-    [TestClass()]
+    [TestClass]
     public class WebFilesControllerTests : ControllerTestBase
     {
         [ClassInitialize]

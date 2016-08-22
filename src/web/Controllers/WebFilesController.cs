@@ -172,11 +172,12 @@ namespace wwwplatform.Controllers
         // POST: WebFiles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Location")] WebFile webFile)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Location")] WebFile webFile, string[] permissions = null)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(webFile).State = EntityState.Modified;
+                Permission.Apply(db, User, RoleManager, webFile, permissions);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }

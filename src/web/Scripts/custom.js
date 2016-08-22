@@ -38,8 +38,9 @@
 
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');
+        var target = $(this).data('target') || '_blank';
         if (event.target.tagName != 'A' && href) {
-            window.open(href, '_blank', true);
+            window.open(href, target, true);
         }
     });
 
