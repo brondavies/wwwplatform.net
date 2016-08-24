@@ -3,7 +3,7 @@
 @model wwwplatform.Models.IndexViewModel
 
 @{
-    ViewBag.Title = "Manage";
+    ViewBag.Title = "Account";
 
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     var externalConfigured = (loginProviders.Count() > 0);

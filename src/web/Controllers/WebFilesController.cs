@@ -20,7 +20,7 @@ using Microsoft.AspNet.Identity;
 namespace wwwplatform.Controllers
 {
     [Extensions.Authorize]
-    [Serializer(typeof(AuditableSerializer))]
+    [Serializer(typeof(WebFileSerializer))]
     public class WebFilesController : BaseController
     {
         // GET: WebFiles

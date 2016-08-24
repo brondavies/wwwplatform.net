@@ -49,6 +49,12 @@
                     var meta = options.meta;
                     var value = options.value;
                     var modal = $('#SelectFile_' + selectFileName);
+                    var renderDate = function (data, type, full, meta) {
+                        if (type === 'display') {
+                            return (new Date(data)).toLocaleString().replace(',', '');
+                        }
+                        return data;
+                    };
                     modal.modal('show')
                         .one('shown.bs.modal', function (e) {
                             // display user's file list
@@ -71,7 +77,7 @@
                                 var datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
                                         { title: 'Name', data: 'Name', targets: 0 },
-                                        { title: 'Date', data: 'UpdatedAt', targets: 1 }
+                                        { title: 'Date', data: 'UpdatedAt', render: renderDate, targets: 1 }
                                     ],
                                     data: files,
                                     info: false,

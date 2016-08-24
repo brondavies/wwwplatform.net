@@ -12,7 +12,7 @@ namespace wwwplatform.Extensions.Helpers
     {
         internal static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext, Type type, Action<T> constructor = null)
         {
-            string key = type.GetType().Name;
+            string key = type.FullName;
             T result = (T)HttpContext.Cache[key];
             if (result == null)
             {

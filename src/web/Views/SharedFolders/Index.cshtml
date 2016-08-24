@@ -22,7 +22,7 @@
 }
 else
 {
-    <table class="table clickable">
+    <table class="table table-striped auto-datatable clickable">
         <thead>
             <tr>
                 <th>
@@ -37,13 +37,13 @@ else
                 <th>
                     @Html.DisplayNameFor(model => model.UpdatedAt)
                 </th>
-                <th></th>
+                <th class="disable-sorting"></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr data-href="/Shared/@(item.Slug)">
+                <tr data-href="/Shared/@item.Slug">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>

@@ -57,6 +57,18 @@ namespace wwwplatform.Migrations
                     });
                     context.SaveChanges();
                 }
+                context.AppSettings.AddOrUpdate(
+                    new AppSetting { Name = "AllowForgotPassword", Description = "Allows users to reset forgotten passwords" },
+                    new AppSetting { Name = "AllowUserRegistration", Description = "Opens user registration to the public" },
+                    new AppSetting { Name = "CanonicalHostName", Description = "The website address that should be used for this site" },
+                    new AppSetting { Name = "DefaultPageDescription", Description = "The default page description" },
+                    new AppSetting { Name = "DefaultPageTitle", Description = "The default page title" },
+                    new AppSetting { Name = "DefaultSiteImage", Description = "The default image used for links shared via social media" },
+                    new AppSetting { Name = "EmailDefaultFrom", Description = "The email address used for emails sent by the system" },
+                    new AppSetting { Name = "SiteName", Description = "The name of the site" },
+                    new AppSetting { Name = "SiteOwner", Description = "The name of the site owner" },
+                    new AppSetting { Name = "TempDir", Description = "The directory used for temporary files" },
+                    new AppSetting { Name = "UserFilesDir", Description = "The directory used for files uploaded by users" });
             }
             catch (Exception exception)
             {
