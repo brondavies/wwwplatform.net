@@ -22,7 +22,7 @@ namespace wwwplatform.Controllers.Tests
         override public void Initialize()
         {
             base.Initialize();
-            db.Database.CreateIfNotExists();
+            db.Setup();
         }
 
         #region Mock Objects

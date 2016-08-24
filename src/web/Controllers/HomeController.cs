@@ -33,14 +33,5 @@ namespace wwwplatform.Controllers
             }
             return RedirectToAction("Index");
         }
-
-        public ActionResult Upgrade()
-        {
-            if (Request.IsLocal)
-            {
-                Models.ApplicationDbContext.Upgrade();
-            }
-            return RedirectToAction("Index");
-        }
     }
 }

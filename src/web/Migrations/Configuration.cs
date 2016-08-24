@@ -55,20 +55,21 @@ namespace wwwplatform.Migrations
                         Grant = true,
                         AppliesToRole_Id = publicRole.Id
                     });
-                    context.SaveChanges();
                 }
-                context.AppSettings.AddOrUpdate(
-                    new AppSetting { Name = "AllowForgotPassword", Description = "Allows users to reset forgotten passwords" },
-                    new AppSetting { Name = "AllowUserRegistration", Description = "Opens user registration to the public" },
-                    new AppSetting { Name = "CanonicalHostName", Description = "The website address that should be used for this site" },
-                    new AppSetting { Name = "DefaultPageDescription", Description = "The default page description" },
-                    new AppSetting { Name = "DefaultPageTitle", Description = "The default page title" },
-                    new AppSetting { Name = "DefaultSiteImage", Description = "The default image used for links shared via social media" },
-                    new AppSetting { Name = "EmailDefaultFrom", Description = "The email address used for emails sent by the system" },
-                    new AppSetting { Name = "SiteName", Description = "The name of the site" },
-                    new AppSetting { Name = "SiteOwner", Description = "The name of the site owner" },
-                    new AppSetting { Name = "TempDir", Description = "The directory used for temporary files" },
-                    new AppSetting { Name = "UserFilesDir", Description = "The directory used for files uploaded by users" });
+                context.AppSettings.AddOrUpdate(m => m.Name,
+                    new AppSetting { Name = "AllowForgotPassword", Kind=AppSetting.KindBool, Description = "Allows users to reset forgotten passwords" },
+                    new AppSetting { Name = "AllowUserRegistration", Kind = AppSetting.KindBool, Description = "Opens user registration to the public" },
+                    new AppSetting { Name = "CanonicalHostName", Kind = AppSetting.KindString, Description = "The website address that should be used for this site" },
+                    new AppSetting { Name = "DefaultPageDescription", Kind = AppSetting.KindString, Description = "The default page description" },
+                    new AppSetting { Name = "DefaultPageTitle", Kind = AppSetting.KindString, Description = "The default page title" },
+                    new AppSetting { Name = "DefaultSiteImage", Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
+                    new AppSetting { Name = "EmailDefaultFrom", Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
+                    new AppSetting { Name = "SiteName", Kind = AppSetting.KindString, Description = "The name of the site" },
+                    new AppSetting { Name = "SiteOwner", Kind = AppSetting.KindString, Description = "The name of the site owner" },
+                    new AppSetting { Name = "TempDir", Kind = AppSetting.KindDirectory, Description = "The directory used for temporary files" },
+                    new AppSetting { Name = "UserFilesDir", Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" });
+
+                context.SaveChanges();
             }
             catch (Exception exception)
             {

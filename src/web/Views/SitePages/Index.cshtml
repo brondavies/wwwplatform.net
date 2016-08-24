@@ -10,7 +10,7 @@
 
 <section class="h3 text-right">
     <div class="btn-group">
-        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("New Page", "Create", null, new { @class = "btn btn-default" })
         @Html.ActionLink("Edit Home Page", "Edit", new { id = "home" }, new { @class = "btn btn-default" })
     </div>
 </section>
@@ -20,6 +20,7 @@
 }
 else
 {
+    <section class="margin-bottom-40">
     <table class="table table-striped auto-datatable clickable">
         <thead>
             <tr>
@@ -64,4 +65,5 @@ else
             }
         </tbody>
     </table>
+    </section>
 }

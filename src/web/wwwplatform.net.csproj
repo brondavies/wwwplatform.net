@@ -223,9 +223,9 @@
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\AppSetting.cs" />
-    <Compile Include="Models\ObjectDictionary.cs" />
-    <Compile Include="Models\Permissible.cs" />
+    <Compile Include="Models\Support\AppSetting.cs" />
+    <Compile Include="Models\Support\ObjectDictionary.cs" />
+    <Compile Include="Models\Support\Permissible.cs" />
     <Compile Include="Models\Permission.methods.cs">
       <DependentUpon>Permission.cs</DependentUpon>
     </Compile>
@@ -263,8 +263,8 @@
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
-    <Compile Include="Models\Roles.cs" />
-    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\Support\Roles.cs" />
+    <Compile Include="Models\Support\Settings.cs" />
     <Compile Include="Models\SitePage.cs">
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
@@ -561,7 +561,12 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
-    <Compile Include="Models\Settings.static.cs" />
+    <Compile Include="Models\Support\Settings.static.cs">
+      <DependentUpon>Settings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Support\AppSetting.enum.cs">
+      <DependentUpon>AppSetting.cs</DependentUpon>
+    </Compile>
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />
@@ -841,6 +846,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />
+    <Folder Include="Views\Database\" />
     <Folder Include="Views\MailingListSubscribers\" />
   </ItemGroup>
   <ItemGroup>

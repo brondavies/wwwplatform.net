@@ -1,4 +1,5 @@
 ﻿@using Microsoft.Owin.Security;
+@using wwwplatform.Extensions.Helpers.Bootstrap;
 
 @model wwwplatform.Models.IndexViewModel
 
@@ -7,36 +8,61 @@
 
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();
     var externalConfigured = (loginProviders.Count() > 0);
+
+    var columns = new[] { new { sm = 3 }, new { sm = 9 } };
+    var labelAttributes = new { @class = "text-right" };
+    var label = "label";
 }
 
 <h2>@ViewBag.Title</h2>
 
 <p class="text-success">@ViewBag.StatusMessage</p>
-<div>
+<section class="margin-bottom-40">
     <h4>Change your account settings</h4>
     <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                @Html.ActionLink("Change your password", "ChangePassword")
-            }
-            else
-            {
-                @Html.ActionLink("Create", "SetPassword")
-            }
-            ]
-        </dd>
+    <div class="form-horizontal">
+        @Html.Row(columns
+            ).Column(label, labelAttributes
+            ).Add("Password"
+            ).Column(
+            ).Add(
+                Model.HasPassword
+                ? Html.ActionLink("Change your password", "ChangePassword")
+                : Html.ActionLink("Create", "SetPassword")
+            )
+
         @if (externalConfigured)
         {
-            <dt>External Logins:</dt>
-            <dd>
-                @Model.Logins.Count [
-                @Html.ActionLink("Manage", "ManageLogins") ]
-            </dd>
+            @Html.Row(columns
+                ).Column(label, labelAttributes
+                ).Add("External Logins"
+                ).Column(
+                ).Add(
+                @<span>
+                    @Model.Logins.Count [
+                    @Html.ActionLink("Manage", "ManageLogins") ]
+                </span>
+                )
         }
+        @Html.Row(columns
+            ).Column(label, labelAttributes
+            ).Add("Two-Factor Authentication"
+            ).Column(
+            ).Add(
+            @<span>
+                There are no two-factor authentication providers configured.
+            </span>
+            )
+        @Html.Row(columns
+            ).Column(label, labelAttributes
+            ).Add("Uploaded Files"
+            ).Column(
+            ).Add(
+            @<span>
+                 @Html.ActionLink("Manage your uploads", "Index", "WebFiles")
+            </span>
+            )
+    </div>
         @*
             Phone Numbers can used as a second factor of verification in a two-factor authentication system.
 
@@ -62,13 +88,7 @@
                 ]
             </dd>
             See <a href="http://go.microsoft.com/fwlink/?LinkId=403804">this article</a> for details on setting up this ASP.NET application to support two-factor authentication.
-        *@
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured.
-            </p>
-            @*@if (Model.TwoFactor)
+        @if (Model.TwoFactor)
                 {
                     using (Html.BeginForm("DisableTwoFactorAuthentication", "Manage", FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
                     {
@@ -88,6 +108,4 @@
                         </text>
                     }
                 }*@
-        </dd>
-    </dl>
-</div>
+</section>

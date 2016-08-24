@@ -8,7 +8,7 @@
 
 <section class="h3 text-right">
     <div class="btn-group">
-        @Html.ActionLink("Create New", "Create", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("New Mailing List", "Create", null, new { @class = "btn btn-default" })
     </div>
 </section>
 
@@ -18,47 +18,52 @@
 }
 else
 {
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Description)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.EmailAdress)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </th>
-        <th></th>
-        <th></th>
-    </tr>
+    <section class="margin-bottom-40">
+    <table class="table table-striped auto-datatable clickable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.EmailAdress)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UpdatedAt)
+                </th>
+                <th class="disable-sorting"></th>
+                <th class="disable-sorting"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EmailAdress)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                    </td>
+                    <td>
+                        @Html.ActionLink("New Message", "Compose", new { id = item.Id }, new { @class = "btn btn-xs btn-success" })
+                    </td>
+                    <td>
+                        @Html.Partial("_TableActionButtons", item)
+                    </td>
+                </tr>
+            }
+        </tbody>
 
-@foreach (var item in Model)
-{
-    <tr>
-        <td>
-            @Html.DisplayFor(modelItem => item.Name)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Description)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.EmailAdress)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdatedAt)
-        </td>
-        <td>
-            @Html.ActionLink("New Message", "Compose", new { id = item.Id }, new { @class = "btn btn-xs btn-success" })
-        </td>
-        <td>
-            @Html.Partial("_TableActionButtons", item)
-        </td>
-    </tr>
-}
-
-</table>
+    </table>
+    </section>
 }
