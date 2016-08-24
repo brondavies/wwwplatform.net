@@ -38,7 +38,7 @@
 
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');
-        var target = $(this).data('target') || '_blank';
+        var target = $(this).data('target') || '_self';
         if (event.target.tagName != 'A' && href) {
             window.open(href, target, true);
         }

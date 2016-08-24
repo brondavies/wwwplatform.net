@@ -43,7 +43,7 @@ else
         <tbody>
             @foreach (var item in Model)
             {
-                <tr data-href="/Shared/@(item.Slug)" data-target="_top">
+                <tr data-href="/Shared/@(item.Slug)">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>

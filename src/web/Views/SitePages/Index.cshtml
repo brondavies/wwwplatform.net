@@ -20,44 +20,48 @@
 }
 else
 {
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Name)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.PubDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdatedBy)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.UpdatedAt)
-        </th>
-        <th></th>
-    </tr>
+<table class="table table-striped auto-datatable clickable">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PubDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UpdatedAt)
+            </th>
+            <th class="disable-sorting"></th>
+        </tr>
+    </thead>
 
 @foreach (var item in Model)
 {
-    <tr>
-        <td>
-            <a href="@(item.Slug.ToAppPath())">
-            @Html.DisplayFor(modelItem => item.Name)
-            </a>
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.PubDate)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdatedBy)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.UpdatedAt)
-        </td>
-        <td>
-            @Html.Partial("_TableActionButtons", item)
-        </td>
-    </tr>
+    <tbody>
+        <tr data-href="/SitePages/Details/@item.Id">
+            <td>
+                <a href="@(item.Slug.ToAppPath())">
+                    @Html.DisplayFor(modelItem => item.Name)
+                </a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PubDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UpdatedAt)
+            </td>
+            <td>
+                @Html.Partial("_TableActionButtons", item)
+            </td>
+        </tr>
+    </tbody>
 }
 
 </table>

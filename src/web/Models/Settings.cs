@@ -1,40 +1,42 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using wwwplatform.Shared.Extensions.System;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.Routing;
 
 namespace wwwplatform.Models
 {
-    public class Settings
+    public partial class Settings : ObjectDictionary
     {
-        public static string AppSetting(string key, string defaultValue = null)
+        private T GetValue<T>(string key, T defaultValue)
         {
-            return ConfigurationManager.AppSettings[key] ?? defaultValue;
+            return ContainsKey(key) ? (T)this[key] : defaultValue;
         }
 
-        public static bool AllowForgotPassword { get { return Boolean.Parse(AppSetting("AllowForgotPassword", Boolean.FalseString)); } }
+        public bool AllowForgotPassword { get { return GetValue("AllowForgotPassword", DefaultAllowForgotPassword); } }
 
-        public static bool AllowUserRegistration { get { return Boolean.Parse(AppSetting("AllowUserRegistration", Boolean.FalseString)); } }
+        public bool AllowUserRegistration { get { return GetValue("AllowUserRegistration", DefaultAllowUserRegistration); } }
 
-        public static string CanonicalHostName { get { return AppSetting("CanonicalHostName"); } }
+        public string CanonicalHostName { get { return GetValue("CanonicalHostName", DefaultCanonicalHostName); } }
 
-        public static string DefaultPageDescription { get { return AppSetting("DefaultPageDescription"); } }
+        public string DefaultPageDescription { get { return GetValue("DefaultPageDescription", ""); } }
 
-        public static string DefaultPageTitle { get { return AppSetting("DefaultPageTitle"); } }
+        public string DefaultPageTitle { get { return GetValue("DefaultPageTitle", AppSetting("DefaultPageTitle")); } }
 
-        public static string DefaultSiteImage { get { return AppSetting("DefaultSiteImage"); } }
+        public string DefaultSiteImage { get { return GetValue("DefaultSiteImage", AppSetting("DefaultSiteImage")); } }
 
-        public static string EmailDefaultFrom { get { return AppSetting("EmailDefaultFrom"); } }
+        public string EmailDefaultFrom { get { return GetValue("EmailDefaultFrom", DefaultEmailFrom); } }
 
-        public static string SiteName { get { return AppSetting("SiteName"); } }
+        public string SiteName { get { return GetValue("SiteName", DefaultSiteName); } }
 
-        public static string SiteOwner { get { return AppSetting("SiteOwner"); } }
+        public string SiteOwner { get { return GetValue("SiteOwner", DefaultSiteOwner); } }
 
-        public static string TempDir { get { return AppSetting("TempDir") ?? "~/App_Data/temp".ResolveLocalPath(); } }
+        public string TempDir { get { return GetValue("TempDir", DefaultTempDir); } }
 
-        public static string UserFilesDir { get { return AppSetting("UserFilesDir") ?? "~/UserFiles".ResolveLocalPath(); } }
+        public string UserFilesDir { get { return GetValue("UserFilesDir", DefaultUserFilesDir); } }
     }
 }

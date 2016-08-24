@@ -14,6 +14,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 using wwwplatform.Models.ViewModels;
 using System.Data.Entity;
+using wwwplatform.Extensions.Helpers;
 
 namespace wwwplatform.Extensions
 {
@@ -29,6 +30,19 @@ namespace wwwplatform.Extensions
         {
             get { return _PageCssClass ?? string.Format("{0}_{1}", Request.RequestContext.RouteData.Values["controller"], Request.RequestContext.RouteData.Values["action"]); }
             set { _PageCssClass = value; }
+        }
+
+        private Settings _Settings;
+        public Settings Settings
+        {
+            get
+            {
+                if (_Settings == null)
+                {
+                    _Settings = Settings.Create(Context);
+                }
+                return _Settings;
+            }
         }
 
         #region Helpers

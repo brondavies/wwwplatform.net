@@ -19,7 +19,7 @@ namespace wwwplatform
     {
         public Task SendAsync(IdentityMessage message)
         {
-            MailMessage mailMessage = new MailMessage(Settings.EmailDefaultFrom, message.Destination, message.Subject, message.Body);
+            MailMessage mailMessage = new MailMessage(Settings.Create(new HttpContextWrapper(HttpContext.Current)).EmailDefaultFrom, message.Destination, message.Subject, message.Body);
             SmtpClient client = new SmtpClient();
             client.SendAsync(mailMessage, message);
             return Task.FromResult(0);

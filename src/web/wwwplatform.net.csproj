@@ -213,6 +213,7 @@
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapElement.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapFormGroup.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapRow.cs" />
+    <Compile Include="Extensions\Helpers\CacheHelper.cs" />
     <Compile Include="Extensions\Helpers\FileStorage.cs" />
     <Compile Include="Extensions\SitePageRouteConstraint.cs" />
     <Compile Include="Global.asax.cs">
@@ -222,6 +223,8 @@
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\AppSetting.cs" />
+    <Compile Include="Models\ObjectDictionary.cs" />
     <Compile Include="Models\Permissible.cs" />
     <Compile Include="Models\Permission.methods.cs">
       <DependentUpon>Permission.cs</DependentUpon>
@@ -557,6 +560,7 @@
     <Content Include="Content\DataTables\css\semanticui.scss" />
     <Content Include="Content\DataTables\css\mixins.scss" />
     <Content Include="Content\DataTables\css\common.scss" />
+    <Compile Include="Models\Settings.static.cs" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />

@@ -15,6 +15,7 @@ namespace wwwplatform.Models
         public DbSet<SitePage> SitePages { get; set; }
         public DbSet<WebFile> WebFiles { get; set; }
         public DbSet<SharedFolder> SharedFolders { get; set; }
+        public DbSet<AppSetting> AppSettings { get; set; }
 
         public DbQuery<T> Active<T>() where T : Auditable
         {

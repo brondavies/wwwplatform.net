@@ -15,7 +15,7 @@ namespace wwwplatform.Extensions.Helpers
         public static string Save(FileInfo file, HttpContextBase context)
         {
             string date  = DateTime.UtcNow.ToString("yyyyMMdd");
-            string folder = Path.Combine(Path.GetFullPath(Settings.UserFilesDir), date);
+            string folder = Path.Combine(Path.GetFullPath(Settings.Create(context).UserFilesDir), date);
             Directory.CreateDirectory(folder);
             string newfile = file.CopyTo(Path.Combine(folder, file.Name)).FullName;
             return "/" + newfile.ToAppPath(context);

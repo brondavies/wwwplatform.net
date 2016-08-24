@@ -19,6 +19,7 @@ using wwwplatform.Models.Serializers;
 using Newtonsoft.Json;
 using System.Web.Caching;
 using Newtonsoft.Json.Serialization;
+using wwwplatform.Extensions.Helpers;
 
 namespace wwwplatform.Extensions
 {
@@ -27,7 +28,6 @@ namespace wwwplatform.Extensions
         private ApplicationDbContext _db;
         private ApplicationUserManager _userManager;
         private ApplicationRoleManager _roleManager;
-        private AuditableSerializer _auditableSerializer;
 
         public ApplicationDbContext db
         {
@@ -105,7 +105,6 @@ namespace wwwplatform.Extensions
             if (serializer == null)
             {
                 return JsonConvert.SerializeObject(model);
-                //serializer = GetFromCacheOrDefault<DefaultContractResolver>("AuditableSerializer");
             }
             JsonSerializerSettings settings = new JsonSerializerSettings { ContractResolver = serializer };
             return JsonConvert.SerializeObject(model, settings);
@@ -119,35 +118,11 @@ namespace wwwplatform.Extensions
             Attributes.SerializerAttribute attribute = (Attributes.SerializerAttribute)
                 (actionDescriptor.GetCustomAttributes(typeof(Attributes.SerializerAttribute), true).FirstOrDefault() ??
                  controllerDescriptor.GetCustomAttributes(typeof(Attributes.SerializerAttribute), true).FirstOrDefault());
-            //return (DefaultContractResolver) Activator.CreateInstance(attribute.Serializer, true);
             if (attribute != null)
             {
-                return GetFromCacheOrDefault<DefaultContractResolver>(attribute.Serializer);
+                return CacheHelper.GetFromCacheOrDefault<DefaultContractResolver>(HttpContext, attribute.Serializer);
             }
             return null;
-        }
-
-        private T GetFromCacheOrDefault<T>(Type type)
-        {
-            string key = type.GetType().Name;
-            T result = (T)HttpContext.Cache[key];
-            if (result == null)
-            {
-                result = (T)Activator.CreateInstance(type, true);
-                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
-            }
-            return result;
-        }
-
-        private T GetFromCacheOrDefault<T>(string key)
-        {
-            T result = (T)HttpContext.Cache[key];
-            if (result == null)
-            {
-                result = (T)Activator.CreateInstance(typeof(T), true);
-                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
-            }
-            return result;
         }
 
         protected virtual ActionResult ErrorResult(ModelStateDictionary modelState)

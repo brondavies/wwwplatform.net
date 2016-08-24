@@ -45,7 +45,7 @@ else
         <tbody>
             @foreach (var item in Model.Files)
             {
-                <tr data-href="/WebFiles/Details/@(item.Id)?v=1">
+                <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>

@@ -23,7 +23,9 @@ namespace wwwplatform.Migrations
         //  This method will be called after migrating to the latest version.
         protected override void Seed(ApplicationDbContext context)
         {
-            var RoleManager = (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
+            var RoleManager = DependencyResolver.Current.GetService<ApplicationRoleManager>();
+            if (RoleManager == null && HttpContext.Current == null) return;
+            RoleManager = RoleManager ?? (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
             var results = Roles.CreateAll(RoleManager);
             foreach (var result in results)
             {
