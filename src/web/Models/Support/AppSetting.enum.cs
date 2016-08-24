@@ -9,9 +9,9 @@ namespace wwwplatform.Models
     {
         public const int KindString = 0;
         public const int KindBool = 1;
-        public const int KindDirectory = 1;
-        public const int KindFile = 2;
-        public const int KindUpload = 3;
-        public const int KindRole = 4;
+        public const int KindDirectory = 2;
+        public const int KindFile = 3;
+        public const int KindUpload = 4;
+        public const int KindRole = 5;
     }
 }

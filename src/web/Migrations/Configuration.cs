@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.Entity.Migrations;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Models;
@@ -56,8 +57,9 @@ namespace wwwplatform.Migrations
                         AppliesToRole_Id = publicRole.Id
                     });
                 }
-                context.AppSettings.AddOrUpdate(m => m.Name,
-                    new AppSetting { Name = "AllowForgotPassword", Kind=AppSetting.KindBool, Description = "Allows users to reset forgotten passwords" },
+                
+                CreateMissing<AppSetting>(context,
+                    new AppSetting { Name = "AllowForgotPassword", Kind = AppSetting.KindBool, Description = "Allows users to reset forgotten passwords" },
                     new AppSetting { Name = "AllowUserRegistration", Kind = AppSetting.KindBool, Description = "Opens user registration to the public" },
                     new AppSetting { Name = "CanonicalHostName", Kind = AppSetting.KindString, Description = "The website address that should be used for this site" },
                     new AppSetting { Name = "DefaultPageDescription", Kind = AppSetting.KindString, Description = "The default page description" },
@@ -67,7 +69,8 @@ namespace wwwplatform.Migrations
                     new AppSetting { Name = "SiteName", Kind = AppSetting.KindString, Description = "The name of the site" },
                     new AppSetting { Name = "SiteOwner", Kind = AppSetting.KindString, Description = "The name of the site owner" },
                     new AppSetting { Name = "TempDir", Kind = AppSetting.KindDirectory, Description = "The directory used for temporary files" },
-                    new AppSetting { Name = "UserFilesDir", Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" });
+                    new AppSetting { Name = "UserFilesDir", Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" }
+                );
 
                 context.SaveChanges();
             }
@@ -75,6 +78,20 @@ namespace wwwplatform.Migrations
             {
                 System.Diagnostics.Debugger.Break();
                 throw exception;
+            }
+        }
+
+        private void CreateMissing<TEntity>(ApplicationDbContext context, params TEntity[] entities) where TEntity : class
+        {
+            foreach (TEntity entity in entities)
+            {
+                context.Set<TEntity>().Attach(entity);
+                var values = context.Entry<TEntity>(entity).GetDatabaseValues();
+                var missing = values == null;
+                if (missing)
+                {
+                    context.Set<TEntity>().Add(entity);
+                }
             }
         }
 
