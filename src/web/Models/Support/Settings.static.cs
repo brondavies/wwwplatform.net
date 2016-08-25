@@ -18,9 +18,9 @@ namespace wwwplatform.Models
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
         }
 
-        static bool DefaultAllowForgotPassword { get { return Boolean.Parse(AppSetting("AllowForgotPassword", Boolean.FalseString)); } }
+        static bool DefaultAllowForgotPassword { get { return bool.Parse(AppSetting("AllowForgotPassword", bool.FalseString)); } }
 
-        static bool DefaultAllowUserRegistration { get { return Boolean.Parse(AppSetting("AllowUserRegistration", Boolean.FalseString)); } }
+        static bool DefaultAllowUserRegistration { get { return bool.Parse(AppSetting("AllowUserRegistration", bool.FalseString)); } }
 
         static string DefaultCanonicalHostName { get { return AppSetting("CanonicalHostName"); } }
 
@@ -36,13 +36,17 @@ namespace wwwplatform.Models
 
         public static Settings Create(HttpContextBase Context)
         {
-            return CacheHelper.GetFromCacheOrDefault<Settings>(Context, typeof(Settings), (value) => {
-                var db = Context.GetOwinContext().Get<ApplicationDbContext>();
-                var list = db.AppSettings.ToList();
-                foreach (var item in list)
+            return CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) => {
+                try
                 {
-                    value[item.Name] = item.Value;
+                    var db = Context.GetOwinContext().Get<ApplicationDbContext>();
+                    var list = db.AppSettings.ToList();
+                    foreach (var item in list)
+                    {
+                        value[item.Name] = item.Value;
+                    }
                 }
+                catch { }
             });
         }
     }

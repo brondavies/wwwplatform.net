@@ -1,6 +1,8 @@
 ﻿using Moq;
 using System;
+using System.IO;
 using System.Web;
+using System.Web.Mvc;
 using wwwplatform.Models;
 
 namespace wwwplatformTests.Support
@@ -57,6 +59,18 @@ namespace wwwplatformTests.Support
             var Server = new Mock<HttpServerUtilityBase>();
             Server.Setup(x => x.MapPath(It.IsAny<string>())).Returns(@"C:\inetpub\wwwplatform.net");
             return Server.Object;
+        }
+
+        protected ViewContext MockViewContext(TextWriter textWriter)
+        {
+            var controller = new MvcTestController();
+            var mockContext = new MockControllerContext(controller, "Test", "Index");
+            var controllerContext = controller.ControllerContext;
+            var view = new Mock<IView>().Object;
+            var viewData = new ViewDataDictionary();
+            var tempData = new TempDataDictionary();
+
+            return new System.Web.Mvc.ViewContext(controllerContext, view, viewData, tempData, textWriter);
         }
 
         protected string NewGuid()

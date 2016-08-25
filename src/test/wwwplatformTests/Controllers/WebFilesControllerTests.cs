@@ -35,6 +35,7 @@ namespace wwwplatform.Controllers.Tests
         public void CreateTest()
         {
             var controller = new WebFilesController();
+            controller.Settings = new Settings();
             var context = CreateMockContext(controller, "Create");
             controller.db = db;
             controller.RoleManager = CreateRoleManager();

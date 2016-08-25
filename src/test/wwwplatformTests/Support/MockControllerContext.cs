@@ -23,9 +23,11 @@ public class MockControllerContext
         Request = new Mock<HttpRequestBase>();
         Response = new Mock<HttpResponseBase>();
         Server = new Mock<HttpServerUtilityBase>();
+        var Cache = new System.Web.Caching.Cache();
         HttpContext.Setup(x => x.Request).Returns(Request.Object);
         HttpContext.Setup(x => x.Response).Returns(Response.Object);
         HttpContext.Setup(x => x.Server).Returns(Server.Object);
+        HttpContext.Setup(x => x.Cache).Returns(Cache);
         Response.Setup(x => x.Output).Returns(new StringWriter(responseBody));
         Request.Setup(x => x.MapPath(It.IsAny<string>())).Returns(Path.GetFullPath("."));
         Server.Setup(x => x.MapPath(It.IsAny<string>())).Returns(Path.GetFullPath("."));

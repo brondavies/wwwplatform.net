@@ -40,31 +40,35 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
             return col;
         }
 
-        override public BootstrapElement Start()
+        override public BootstrapElement Start(bool write = true)
         {
-            if (base.Start() != null)
+            if (base.Start(false) != null)
             {
-                TagBuilder tagBuilder = new TagBuilder(TagName);
-
-                if (_htmlAttributes != null) { tagBuilder.MergeAttributes(_htmlAttributes); }
-
-                if (ColumnOffset != null)
+                if (write)
                 {
-                    foreach (var size in ColumnOffset.Keys)
-                    {
-                        tagBuilder.AddCssClass(string.Format("col-{0}-offset-{1}", size, ColumnOffset[size]));
-                    }
-                }
+                    TagBuilder tagBuilder = new TagBuilder(TagName);
 
-                if (ColumnSize != null)
-                {
-                    foreach (var size in ColumnSize.Keys)
-                    {
-                        tagBuilder.AddCssClass(string.Format("col-{0}-{1}", size, ColumnSize[size]));
-                    }
-                }
+                    if (_htmlAttributes != null) { tagBuilder.MergeAttributes(_htmlAttributes); }
 
-                _viewContext.Writer.Write(tagBuilder.ToString(TagRenderMode.StartTag));
+                    if (ColumnOffset != null)
+                    {
+                        foreach (var size in ColumnOffset.Keys)
+                        {
+                            tagBuilder.AddCssClass(string.Format("col-{0}-offset-{1}", size, ColumnOffset[size]));
+                        }
+                    }
+
+                    if (ColumnSize != null)
+                    {
+                        foreach (var size in ColumnSize.Keys)
+                        {
+                            tagBuilder.AddCssClass(string.Format("col-{0}-{1}", size, ColumnSize[size]));
+                        }
+                    }
+
+                    _viewContext.Writer.Write(tagBuilder.ToString(TagRenderMode.StartTag));
+                }
+                return null;
             }
             return this;
         }

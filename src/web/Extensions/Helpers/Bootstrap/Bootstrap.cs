@@ -278,6 +278,33 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
 
         #endregion
 
+        #region BootstrapDropDown
+
+        public static MvcHtmlString FormDropDown(this HtmlHelper html, FormDropDownOptions options, dynamic additionalViewData = null)
+        {
+            if (additionalViewData != null)
+            {
+                if (additionalViewData.htmlAttributes != null)
+                {
+                }
+            }
+            return null;
+        }
+
+        private static BootstrapDropDown DropDownHelper(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, FormDropDownOptions options)
+        {
+            BootstrapDropDown dropdown = new BootstrapDropDown(htmlHelper.ViewContext, htmlAttributes);
+            if (options != null)
+            {
+                dropdown.FieldName = options.Name;
+                dropdown.FieldValue = options.Value;
+                dropdown.Options = options.Options;
+            }
+            
+            return dropdown;
+        }
+        #endregion
+
         public static MvcHtmlString Concat(this MvcHtmlString first, params MvcHtmlString[] strings)
         {
             return MvcHtmlString.Create(first.ToString() + string.Concat(strings.Select(s => s.ToString())));

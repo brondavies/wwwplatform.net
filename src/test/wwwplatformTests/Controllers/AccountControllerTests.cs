@@ -95,6 +95,7 @@ namespace wwwplatform.Controllers.Tests
         public void RegisterTest()
         {
             var controller = new AccountController();
+            controller.Settings = new Models.Settings();
             var context = CreateMockContext(controller, "Register");
             controller.RoleManager = CreateRoleManager();
             controller.UserManager = MockApplicationUserManager();
@@ -148,6 +149,7 @@ namespace wwwplatform.Controllers.Tests
         public void ForgotPasswordTest()
         {
             var controller = new AccountController();
+            controller.Settings = new Models.Settings();
             var mockUrlHelper = new MockUrlHelper(MockRequestContext());
             mockUrlHelper.ActionCallback = (a, c, r, p) => {
                 return string.Format("{0}://{1}/{2}/{3}/{4}", p, c, a, r["userId"], r["code"]);
@@ -199,6 +201,7 @@ namespace wwwplatform.Controllers.Tests
         public void ForgotPasswordConfirmationTest()
         {
             var controller = new AccountController();
+            controller.Settings = new Models.Settings();
             var context = CreateMockContext(controller, "ForgotPasswordConfirmation");
 
             var result = controller.ForgotPasswordConfirmation();
@@ -210,6 +213,7 @@ namespace wwwplatform.Controllers.Tests
         public void ResetPasswordTest()
         {
             var controller = new AccountController();
+            controller.Settings = new Models.Settings();
             var context = CreateMockContext(controller, "ResetPassword");
             var user = new ApplicationUser
             {
@@ -243,6 +247,7 @@ namespace wwwplatform.Controllers.Tests
         public void ResetPasswordConfirmationTest()
         {
             var controller = new AccountController();
+            controller.Settings = new Models.Settings();
             var context = CreateMockContext(controller, "ResetPasswordConfirmation");
 
             var result = controller.ResetPasswordConfirmation();

@@ -13,14 +13,30 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
     {
         private bool _disposed;
         private string _tagName;
+        private BootstrapElement _parent;
 
         protected IDictionary<string, object> _htmlAttributes;
         protected ViewContext _viewContext;
         protected int _children;
-        
-        public virtual BootstrapElement Parent { get; set; }
+
+        public virtual BootstrapElement Parent
+        {
+            get { return _parent; }
+            set
+            {
+                if (_parent != value)
+                {
+                    _parent = value;
+                    _parent._children++;
+                }
+            }
+        }
 
         public string TagName { get { return _tagName; } set { _tagName = value ?? _tagName; } }
+
+        public string ClassName { get; set; }
+
+        public string Text { get; set; }
 
         public BootstrapElement(ViewContext viewContext)
         {
@@ -82,7 +98,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
         }
 
         private bool _started;
-        public virtual BootstrapElement Start()
+        public virtual BootstrapElement Start(bool write = true)
         {
             if (_started) { return null; }
             if (Parent != null)
@@ -90,11 +106,31 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
                 Parent.Start();
             }
             _started = true;
+
+            if (write)
+            {
+                TagBuilder tagBuilder = new TagBuilder(TagName);
+                if (_htmlAttributes != null) { tagBuilder.MergeAttributes(_htmlAttributes); }
+                tagBuilder.AddCssClass(ClassName);
+
+                if (Text != null)
+                {
+                    tagBuilder.SetInnerText(Text);
+                }
+                _viewContext.Writer.Write(tagBuilder.ToString(TagRenderMode.StartTag));
+                _viewContext.Writer.Write(tagBuilder.InnerHtml);
+            }
+
             return this;
         }
 
         public virtual MvcHtmlString Finish()
         {
+            _children--;
+            if (_children > 0)
+            {
+                return null;
+            }
             return ToMvcHtmlString();
         }
 

@@ -1,0 +1,21 @@
+﻿@using wwwplatform.Models;
+@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model AppSetting
+
+@{ 
+    var BoolOptions = new dynamic[] { new { Text = "True" }, new { Text = "False" } };
+}
+
+<div class="form-group">
+    @switch (Model.Kind)
+    {
+        case AppSetting.KindBool:
+            Html.FormDropDown(new FormDropDownOptions { Name = Model.Value, Options = BoolOptions });
+            break;
+        default:
+        case AppSetting.KindString:
+            <input type="text" name="@(Model.Name)" value="@(Model.Value)" class="form-control" />
+            break;
+    }
+</div>

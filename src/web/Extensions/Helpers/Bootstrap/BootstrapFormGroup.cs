@@ -11,7 +11,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
     {
         public BootstrapFormGroup(HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes) : base(htmlHelper, htmlAttributes)
         {
-            className = "form-group";
+            ClassName = "form-group";
         }
     }
 }

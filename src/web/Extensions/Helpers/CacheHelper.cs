@@ -10,29 +10,52 @@ namespace wwwplatform.Extensions.Helpers
 {
     internal class CacheHelper
     {
+        internal static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext, Action<T> constructor = null)
+        {
+            Type type = typeof(T);
+            return GetFromCacheOrDefault<T>(HttpContext, type.FullName, type, constructor);
+        }
+
         internal static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext, Type type, Action<T> constructor = null)
         {
-            string key = type.FullName;
-            T result = (T)HttpContext.Cache[key];
+            return GetFromCacheOrDefault<T>(HttpContext, type.FullName, type, constructor);
+        }
+
+        internal static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext, string key, Action<T> constructor = null)
+        {
+            return GetFromCacheOrDefault<T>(HttpContext, key, typeof(T), constructor);
+        }
+
+        private static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext, string key, Type type, Action<T> constructor = null)
+        {
+            T result = default(T);
+            try
+            {
+                result = (T)HttpContext.Cache[key];
+            }
+            catch { }
             if (result == null)
             {
                 result = (T)Activator.CreateInstance(type, true);
                 constructor?.Invoke(result);
-                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+                try
+                {
+                    HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+                }
+                catch { }
             }
             return result;
         }
 
-        internal static T GetFromCacheOrDefault<T>(HttpContextBase HttpContext,  string key, Action<T> constructor = null)
+        internal static void ClearFromCache(HttpContextBase HttpContext, Type type)
         {
-            T result = (T)HttpContext.Cache[key];
-            if (result == null)
-            {
-                result = (T)Activator.CreateInstance(typeof(T), true);
-                constructor?.Invoke(result);
-                HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
-            }
-            return result;
+            string key = type.FullName;
+            ClearFromCache(HttpContext, key);
+        }
+
+        internal static void ClearFromCache(HttpContextBase HttpContext, string key)
+        {
+            HttpContext.Cache.Remove(key);
         }
     }
 }

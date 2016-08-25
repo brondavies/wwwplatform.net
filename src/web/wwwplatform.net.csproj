@@ -184,6 +184,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\AppSettingsController.cs" />
     <Compile Include="Controllers\SharedFoldersController.cs" />
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
@@ -209,10 +210,15 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\AnonymousObjectConverter.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\Bootstrap.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapButton.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapButtonGroup.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapColumn.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapDropDown.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapElement.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapFormGroup.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapMenu.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapRow.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\FormDropDownOptions.cs" />
     <Compile Include="Extensions\Helpers\CacheHelper.cs" />
     <Compile Include="Extensions\Helpers\FileStorage.cs" />
     <Compile Include="Extensions\SitePageRouteConstraint.cs" />
@@ -761,6 +767,8 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="Views\SharedFolders\Edit.cshtml" />
     <Content Include="Views\Shared\_PageNavigation.cshtml" />
+    <Content Include="Views\AppSettings\Index.cshtml" />
+    <Content Include="Views\AppSettings\_AppSettingEditor.cshtml" />
     <None Include="Views\Shared\_SelectFile.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

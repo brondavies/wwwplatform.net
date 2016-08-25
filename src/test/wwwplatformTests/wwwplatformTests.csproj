@@ -136,12 +136,15 @@
     <Compile Include="Controllers\AccountControllerTests.cs" />
     <Compile Include="Controllers\SharedFoldersControllerTests.cs" />
     <Compile Include="Controllers\WebFilesControllerTests.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapDropDownTests.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\BootstrapElementTests.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="Extensions\System\StringTests.cs" />
     <Compile Include="Support\ControllerTestBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Support\MockControllerContext.cs" />
     <Compile Include="Support\MockUrlHelper.cs" />
+    <Compile Include="Support\MvcTestController.cs" />
     <Compile Include="Support\Settings.cs" />
     <Compile Include="Support\TestBase.cs" />
   </ItemGroup>

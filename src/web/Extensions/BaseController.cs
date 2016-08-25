@@ -59,7 +59,7 @@ namespace wwwplatform.Extensions
                 _roleManager = value;
             }
         }
-        
+
         public ApplicationUserManager UserManager
         {
             get
@@ -69,6 +69,20 @@ namespace wwwplatform.Extensions
             set
             {
                 _userManager = value;
+            }
+        }
+
+        private wwwplatform.Models.Settings _settings;
+        public wwwplatform.Models.Settings Settings
+        {
+            get
+            {
+                if (_settings == null) { _settings = Settings.Create(HttpContext); }
+                return _settings;
+            }
+            set
+            {
+                _settings = value;
             }
         }
 
@@ -96,7 +110,7 @@ namespace wwwplatform.Extensions
                 HttpContext.Request.AcceptTypes.Contains("application/json") ||
                 HttpContext.Request.AcceptTypes.Contains("text/javascript"));
             accept = accept || (HttpContext.Request.ContentType?.EndsWith("json")).GetValueOrDefault();
-            return accept;        
+            return accept;
         }
 
         private string Serialize(object model)
@@ -127,7 +141,7 @@ namespace wwwplatform.Extensions
 
         protected virtual ActionResult ErrorResult(ModelStateDictionary modelState)
         {
-            Response.StatusCode = (int) HttpStatusCode.BadRequest;
+            Response.StatusCode = (int)HttpStatusCode.BadRequest;
             var errors = GetErrorsFromModelState(modelState);
             return Json(new { status = Response.StatusCode, errors = errors }, JsonRequestBehavior.AllowGet);
         }
@@ -197,7 +211,7 @@ namespace wwwplatform.Extensions
         {
             throw new HttpException(404, "Not found");
         }
-        
+
         protected override void OnActionExecuted(ActionExecutedContext filterContext)
         {
             base.OnActionExecuted(filterContext);

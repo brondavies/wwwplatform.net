@@ -137,7 +137,7 @@ namespace wwwplatform.Controllers
         {
             string extension = Path.GetExtension(file.FileName).ToLower();
             string tempfilename = Extensions.String.Random(16);
-            string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(Settings.Create(HttpContext).TempDir), tempfilename), extension);
+            string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(Settings.TempDir), tempfilename), extension);
             file.SaveAs(tempfile);
 
             if (System.IO.File.Exists(tempfile))

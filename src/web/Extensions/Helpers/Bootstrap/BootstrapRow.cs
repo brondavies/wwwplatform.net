@@ -19,15 +19,13 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
         private BootstrapColumnOffsets[] _columnOffsets;
 
         public BootstrapColumnOffsets[] ColumnOffsets { get { return _columnOffsets; } set { _columnOffsets = value; } }
-
-        public string className { get; set; }
-
+        
         public BootstrapRow(HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes) : base(htmlHelper.ViewContext)
         {
             _columns = 0;
             _htmlHelper = htmlHelper;
             _htmlAttributes = htmlAttributes;
-            className = "row";
+            ClassName = "row";
         }
 
         public override BootstrapColumn Column()
@@ -54,32 +52,8 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
             column.ColumnSize = NextSize();
             _columns++;
             column.Parent = this;
-            _children++;
-
+            
             return column;
-        }
-
-        public override BootstrapElement Start()
-        {
-            if (base.Start() != null)
-            {
-                TagBuilder tagBuilder = new TagBuilder("div");
-                if (_htmlAttributes != null) { tagBuilder.MergeAttributes(_htmlAttributes); }
-                tagBuilder.AddCssClass(className);
-
-                _htmlHelper.ViewContext.Writer.Write(tagBuilder.ToString(TagRenderMode.StartTag));
-            }
-            return this;
-        }
-
-        public override MvcHtmlString Finish()
-        {
-            _children--;
-            if (_children <= 0)
-            {
-                return base.Finish();
-            }
-            return null;
         }
 
         internal BootstrapColumnOffsets NextOffset()

@@ -18,7 +18,7 @@ namespace wwwplatform.Models
             // Set AutoMigrateDatabaseToLatestVersion = "False" in web.config to disable automatic migrations
             // and call ApplicationDbContext.Upgrade() when migration should be executed
             // or use Update-Database in the Package Manager Console
-            if (Convert.ToBoolean(Settings.AppSetting("AutoMigrateDatabaseToLatestVersion", bool.FalseString)))
+            if (bool.Parse(Settings.AppSetting("AutoMigrateDatabaseToLatestVersion", bool.FalseString)))
             {
                 Database.SetInitializer(new MigrateDatabaseToLatestVersion<ApplicationDbContext, Migrations.Configuration>());
             }

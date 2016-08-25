@@ -23,6 +23,7 @@ namespace wwwplatform.Controllers.Tests
         {
             base.Initialize();
             db.Setup();
+            ApplicationDbContext.Upgrade();
         }
 
         #region Mock Objects

@@ -114,7 +114,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowUserRegistration)
+            if (!Request.IsLocal && !Settings.AllowUserRegistration)
             {
                 return HttpNotFound(); //disabled
             }
@@ -128,7 +128,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Register(RegisterViewModel model)
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowUserRegistration)
+            if (!Request.IsLocal && !Settings.AllowUserRegistration)
             {
                 return HttpNotFound(); //disabled
             }
@@ -176,7 +176,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ForgotPassword(ForgotPasswordViewModel model)
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowForgotPassword)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -206,7 +206,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPasswordConfirmation()
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowForgotPassword)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -218,7 +218,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ResetPassword(string code)
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowForgotPassword)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -232,7 +232,7 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowForgotPassword)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
@@ -260,7 +260,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ResetPasswordConfirmation()
         {
-            if (!Request.IsLocal && !Settings.Create(HttpContext).AllowForgotPassword)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
