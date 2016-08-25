@@ -59,18 +59,7 @@ namespace wwwplatform.Migrations
                 }
                 
                 CreateMissing<AppSetting>(context,
-                    new AppSetting { Name = "AllowForgotPassword", Kind = AppSetting.KindBool, DefaultValue = "True", Description = "Allows users to reset forgotten passwords" },
-                    new AppSetting { Name = "AllowUserRegistration", Kind = AppSetting.KindBool, DefaultValue = "True", Description = "Opens user registration to the public" },
-                    new AppSetting { Name = "CanonicalHostName", Kind = AppSetting.KindString, Description = "The host name that should be used for this site" },
-                    new AppSetting { Name = "DefaultPageDescription", Kind = AppSetting.KindString, Description = "The default page description" },
-                    new AppSetting { Name = "DefaultPageTitle", Kind = AppSetting.KindString, Description = "The default page title" },
-                    new AppSetting { Name = "DefaultSiteImage", Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
-                    new AppSetting { Name = "EmailDefaultFrom", Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
-                    new AppSetting { Name = "ShowSharedFoldersInMenus", Kind = AppSetting.KindBool, DefaultValue = "True", Description = "Add a link to shared folders in the navigation and footer. Shared Folder links are always available to the roles assigned." },
-                    new AppSetting { Name = "SiteName", Kind = AppSetting.KindString, Description = "The name of the site" },
-                    new AppSetting { Name = "SiteOwner", Kind = AppSetting.KindString, Description = "The name of the site owner" },
-                    new AppSetting { Name = "TempDir", Kind = AppSetting.KindDirectory, Description = "The directory used for temporary files" },
-                    new AppSetting { Name = "UserFilesDir", Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" }
+                    Settings.GetDefaultSettings()
                 );
 
                 context.SaveChanges();

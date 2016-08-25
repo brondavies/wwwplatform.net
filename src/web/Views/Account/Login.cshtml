@@ -1,46 +1,62 @@
-﻿@using wwwplatform.Models
-@model LoginViewModel
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.LoginViewModel
+
 @{
     ViewBag.Title = "Log in";
     Model.RememberMe = true;
+    var columnSizes = new[] { new { xs = 6, md = 3 }, new { xs = 6, md = 6 } };
+    var columnOffsets = new[] { new { md = 3 }, new { md = 0 } };
 }
 
 <h2>@ViewBag.Title</h2>
-<div class="row">
-    <div class="col-md-8 col-md-offset-2">
-        <section id="loginForm">
+<section id="loginForm" class="margin-bottom-40">
+    <div class="row">
+        <div class="well col-sm-6 col-sm-offset-3">
             @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { @class = "form-horizontal", role = "form" }))
             {
                 @SimpleAntiForgeryToken()
-                <h4>Enter your user name and password to log in.</h4>
+                <h4 class="text-center">Enter your user name and password to log in.</h4>
                 <hr />
                 @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Username, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
+                    @Html.LabelFor(m => m.Username, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-6">
                         @Html.TextBoxFor(m => m.Username, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Username, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    @Html.LabelFor(m => m.Password, new { @class = "col-md-2 control-label" })
-                    <div class="col-md-10">
+                    @Html.LabelFor(m => m.Password, new { @class = "col-md-3 control-label" })
+                    <div class="col-md-6">
                         @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
                         @Html.ValidationMessageFor(m => m.Password, "", new { @class = "text-danger" })
                     </div>
                 </div>
                 <div class="form-group">
-                    <div class="col-xs-6 col-md-offset-2 col-md-4">
-                        <input type="submit" value="Log in" class="btn btn-default" />
+                    <div class="col-sm-6 col-md-3 col-md-offset-3">
+                        <input type="submit" value="Log in" class="btn btn-primary" />
                     </div>
                     <div class="col-xs-6">
                         <div class="checkbox">
                             @Html.CheckBoxFor(m => m.RememberMe)
-                            @Html.LabelFor(m => m.RememberMe)
+                            @Html.LabelFor(m => m.RememberMe, htmlAttributes: new { style = "padding-left: 0;" })
                         </div>
                     </div>
                 </div>
             }
-        </section>
+        </div>
     </div>
-</div>
+    <div class="row">
+        <div class="col-sm-12 text-center">
+            @if (Settings.AllowForgotPassword)
+            {
+                @Html.ActionLink("Forgot your password?", "ForgotPassword", "Account", null, new { @class = "btn btn-default" })
+            }
+            @if (Settings.AllowUserRegistration)
+            {
+                @Html.ActionLink("Create an account", "Register", "Account", null, new { @class = "btn btn-default" })
+            }
+        </div>
+    </div>
+</section>

@@ -1,14 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web;
-using System.Web.Mvc;
-using System.Web.Routing;
-
-namespace wwwplatform.Models
+﻿namespace wwwplatform.Models
 {
     public partial class Settings : ObjectDictionary
     {
@@ -22,28 +12,28 @@ namespace wwwplatform.Models
             return defaultValue;
         }
 
-        public bool AllowForgotPassword { get { return bool.Parse(GetValue("AllowForgotPassword", DefaultAllowForgotPassword)); } }
+        public bool AllowForgotPassword { get { return bool.Parse(GetValue(kAllowForgotPassword, DefaultAllowForgotPassword)); } }
 
-        public bool AllowUserRegistration { get { return bool.Parse(GetValue("AllowUserRegistration", DefaultAllowUserRegistration)); } }
+        public bool AllowUserRegistration { get { return bool.Parse(GetValue(kAllowUserRegistration, DefaultAllowUserRegistration)); } }
 
-        public string CanonicalHostName { get { return GetValue("CanonicalHostName", DefaultCanonicalHostName); } }
+        public string CanonicalHostName { get { return GetValue(kCanonicalHostName, GetConfig(kCanonicalHostName)); } }
 
-        public string DefaultPageDescription { get { return GetValue("DefaultPageDescription", ""); } }
+        public string DefaultPageDescription { get { return GetValue(kDefaultPageDescription, ""); } }
 
-        public string DefaultPageTitle { get { return GetValue("DefaultPageTitle", AppSetting("DefaultPageTitle")); } }
+        public string DefaultPageTitle { get { return GetValue(kDefaultPageTitle, GetConfig(kDefaultPageTitle)); } }
 
-        public string DefaultSiteImage { get { return GetValue("DefaultSiteImage", AppSetting("DefaultSiteImage")); } }
+        public string DefaultSiteImage { get { return GetValue(kDefaultSiteImage, GetConfig(kDefaultSiteImage)); } }
 
-        public string EmailDefaultFrom { get { return GetValue("EmailDefaultFrom", DefaultEmailFrom); } }
+        public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
 
-        public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue("ShowSharedFoldersInMenus", DefaultShowSharedFoldersInMenus)); } }
+        public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue(kShowSharedFoldersInMenus, DefaultShowSharedFoldersInMenus)); } }
 
-        public string SiteName { get { return GetValue("SiteName", DefaultSiteName); } }
+        public string SiteName { get { return GetValue(kSiteName, GetConfig(kSiteName)); } }
 
-        public string SiteOwner { get { return GetValue("SiteOwner", DefaultSiteOwner); } }
+        public string SiteOwner { get { return GetValue(kSiteOwner, GetConfig(kSiteOwner)); } }
 
-        public string TempDir { get { return GetValue("TempDir", DefaultTempDir); } }
+        public string TempDir { get { return GetValue(kTempDir, DefaultTempDir); } }
 
-        public string UserFilesDir { get { return GetValue("UserFilesDir", DefaultUserFilesDir); } }
+        public string UserFilesDir { get { return GetValue(kUserFilesDir, DefaultUserFilesDir); } }
     }
 }
