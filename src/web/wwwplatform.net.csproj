@@ -219,6 +219,7 @@
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapMenu.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapRow.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\FormDropDownOptions.cs" />
+    <Compile Include="Extensions\Helpers\Bootstrap\MenuOption.cs" />
     <Compile Include="Extensions\Helpers\CacheHelper.cs" />
     <Compile Include="Extensions\Helpers\FileStorage.cs" />
     <Compile Include="Extensions\SitePageRouteConstraint.cs" />

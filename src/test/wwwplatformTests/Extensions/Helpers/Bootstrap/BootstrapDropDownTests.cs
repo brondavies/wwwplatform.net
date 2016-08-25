@@ -31,5 +31,33 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
                 "</div>",
                 stringBuilder.ToString());
         }
+
+        [TestMethod]
+        public void TestDropDownWithOptions()
+        {
+            var stringBuilder = new StringBuilder();
+            using (var textWriter = new StringWriter(stringBuilder))
+            {
+                using (BootstrapDropDown element = new BootstrapDropDown(MockViewContext(textWriter)))
+                {
+                    element.FieldName = "SomeField";
+                    element.FieldValue = "Value1";
+                    element.Options = new [] { new MenuOption { Value = "Value1" }, new MenuOption { Value = "Value2" } };
+                    element.ToMvcHtmlString();
+                }
+            }
+
+            Assert.AreEqual(
+                "<div class=\"dropdown\">" +
+                    "<button aria-haspopup=\"true\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">" +
+                        "Value1<span class=\"caret\"></span>" +
+                    "</button>" +
+                    "<ul class=\"dropdown-menu\">" +
+                        "<li><a data-value=\"Value1\" href=\"#\">Value1</a></li>" +
+                        "<li><a data-value=\"Value2\" href=\"#\">Value2</a></li>" +
+                    "</ul>" +
+                "</div>",
+                stringBuilder.ToString());
+        }
     }
 }

@@ -111,7 +111,10 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
             {
                 TagBuilder tagBuilder = new TagBuilder(TagName);
                 if (_htmlAttributes != null) { tagBuilder.MergeAttributes(_htmlAttributes); }
-                tagBuilder.AddCssClass(ClassName);
+                if (!string.IsNullOrWhiteSpace(ClassName))
+                {
+                    tagBuilder.AddCssClass(ClassName);
+                }
 
                 if (Text != null)
                 {

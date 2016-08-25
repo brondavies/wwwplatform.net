@@ -10,7 +10,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
     {
         public string FieldName;
         public object FieldValue;
-        public dynamic[] Options;
+        public IEnumerable<MenuOption> Options;
 
         public BootstrapDropDown(ViewContext viewContext, IDictionary<string, object> htmlAttributes = null) : base(viewContext)
         {

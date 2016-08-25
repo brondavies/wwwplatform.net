@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Web;
 
 namespace wwwplatform.Extensions.Helpers.Bootstrap
 {
-    public class FormDropDownOptions
+    public class MenuOption
     {
-        public string Name;
+        public string Text;
         public object Value;
-        public IEnumerable<MenuOption> Options;
     }
 }

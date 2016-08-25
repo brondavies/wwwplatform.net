@@ -9,7 +9,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
 {
     public class BootstrapMenu : BootstrapElement
     {
-        public dynamic[] Options;
+        public IEnumerable<MenuOption> Options;
 
         public BootstrapMenu(ViewContext viewContext, IDictionary<string, object> htmlAttributes) : base(viewContext)
         {
@@ -23,14 +23,13 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
             {
                 if (Options != null)
                 {
-                    TagBuilder b = new TagBuilder("a");
-                    b.Attributes["href"] = "#";
-
-                    foreach (dynamic option in Options)
+                    foreach (var option in Options)
                     {
                         var element = new BootstrapElement(_viewContext) { TagName = "li" };
-                        b.SetInnerText(option.Text);
-                        b.Attributes["data-value"] = option.Value ?? option.Text;
+                        TagBuilder b = new TagBuilder("a");
+                        b.Attributes["href"] = "#";
+                        b.Attributes["data-value"] = (option.Value != null) ? Convert.ToString(option.Value) : option.Text;
+                        b.SetInnerText(option.Text ?? Convert.ToString(option.Value));
                         Add(element.Add(b));
                     }
                 }
