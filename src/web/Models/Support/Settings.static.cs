@@ -18,13 +18,15 @@ namespace wwwplatform.Models
             return ConfigurationManager.AppSettings[key] ?? defaultValue;
         }
 
-        static bool DefaultAllowForgotPassword { get { return bool.Parse(AppSetting("AllowForgotPassword", bool.FalseString)); } }
+        static string DefaultAllowForgotPassword { get { return AppSetting("AllowForgotPassword", bool.FalseString); } }
 
-        static bool DefaultAllowUserRegistration { get { return bool.Parse(AppSetting("AllowUserRegistration", bool.FalseString)); } }
+        static string DefaultAllowUserRegistration { get { return AppSetting("AllowUserRegistration", bool.FalseString); } }
 
         static string DefaultCanonicalHostName { get { return AppSetting("CanonicalHostName"); } }
 
         static string DefaultEmailFrom { get { return AppSetting("EmailDefaultFrom"); } }
+
+        static string DefaultShowSharedFoldersInMenus { get { return AppSetting("ShowSharedFoldersInMenus", bool.TrueString); } }
 
         static string DefaultSiteName { get { return AppSetting("SiteName"); } }
 

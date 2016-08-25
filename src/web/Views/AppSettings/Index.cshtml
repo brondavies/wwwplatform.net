@@ -1,19 +1,37 @@
 ﻿@using wwwplatform.Models;
+@using wwwplatform.Extensions.Helpers.Bootstrap;
+@using System.Text.RegularExpressions;
 
 @model IEnumerable<AppSetting>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Application Settings";
+}
+@helper PrettyName(string name)
+{
+Regex regex = new Regex("([A-Z])");
+Write(regex.Replace(name, " $1"));
 }
 
-<h2>Index</h2>
+<h2>@ViewBag.Title</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<section class="margin-bottom-40">
-    @using (Html.BeginForm())
-    {
+@using (Html.BeginForm("Edit", "AppSettings", FormMethod.Post))
+{
+    @Html.Row(new[] { new { sm = 9 }, new { sm = 3 } }
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">
+            Change application settings
+        </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Index")
+        </span>
+        )
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    <section class="margin-bottom-40">
         @Html.AntiForgeryToken()
         <table class="table table-striped">
             <thead>
@@ -24,7 +42,7 @@
                     <th>
                         @Html.DisplayNameFor(model => model.Value)
                     </th>
-                    <th>
+                    <th class="col-sm-4">
                         @Html.DisplayNameFor(model => model.Description)
                     </th>
                 </tr>
@@ -34,17 +52,17 @@
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Value)
+                            @PrettyName(item.Name)
                         </td>
                         <td>
                             @Html.Partial("_AppSettingEditor", item)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
                         </td>
                     </tr>
                 }
             </tbody>
         </table>
-    }
-</section>
+    </section>
+}

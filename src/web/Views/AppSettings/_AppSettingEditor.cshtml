@@ -7,11 +7,11 @@
     var BoolOptions = new [] { new MenuOption { Text = "True" }, new MenuOption { Text = "False" } };
 }
 
-<div class="form-group">
+<div>
     @switch (Model.Kind)
     {
         case AppSetting.KindBool:
-            Html.FormDropDown(new FormDropDownOptions { Name = Model.Value, Options = BoolOptions });
+            Html.FormDropDown(new FormDropDownOptions { Name = Model.Name, Value = Model.Value ?? Model.DefaultValue, Options = BoolOptions });
             break;
         default:
         case AppSetting.KindString:

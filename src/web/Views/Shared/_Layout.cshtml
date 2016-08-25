@@ -79,26 +79,49 @@
                     <ul class="list-unstyled list-inline pull-right">
                         <li>
                         </li>
-                        <li>
-                            @UserAdminLink()
-                        </li>
-                        <li>
-                            @PagesAdminLink()
-                        </li>
-                        <li>
-                            @MailingListAdminLink()
-                        </li>
+
                         @if (Request.IsAuthenticated)
                         {
-                            <li>
-                                @SharedFoldersLink()
-                            </li>
+                            if (User.IsInRole(wwwplatform.Models.Roles.Administrators) ||
+                                User.IsInRole(wwwplatform.Models.Roles.Editors) ||
+                                User.IsInRole(wwwplatform.Models.Roles.ListManagers))
+                            {
+                                <li>
+                                    <div class="dropup adminMenu">
+                                        <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="adminMenu">
+                                            Admin <span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="adminMenu">
+                                            <li>
+                                                @UserAdminLink()
+                                            </li>
+                                            <li>
+                                                @PagesAdminLink()
+                                            </li>
+                                            <li>
+                                                @MailingListAdminLink()
+                                            </li>
+                                            <li>
+                                                @SettingsAdminLink()
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </li>
+                            }
+                            if (Settings.ShowSharedFoldersInMenus)
+                            {
+                                <li>
+                                    @SharedFoldersLink()
+                                </li>
+                            }
                             <li>
                                 @MyAccountLink()
                             </li>
                         }
                         <li>
                             @LoginLink()
+                        </li>
+                        <li>
                         </li>
                     </ul>
                 </div>

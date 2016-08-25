@@ -126,3 +126,10 @@ table.dataTable thead th::after{
     0% { background-position: 0 0; }
     100% { background-position: 1096px 0; }
 }
+#footer .adminMenu .dropdown-menu {
+    background-color: #4f4e53;
+}
+#footer .adminMenu .dropdown-menu>li>a:focus,
+#footer .adminMenu .dropdown-menu>li>a:hover {
+    background-color: transparent;
+}

@@ -22,17 +22,17 @@ namespace wwwplatform.Controllers
             return View(settings);
         }
 
-        // POST: AppSettings
+        // POST: AppSettings/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Update(FormCollection form)
+        public async Task<ActionResult> Edit(FormCollection form)
         {
             var settings = db.AppSettings.ToList();
             foreach(var setting in settings)
             {
                 if (form.AllKeys.Contains(setting.Name))
                 {
-                    setting.Value = form[setting.Name];
+                    setting.Value = NullIfEmpty(form[setting.Name]);
                     db.Entry(setting).State = EntityState.Modified;
                 }
             }
@@ -41,6 +41,15 @@ namespace wwwplatform.Controllers
             CacheHelper.ClearFromCache(HttpContext, typeof(Settings));
 
             return RedirectToAction("Index");
+        }
+
+        private string NullIfEmpty(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return null;
+            }
+            return value.Trim();
         }
     }
 }

@@ -26,7 +26,16 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
                 toggleAttributes["data-toggle"] = "dropdown";
                 toggleAttributes["aria-haspopup"] = "true";
 
-                var toggle = new BootstrapButton(_viewContext, toggleAttributes) { Text = Convert.ToString(FieldValue) };
+                if (!string.IsNullOrEmpty(FieldName))
+                {
+                    TagBuilder hidden = new TagBuilder("input");
+                    hidden.Attributes["type"] = "hidden";
+                    hidden.Attributes["name"] = FieldName;
+                    hidden.Attributes["value"] = Convert.ToString(FieldValue);
+                    _viewContext.Writer.Write(hidden.ToString(TagRenderMode.SelfClosing));
+                }
+
+                var toggle = new BootstrapButton(_viewContext, toggleAttributes) { Text = Convert.ToString(FieldValue) + " " };
                 toggle.ClassName += " dropdown-toggle";
                 var caret = new BootstrapElement(_viewContext) { TagName = "span", ClassName = "caret" };
                 var menu = new BootstrapMenu(_viewContext, null) { Options = Options };

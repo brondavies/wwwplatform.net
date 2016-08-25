@@ -11,6 +11,8 @@ namespace wwwplatform.Models
 
         public string Value { get; set; }
 
+        public string DefaultValue { get; set; }
+
         public string Description { get; set; }
 
         public int Kind { get; set; }

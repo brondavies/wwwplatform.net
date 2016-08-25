@@ -44,5 +44,19 @@
         }
     });
 
+    $('.dropdown input[type="hidden"]').each(function (i, input) {
+        var dropdown = $(this).closest('.dropdown');
+        $('a[data-value]', dropdown).click(function (event) {
+            event.preventDefault();
+            var value = $(this).data('value');
+            var label = $(this).text();
+            var toggle = $('[data-toggle="dropdown"]', dropdown);
+            var caret = $('.caret', toggle);
+            toggle.text(label + ' ');
+            caret.length && toggle.append(caret);
+            input.value = value;
+        });
+    });
+
     $(document.body).addClass('in');
 })

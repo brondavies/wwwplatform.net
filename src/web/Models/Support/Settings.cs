@@ -14,12 +14,17 @@ namespace wwwplatform.Models
     {
         private T GetValue<T>(string key, T defaultValue)
         {
-            return ContainsKey(key) ? (T)this[key] : defaultValue;
+            try
+            {
+                return ContainsKey(key) ? (T)this[key] : defaultValue;
+            }
+            catch { }
+            return defaultValue;
         }
 
-        public bool AllowForgotPassword { get { return GetValue("AllowForgotPassword", DefaultAllowForgotPassword); } }
+        public bool AllowForgotPassword { get { return bool.Parse(GetValue("AllowForgotPassword", DefaultAllowForgotPassword)); } }
 
-        public bool AllowUserRegistration { get { return GetValue("AllowUserRegistration", DefaultAllowUserRegistration); } }
+        public bool AllowUserRegistration { get { return bool.Parse(GetValue("AllowUserRegistration", DefaultAllowUserRegistration)); } }
 
         public string CanonicalHostName { get { return GetValue("CanonicalHostName", DefaultCanonicalHostName); } }
 
@@ -30,6 +35,8 @@ namespace wwwplatform.Models
         public string DefaultSiteImage { get { return GetValue("DefaultSiteImage", AppSetting("DefaultSiteImage")); } }
 
         public string EmailDefaultFrom { get { return GetValue("EmailDefaultFrom", DefaultEmailFrom); } }
+
+        public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue("ShowSharedFoldersInMenus", DefaultShowSharedFoldersInMenus)); } }
 
         public string SiteName { get { return GetValue("SiteName", DefaultSiteName); } }
 

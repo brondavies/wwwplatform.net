@@ -18,6 +18,7 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
             {
                 using (BootstrapDropDown element = new BootstrapDropDown(MockViewContext(textWriter)))
                 {
+                    element.FieldValue = "MyDropdown";
                     element.ToMvcHtmlString();
                 }
             }
@@ -25,7 +26,7 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
             Assert.AreEqual(
                 "<div class=\"dropdown\">" +
                     "<button aria-haspopup=\"true\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">" +
-                    "<span class=\"caret\"></span>" +
+                    "MyDropdown <span class=\"caret\"></span>" +
                     "</button>" +
                     "<ul class=\"dropdown-menu\"></ul>" +
                 "</div>",
@@ -49,8 +50,9 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
 
             Assert.AreEqual(
                 "<div class=\"dropdown\">" +
+                    "<input name=\"SomeField\" type=\"hidden\" value=\"Value1\" />" +
                     "<button aria-haspopup=\"true\" class=\"btn dropdown-toggle\" data-toggle=\"dropdown\">" +
-                        "Value1<span class=\"caret\"></span>" +
+                        "Value1 <span class=\"caret\"></span>" +
                     "</button>" +
                     "<ul class=\"dropdown-menu\">" +
                         "<li><a data-value=\"Value1\" href=\"#\">Value1</a></li>" +
