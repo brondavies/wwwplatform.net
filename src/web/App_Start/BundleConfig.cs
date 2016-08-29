@@ -31,7 +31,7 @@ namespace wwwplatform
                 "~/Scripts/modernizr.custom.js"
             ));
 
-            bundles.Add(new StyleBundle("~/assets/css").Include(
+            bundles.Add(new StyleBundle("~/assets/css/all").Include(
                 "~/assets/css/animate.css",
                 "~/assets/css/nexus.css",
                 "~/assets/css/responsive.css",

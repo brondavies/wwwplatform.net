@@ -4,12 +4,16 @@
     {
         private T GetValue<T>(string key, T defaultValue)
         {
+            T value = default(T);
             try
             {
-                return ContainsKey(key) ? (T)this[key] : defaultValue;
+                if (ContainsKey(key))
+                {
+                    value = (T)this[key];
+                }
             }
             catch { }
-            return defaultValue;
+            return value != null ? value : defaultValue;
         }
 
         public bool AllowForgotPassword { get { return bool.Parse(GetValue(kAllowForgotPassword, DefaultAllowForgotPassword)); } }
