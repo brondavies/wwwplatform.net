@@ -46,5 +46,11 @@ namespace wwwplatform.Models
             }
             return null;
         }
+
+        public static bool IsBuiltinRole(IdentityRole role)
+        {
+            var roles = new string[] { Roles.Administrators, Roles.Editors, Roles.ListManagers, Roles.Public, Roles.Users };
+            return (roles.Contains(role.Name));
+        }
     }
 }

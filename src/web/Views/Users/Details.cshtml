@@ -20,13 +20,12 @@
         <span>(@Model.UserName)</span>
     </h4>
         ).Column(htmlAttributes: new { @class = "text-right" }
-        ).Add(@<span>
-            <div class="btn-group">
+        ).Add(@<div class="btn-group">
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
                 @Html.ActionLink("Reset Password", "ResetPassword", new { id = Model.Id }, new { @class = "btn btn-default" })
             </div>
-            @Html.ActionLink("Cancel", "Index")
-            </span>
+        ).Add(
+            Html.ActionLink("Cancel", "Index")    
         )
     <hr />
     @Html.Row(columns

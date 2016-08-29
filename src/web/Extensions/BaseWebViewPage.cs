@@ -81,6 +81,16 @@ namespace wwwplatform.Extensions
             return null;
         }
 
+        public IHtmlString RolesAdminLink()
+        {
+            if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
+            {
+                return Html.ActionLink("Manage Roles", "Index", "Roles");
+            }
+
+            return null;
+        }
+
         public IHtmlString SettingsAdminLink()
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))

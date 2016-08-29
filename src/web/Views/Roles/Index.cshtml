@@ -1,0 +1,71 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+@using wwwplatform.Models.ViewModels;
+@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model IEnumerable<IdentityRole>
+
+@{
+    ViewBag.Title = "Manage Roles";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<section class="h3 text-right">
+    <a href="#createrole" data-toggle="modal" data-target="#CreateRoleModal" class="btn btn-default">Create Role</a>
+</section>
+<section class="margin-bottom-40">
+    <table class="table table-striped clickable">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Name)
+                </th>
+                <th class="text-right">
+                    Users
+                </th>
+                <th class="disable-sorting"></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr data-href="/Roles/Details/@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td class="text-right">
+                        @Html.DisplayFor(modelItem => item.Users.Count)
+                    </td>
+                    <td>
+                        @if (!wwwplatform.Models.Roles.IsBuiltinRole(item))
+                        {
+                            Html.RenderPartial("_TableActionButtons", item, new TableActionOptions { showDetails = false, showEdit = false });
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+<div id="CreateRoleModal" class="text-left h5 modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Create Role</h4>
+            </div>
+            @using (Html.BeginForm("Create", "Roles", FormMethod.Post))
+            {
+                <div class="modal-body">
+                    @SimpleAntiForgeryToken()
+                    <label class="control-label">Enter the new role name</label>
+                    <input class="form-control" type="text" name="roleName" />
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary">OK</button>
+                </div>
+            }
+        </div>
+    </div>
+</div>

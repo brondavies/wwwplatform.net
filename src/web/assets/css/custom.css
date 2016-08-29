@@ -133,3 +133,8 @@ table.dataTable thead th::after{
 #footer .adminMenu .dropdown-menu>li>a:hover {
     background-color: transparent;
 }
+.modal-body .checkbox.inline {
+    width: 49%;
+    height: 30px;
+    vertical-align: middle;
+}

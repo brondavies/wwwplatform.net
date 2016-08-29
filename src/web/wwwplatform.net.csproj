@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\AppSettingsController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SharedFoldersController.cs" />
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
@@ -230,6 +231,7 @@
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Serializers\ApplicationUserSerializer.cs" />
     <Compile Include="Models\Support\AppSetting.cs" />
     <Compile Include="Models\Support\ObjectDictionary.cs" />
     <Compile Include="Models\Support\Permissible.cs" />
@@ -275,6 +277,7 @@
     <Compile Include="Models\SitePage.cs">
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\RoleDetailModel.cs" />
     <Compile Include="Models\ViewModels\SentEmailMessageModel.cs" />
     <Compile Include="Models\ViewModels\TableActionOptions.cs" />
     <Compile Include="Models\ViewModels\UploadDialogOptions.cs" />
@@ -770,6 +773,9 @@
     <Content Include="Views\Shared\_PageNavigation.cshtml" />
     <Content Include="Views\AppSettings\Index.cshtml" />
     <Content Include="Views\AppSettings\_AppSettingEditor.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\Details.cshtml" />
+    <Content Include="Views\Roles\Delete.cshtml" />
     <None Include="Views\Shared\_SelectFile.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">

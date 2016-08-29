@@ -5,10 +5,7 @@
 @{
     ViewBag.Title = "Create User";
     var columns = new[] { new { sm = 3 }, new { sm = 9 } };
-    var labelAttributes = new { @class = "control-label" };
     var label = new { @class = "control-label" };
-    var boot_switch = new { htmlAttributes = new { @class = "bootstrap-switch" } };
-    var yes_no = new { htmlAttributes = new { @class = "bootstrap-switch yes-no" } };
 }
 
 <h2>@ViewBag.Title</h2>
@@ -31,7 +28,6 @@
         </span>
         )
         <hr />
-        @Html.HiddenFor(model => model.Id)
 
         @Html.FormGroup(columns
         ).Column(null, label).Add(

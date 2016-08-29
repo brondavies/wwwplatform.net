@@ -9,7 +9,8 @@
 <section class="h3 text-right">
     <div class="btn-group">
         @Html.ActionLink("Create User", "Create", null, new { @class = "btn btn-default" })
-        @Html.ActionLink("Manage Your Account", "Index", "Manage", null, new { @class = "btn btn-default" })
+        @Html.ActionLink("Manage Roles", "Index", "Roles", routeValues: null, htmlAttributes: new { @class = "btn btn-default" })
+        @Html.ActionLink("Your Account", "Index", "Manage", null, new { @class = "btn btn-default" })
     </div>
 </section>
 <section class="margin-bottom-40">

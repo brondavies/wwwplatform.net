@@ -1,0 +1,166 @@
+﻿@using Microsoft.AspNet.Identity.EntityFramework;
+@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.ViewModels.RoleDetailModel
+
+@{
+    ViewBag.Title = "Role Details";
+    var columns = new[] { new { sm = 4 }, new { sm = 8 } };
+}
+
+<h2>@ViewBag.Title</h2>
+
+<div>
+    @Html.Row(columns
+        ).Column(
+        ).Add(
+    @<h4 class="no-margin">
+        @Model.Role.Name
+    </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(
+    @<div class="btn-group">
+        @if (!wwwplatform.Models.Roles.IsBuiltinRole(Model.Role))
+                {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Role.Id }, new { @class = "btn btn-default" })
+        }
+        <a href="#adduser" data-toggle="modal" data-target="#SelectUsersModal" class="btn btn-default">Add Users</a>
+    </div>
+        ).Add(
+            Html.ActionLink("Cancel", "Index")
+        )
+    <hr />
+
+    @if (Model.Users.Count() == 0)
+    {
+        <section class="jumbotron text-center"><h3 class="text-muted">No users in this role</h3></section>
+    }
+    else
+    {
+        <table class="table table-striped auto-datatable clickable">
+            <thead>
+                <tr>
+                    <th>
+                        Name
+                    </th>
+                    <th>
+                        User Name
+                    </th>
+                    <th>
+                        Email
+                    </th>
+                    <th class="disable-sorting"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Users)
+                {
+                    <tr data-href="/Users/Details/@(item.Id)">
+                        <td>
+                            @item.FullName()
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UserName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td>
+                            <div class="pull-left">
+                                <form action="/Roles/RemoveUser/@(Model.Role.Id)" method="post">
+                                    @SimpleAntiForgeryToken()
+                                    @Html.Hidden("userId", item.Id)
+                                    <input type="submit" value="Remove" class="btn btn-xs btn-danger" />
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+<div id="SelectUsersModal" class="text-left h5 modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Select Users</h4>
+            </div>
+            @using (Html.BeginForm("AddUsers", "Roles", new { id = Model.Role.Id }, FormMethod.Post))
+            {
+                @SimpleAntiForgeryToken()
+                <h5 class="text-center">Select the users to add to the @(Model.Role.Name) role</h5>
+                <div class="modal-body">
+                    <div class="user-table">
+                        <table class="table table-striped clickable user-list">
+                            <thead>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                    <input type="submit" class="btn btn-primary" value="Add" />
+                </div>
+            }
+        </div>
+    </div>
+</div>
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptBlock(
+        @<script type="text/javascript">
+            $(function () {
+                var modal = $('#SelectUsersModal');
+                modal.one('shown.bs.modal', function (e) {
+                    // display users list
+                    function renderCheckbox(data, type, row) {
+                        if (type === 'display') {
+                            return '<input type="checkbox" class="checkbox" name="userId" value="' + data + '" />';
+                        }
+                        return data;
+                    }
+                    var datatable;
+                    $('table.user-list', modal).on('click', 'tbody>tr', function (event) {
+                        if (event.target.tagName != 'INPUT') {
+                            var check = $('input[type="checkbox"]:first', this);
+                            check[0].checked = !check[0].checked;
+                        }
+                    });
+                    $.ajax({
+                        url: '@Url.Action("AvailableUsers", "Roles", new { id = Model.Role.Id })',
+                        method: 'post',
+                        dataType: 'json',
+                        data: {
+                            '__RequestVerificationToken': $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function (users) {
+                            // users = [{Id:, FirstName:, LastName:, UserName:}]
+                            datatable = $('table.user-list', modal).DataTable({
+                                columnDefs: [
+                                    { orderable: false, data: 'Id', render: renderCheckbox, className: 'select-checkbox', targets: 0 },
+                                    { title: 'Username', data: 'UserName', targets: 2 },
+                                    {
+                                        title: 'Name', data: function (data) {
+                                            return data.FirstName + ' ' + data.LastName;
+                                        }, targets: 1
+                                    }
+                                ],
+                                data: users,
+                                info: false,
+                                language: {
+                                    emptyTable: 'No users available to select.'
+                                },
+                                order: [[1, 'asc']],
+                                paging: false,
+                                retrieve: true
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+    );
+}
