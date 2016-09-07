@@ -33,8 +33,6 @@ namespace wwwplatform
 
             bundles.Add(new StyleBundle("~/assets/css/all").Include(
                 "~/assets/css/animate.css",
-                "~/assets/css/nexus.css",
-                "~/assets/css/responsive.css",
                 "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
                 //"~/Scripts/dropzone/basic.css",
                 //"~/Scripts/dropzone/dropzone.css",

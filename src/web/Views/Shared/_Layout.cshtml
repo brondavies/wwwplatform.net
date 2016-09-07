@@ -26,7 +26,7 @@
     @Scripts.Render("~/scripts/modernizr")
 </head>
 <body class="fade @(PageCssClass)">
-    <div id="pre_header" class="visible-lg">
+    <div id="pre_header" class="visible-sm visible-md visible-lg">
         <div class="pull-right text-right text-white">
             @if (Request.IsAuthenticated)
             {
@@ -42,21 +42,31 @@
     </div>
     <div id="header" class="container">
         <div class="row">
-            <!-- Logo -->
-            <div class="logo">
-                <a href="~/" title="Home">
-                    <img src="~/assets/img/banner_image.png" alt="@(Settings.SiteName)" />
-                </a>
-            </div>
-            <!-- End Logo -->
-            <!-- Top Menu -->
-            <div class="col-md-12">
-                <div id="hornav" class="pull-right visible-lg">
-                    @Html.Partial("_Nav")
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#page-nav" aria-expanded="false">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <!-- Logo -->
+                        <div class="logo navbar-brand">
+                            <a href="~/" title="Home">
+                                <img src="~/assets/img/banner_image.png" alt="@(Settings.SiteName)" />
+                            </a>
+                        </div>
+                        <!-- End Logo -->
+                    </div>
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="page-nav">
+                        @Html.Partial("_Nav")
+                    </div>
                 </div>
-            </div>
-            <div class="clear"></div>
-            <!-- End Top Menu -->
+            </nav>
         </div>
         <div id="messages"></div>
     </div>
@@ -67,15 +77,14 @@
     </div>
     <!-- === END CONTENT === -->
     <!-- === BEGIN FOOTER === -->
-    @*@Html.Partial("_FooterExpanded")*@
     <!-- Footer Menu -->
     <div id="footer">
         <div class="container">
             <div class="row">
-                <div id="copyright" class="col-md-4">
+                <div id="copyright" class="col-sm-4">
                     <p>&copy; @(DateTime.Now.Year) @(Settings.SiteOwner)</p>
                 </div>
-                <div id="footermenu" class="col-md-8">
+                <div id="footermenu" class="col-sm-8">
                     <ul class="list-unstyled list-inline pull-right">
                         <li>
                         </li>

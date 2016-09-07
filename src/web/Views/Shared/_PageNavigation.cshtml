@@ -2,17 +2,18 @@
 
 @{ 
     var subpages = Model.SubPages;
+    var cssClass = (subpages.Count() > 0) ? "parent" : "";
 }
 
-<a href="@Model.AppRelativeUrl()">@Model.Name</a>
-@if (subpages.Count() > 0)
-{
-    <ul>
-        @foreach (var p in subpages)
-        {
-            <li>
+<li class="@cssClass">
+    <a href="@Model.AppRelativeUrl()">@Model.Name</a>
+    @if (subpages.Count() > 0)
+    {
+        <ul>
+            @foreach (var p in subpages)
+            {
                 @Html.Partial("_PageNavigation", p)
-            </li>
-        }
-    </ul>
-}
+            }
+        </ul>
+    }
+</li>

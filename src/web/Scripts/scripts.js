@@ -109,8 +109,3 @@ $(function () {
    );
 
 });
-
-// Mobile Menu
-    $(function(){
-        $('#hornav').slicknav();
-    });
