@@ -15,12 +15,22 @@ using Newtonsoft.Json;
 using wwwplatform.Models.ViewModels;
 using System.Data.Entity;
 using wwwplatform.Extensions.Helpers;
+using System.Web.WebPages;
 
 namespace wwwplatform.Extensions
 {
     public abstract class BaseWebViewPage<T> : WebViewPage<T>
     {
         public readonly FormMethod POST = FormMethod.Post;
+
+        protected override void ConfigurePage(WebPageBase parentPage)
+        {
+            base.ConfigurePage(parentPage);
+            if (null == ViewBag.Layout)
+            {
+                ViewBag.Layout = Settings.DefaultPageLayout;
+            }
+        }
 
         private string _PageCssClass;
         /// <summary>
@@ -61,7 +71,7 @@ namespace wwwplatform.Extensions
             if (Request.IsAuthenticated)
             {
                 text = text ?? "Sign Out";
-                var form = Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" });
+                var form = Html.BeginForm("LogOff", "Account", POST, new { id = "logoutForm" });
                 var attr = (className != null) ? "class=\"\"" + className : "";
                 Write(SimpleAntiForgeryToken());
                 WriteLiteral(string.Format("<a href=\"javascript:document.getElementById('logoutForm').submit()\" {0}>{1}</a>", attr, text));
@@ -141,7 +151,7 @@ namespace wwwplatform.Extensions
             return null;
         }
 
-        public IHtmlString UploadDialogButton(string name, string text, string eventName = null)
+        public IHtmlString UploadDialogButton(string name, string text, string eventName = null, string className = null)
         {
             if (string.IsNullOrEmpty(eventName))
             {
@@ -149,7 +159,7 @@ namespace wwwplatform.Extensions
             }
             var script = "$(window).trigger('selectfile.show', {eventName: '" + eventName + "'});";
 
-            WriteLiteral("<a href=\"#\" class=\"btn btn-default\" onclick=\"" + script + "\">" + text + "</a>");
+            WriteLiteral("<a href=\"#\" class=\"btn btn-default " + className + "\" onclick=\"" + script + "\">" + text + "</a>");
             return Html.Partial("_SelectFile", new SelectFileOptions { name = name });
         }
 
@@ -266,23 +276,25 @@ namespace wwwplatform.Extensions
             return _userManager;
         }
 
-        public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true)
+        public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true, string name="permissions", string className = null)
         {
             var publicRole = PublicRole;
+            WriteLiteral(string.Format("<div class=\"btn-group {0}\" data-toggle=\"buttons\">", className));
             foreach (var role in RoleManager.Roles)
             {
                 if (role.Id != publicRole.Id || includePublic)
                 {
-                    RoleCheckbox(permissions, role);
+                    RoleCheckbox(permissions, role, name);
                 }
             }
+            WriteLiteral("</div>");
             return null;
         }
 
-        public IHtmlString RoleCheckbox(IEnumerable<string> permissions, IdentityRole role)
+        public IHtmlString RoleCheckbox(IEnumerable<string> permissions, IdentityRole role, string name)
         {
             bool ischecked = permissions.Contains(role.Id);
-            string format = "<input {1} name=\"permissions\" type=\"checkbox\" autocomplete=\"off\" value=\"{0}\"><span class=\"fa fa-check\"></span>{2}";
+            string format = "<input {1} name=\"" + name + "\" type=\"checkbox\" autocomplete=\"off\" value=\"{0}\"><span class=\"fa fa-check\"></span>{2}";
             WriteLiteral("<label class=\"btn btn-default" + (ischecked ? " active" : "") + "\">");
             WriteLiteral(string.Format(format, role.Id, ischecked ? "checked=\"checked\"" : "", role.Name));
             WriteLiteral("</label>");

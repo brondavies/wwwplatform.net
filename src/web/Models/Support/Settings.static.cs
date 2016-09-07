@@ -19,6 +19,8 @@ namespace wwwplatform.Models
         private const string kDefaultPageDescription = "DefaultPageDescription";
         private const string kDefaultPageTitle = "DefaultPageTitle";
         private const string kDefaultSiteImage = "DefaultSiteImage";
+        private const string kDefaultPageLayout = "DefaultPageLayout";
+        private const string kDefaultUploadPermissions = "DefaultUploadPermissions";
         private const string kEmailDefaultFrom = "EmailDefaultFrom";
         private const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
         private const string kSiteName = "SiteName";
@@ -64,8 +66,10 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kAllowUserRegistration, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowUserRegistration, Description = "Opens user registration to the public" },
                 new AppSetting { Name = kCanonicalHostName, Kind = AppSetting.KindString, Description = "The host name that should be used for this site" },
                 new AppSetting { Name = kDefaultPageDescription, Kind = AppSetting.KindString, Description = "The default page description" },
+                new AppSetting { Name = kDefaultPageLayout, Kind = AppSetting.KindFile, Description = "The default page layout file" },
                 new AppSetting { Name = kDefaultPageTitle, Kind = AppSetting.KindString, Description = "The default page title" },
                 new AppSetting { Name = kDefaultSiteImage, Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
+                new AppSetting { Name = kDefaultUploadPermissions, Kind = AppSetting.KindRole, Description = "The default permissions for files uploaded by any user" },
                 new AppSetting { Name = kEmailDefaultFrom, Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
                 new AppSetting { Name = kShowSharedFoldersInMenus, Kind = AppSetting.KindBool, DefaultValue = DefaultShowSharedFoldersInMenus, Description = "Add a link to shared folders in the navigation and footer. Shared Folder links are always available to the roles assigned." },
                 new AppSetting { Name = kSiteName, Kind = AppSetting.KindString, Description = "The name of the site" },

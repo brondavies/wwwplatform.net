@@ -24,12 +24,16 @@
 
         public string DefaultPageDescription { get { return GetValue(kDefaultPageDescription, ""); } }
 
+        public string DefaultPageLayout { get { return GetValue(kDefaultPageLayout, GetConfig(kDefaultPageLayout)); } }
+
         public string DefaultPageTitle { get { return GetValue(kDefaultPageTitle, GetConfig(kDefaultPageTitle)); } }
 
         public string DefaultSiteImage { get { return GetValue(kDefaultSiteImage, GetConfig(kDefaultSiteImage)); } }
 
-        public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
+        public string DefaultUploadPermissions { get { return GetValue(kDefaultUploadPermissions, GetConfig(kDefaultUploadPermissions)); } }
 
+        public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
+        
         public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue(kShowSharedFoldersInMenus, DefaultShowSharedFoldersInMenus)); } }
 
         public string SiteName { get { return GetValue(kSiteName, GetConfig(kSiteName)); } }

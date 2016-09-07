@@ -5,6 +5,8 @@
 
 @{ 
     var BoolOptions = new [] { new MenuOption { Text = "True" }, new MenuOption { Text = "False" } };
+    string deferredScript = "";
+    string uploadEventScript = "$(window).bind('{0}_upload.selected', function(event, data){{data.url && $('[name=\"{0}\"]').val(data.url);}})";
 }
 
 <div>
@@ -13,9 +15,23 @@
         case AppSetting.KindBool:
             Html.FormDropDown(new FormDropDownOptions { Name = Model.Name, Value = Model.Value ?? Model.DefaultValue, Options = BoolOptions });
             break;
-        default:
+        case AppSetting.KindRole:
+            @RoleButtonGroup((Model.Value ?? UsersRole.Id).Split(','), name: Model.Name, className: "btn-group-xs")
+            break;
+        case AppSetting.KindUpload:
+            <div class="input-group">
+                <input type="text" disabled name="@(Model.Name)" value="@(Model.Value)" class="form-control" />
+                @UploadDialogButton(Model.Name, "Select File", Model.Name + "_upload", "input-group-addon")
+                @{ deferredScript += string.Format(uploadEventScript, Model.Name); }
+            </div>
+            break;
         case AppSetting.KindString:
+        default:
             <input type="text" name="@(Model.Name)" value="@(Model.Value)" class="form-control" />
             break;
     }
 </div>
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptBlock(deferredScript);
+}

@@ -15,7 +15,7 @@ Write(regex.Replace(name, " $1"));
 
 <h2>@ViewBag.Title</h2>
 
-@using (Html.BeginForm("Edit", "AppSettings", FormMethod.Post))
+@using (Html.BeginForm("Edit", "AppSettings", POST))
 {
     @Html.Row(new[] { new { sm = 9 }, new { sm = 3 } }
         ).Column(

@@ -3,42 +3,44 @@
 @{
     var fieldName = Model.name;
 }
-<div id="SelectFile_@fieldName" class="text-left h5 modal fade" tabindex="-1" role="dialog">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title">Select or Upload File</h4>
-            </div>
-            <div class="modal-body">
-                <input type="hidden" data-role="file-url" />
-                <input type="hidden" data-role="file-id" />
-                <div class="file-table">
-                    <table class="table table-striped clickable file-list">
-                        <thead>
-                        </thead>
-                        <tbody></tbody>
-                    </table>
-                </div>
-                <div class="js-uploader">
-                    <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
-                    <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
-                        <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
-                        @SimpleAntiForgeryToken()
-                        <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
-                    </form>
-                    <div class="spinner"></div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">OK</button>
-            </div>
-        </div>
-    </div>
-</div>
 @using (Html.BeginScriptContext())
 {
+    Html.AddScriptBlock(
+        @<div id="SelectFile_@fieldName" class="text-left h5 modal fade" tabindex="-1" role="dialog">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title">Select or Upload File</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" data-role="file-url" />
+                        <input type="hidden" data-role="file-id" />
+                        <div class="file-table">
+                            <table class="table table-striped clickable file-list">
+                                <thead>
+                                </thead>
+                                <tbody></tbody>
+                            </table>
+                        </div>
+                        <div class="js-uploader">
+                            <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
+                            <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
+                                <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
+                                @SimpleAntiForgeryToken()
+                                <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
+                            </form>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="button" class="btn btn-primary">OK</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        );
     Html.AddScriptBlock(
         @<script type="text/javascript">
             $(function () {

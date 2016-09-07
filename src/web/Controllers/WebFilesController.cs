@@ -101,7 +101,17 @@ namespace wwwplatform.Controllers
                 if (ModelState.IsValid)
                 {
                     results.file = db.WebFiles.Add(results.file);
-                    Permission.Apply(db, User, RoleManager, results.file, new string[] { RoleManager.FindByName(Roles.Users)?.Id }); //default permissions
+                    string defaultRoleSetting = Settings.DefaultUploadPermissions;
+                    string[] defaultRoles;
+                    if (!string.IsNullOrEmpty(defaultRoleSetting))
+                    {
+                        defaultRoles = defaultRoleSetting.Split(',');
+                    }
+                    else
+                    {
+                        defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
+                    }
+                    Permission.Apply(db, User, RoleManager, results.file, defaultRoles); //default permissions
                     await db.SaveChangesAsync();
                     results.status = UploadResults.OK;
                     results.message = null;  //"File uploaded successfully.";

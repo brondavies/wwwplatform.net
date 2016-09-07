@@ -32,15 +32,55 @@ namespace wwwplatform.Controllers
             {
                 if (form.AllKeys.Contains(setting.Name))
                 {
-                    setting.Value = NullIfEmpty(form[setting.Name]);
+                    var normalizedValue = NullIfEmpty(form[setting.Name]);
+                    if (!string.IsNullOrEmpty(normalizedValue))
+                    if (setting.Kind == AppSetting.KindDirectory)
+                    {
+                        if (!ExistsDir(normalizedValue))
+                        {
+                            SetFailureMessage(normalizedValue + " does not exist.");
+                            continue;
+                        }
+                    }
+                    else
+                    if (setting.Kind == AppSetting.KindFile)
+                    {
+                        if (!ExistsFile(normalizedValue))
+                        {
+                            SetFailureMessage(normalizedValue + " does not exist.");
+                            continue;
+                        }
+                    }
+                    setting.Value = normalizedValue;
                     db.Entry(setting).State = EntityState.Modified;
                 }
             }
             
             await db.SaveChangesAsync();
             CacheHelper.ClearFromCache(HttpContext, typeof(Settings));
+            SetSuccessMessage("Settings updated successfully!");
 
             return RedirectToAction("Index");
+        }
+
+        private bool ExistsFile(string normalizedValue)
+        {
+            var exists = false;
+            try
+            {
+                exists = System.IO.File.Exists(Server.MapPath(normalizedValue));
+            }
+            catch { }
+            return exists;
+        }
+        
+        private bool ExistsDir(string normalizedValue)
+        {
+            var exists = false;
+            try {
+                exists = System.IO.Directory.Exists(Server.MapPath(normalizedValue));
+            } catch { }
+            return exists;
         }
 
         private string NullIfEmpty(string value)
