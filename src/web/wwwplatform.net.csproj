@@ -209,6 +209,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Extensions\Filters\ViewConfigurationFilter.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\AnonymousObjectConverter.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\Bootstrap.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapButton.cs" />
