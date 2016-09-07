@@ -28,6 +28,10 @@ namespace wwwplatform.Models
 
         [DisplayName("Publication Date")]
         public DateTime PubDate { get; set; }
+        
+        [MaxLength(150)]
+        [DisplayName("The page layout file")]
+        public string Layout { get; set; }
 
         [DataType(DataType.Html), UIHint("tinymce_jquery_full"), AllowHtml]
         [DisplayName("Page Body")]
