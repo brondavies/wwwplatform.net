@@ -170,14 +170,17 @@ div.mce-panel {
     }
 }
 /*page-nav*/
-
+/*messages*/
+.h0 {
+    height:0;
+}
 #header #messages {
     bottom: -40px;
     position: absolute;
     text-align: center;
     width: 100%;
 }
-
+#messages span,
 #messages p {
     border-radius: 10px;
     box-shadow: 0px 3px 6px rgba(0,0,0,0.33);
@@ -189,9 +192,11 @@ div.mce-panel {
 }
 #messages p.bg-success {
     border: 1px solid #67B847;
+    color:#3e6e2b;
 }
 #messages p.bg-danger {
     border: 1px solid #B64949;
+    color:#B64949;
 }
 /* Footer Menu */
 #footer {
