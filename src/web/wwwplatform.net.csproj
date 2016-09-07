@@ -298,13 +298,6 @@
     <Content Include="assets\css\animate.css" />
     <Content Include="assets\css\custom.css" />
     <Content Include="assets\img\banner_image.png" />
-    <Content Include="assets\img\closelabel.gif" />
-    <Content Include="assets\img\link.png" />
-    <Content Include="assets\img\loading.gif" />
-    <Content Include="assets\img\logo.png" />
-    <Content Include="assets\img\menu_arrow.png" />
-    <Content Include="assets\img\nextlabel.gif" />
-    <Content Include="assets\img\prevlabel.gif" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.min.css" />
     <Content Include="Content\bootstrap-switch\bootstrap3\bootstrap-switch.css" />
