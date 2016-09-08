@@ -10,11 +10,11 @@ namespace wwwplatform
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            var settings = Settings.Create(new HttpContextWrapper(HttpContext.Current));
+            var Context = new HttpContextWrapper(HttpContext.Current);
+            var settings = Settings.Create(Context);
 
             string skin = settings.SkinDefinitionFile ??  "~/App_Data/Skins/Default/skin.json";
-            SkinDefinition skindef = SkinDefinition.Load(HttpContext.Current.Server.MapPath(skin));
-            HttpContext.Current.Application["Layout"] = skindef.layout;
+            SkinDefinition skindef = SkinDefinition.Load(Context.Server.MapPath(skin));
             foreach (var script in skindef.scripts.Keys)
             {
                 bundles.Add(new ScriptBundle(script).Include(skindef.scripts[script].ToArray()));

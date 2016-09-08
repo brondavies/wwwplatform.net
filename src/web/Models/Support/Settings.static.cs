@@ -15,21 +15,21 @@ namespace wwwplatform.Models
 {
     public partial class Settings : ObjectDictionary
     {
-        private const string kAllowForgotPassword = "AllowForgotPassword";
-        private const string kAllowUserRegistration = "AllowUserRegistration";
-        private const string kCanonicalHostName = "CanonicalHostName";
-        private const string kDefaultPageDescription = "DefaultPageDescription";
-        private const string kDefaultPageLayout = "DefaultPageLayout";
-        private const string kDefaultPageTitle = "DefaultPageTitle";
-        private const string kDefaultSiteImage = "DefaultSiteImage";
-        private const string kDefaultUploadPermissions = "DefaultUploadPermissions";
-        private const string kEmailDefaultFrom = "EmailDefaultFrom";
-        private const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
-        private const string kSiteName = "SiteName";
-        private const string kSiteOwner = "SiteOwner";
-        private const string kSkinDefinitionFile = "SkinDefinitionFile";
-        private const string kTempDir = "TempDir";
-        private const string kUserFilesDir = "UserFilesDir";
+        internal const string kAllowForgotPassword = "AllowForgotPassword";
+        internal const string kAllowUserRegistration = "AllowUserRegistration";
+        internal const string kCanonicalHostName = "CanonicalHostName";
+        internal const string kDefaultPageDescription = "DefaultPageDescription";
+        internal const string kDefaultPageLayout = "DefaultPageLayout";
+        internal const string kDefaultPageTitle = "DefaultPageTitle";
+        internal const string kDefaultSiteImage = "DefaultSiteImage";
+        internal const string kDefaultUploadPermissions = "DefaultUploadPermissions";
+        internal const string kEmailDefaultFrom = "EmailDefaultFrom";
+        internal const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
+        internal const string kSiteName = "SiteName";
+        internal const string kSiteOwner = "SiteOwner";
+        internal const string kSkinDefinitionFile = "SkinDefinitionFile";
+        internal const string kTempDir = "TempDir";
+        internal const string kUserFilesDir = "UserFilesDir";
 
         public static string GetConfig(string key, string defaultValue = null)
         {
@@ -75,10 +75,6 @@ namespace wwwplatform.Models
                             value[entry.Key] = entry.Value;
                         }
                     }
-                }
-                if (string.IsNullOrEmpty(value.SkinDefinitionFile))
-                {
-                    value[kSkinDefinitionFile] = Context.Application["Layout"];
                 }
                 if (!File.Exists(settingsFilename))
                 {

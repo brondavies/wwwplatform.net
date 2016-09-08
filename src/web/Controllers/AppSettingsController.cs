@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using wwwplatform.Extensions;
 using wwwplatform.Extensions.Helpers;
 using wwwplatform.Models;
+using wwwplatform.Models.Support;
 
 namespace wwwplatform.Controllers
 {
@@ -34,21 +35,36 @@ namespace wwwplatform.Controllers
                 {
                     var normalizedValue = NullIfEmpty(form[setting.Name]);
                     if (!string.IsNullOrEmpty(normalizedValue))
-                    if (setting.Kind == AppSetting.KindDirectory)
                     {
-                        if (!ExistsDir(normalizedValue))
+                        if (setting.Kind == AppSetting.KindDirectory)
                         {
-                            SetFailureMessage(normalizedValue + " does not exist.");
-                            continue;
+                            if (!ExistsDir(normalizedValue))
+                            {
+                                SetFailureMessage(normalizedValue + " does not exist.");
+                                continue;
+                            }
                         }
-                    }
-                    else
-                    if (setting.Kind == AppSetting.KindFile)
-                    {
-                        if (!ExistsFile(normalizedValue))
+                        else
+                        if (setting.Kind == AppSetting.KindFile)
                         {
-                            SetFailureMessage(normalizedValue + " does not exist.");
-                            continue;
+                            if (!ExistsFile(normalizedValue))
+                            {
+                                SetFailureMessage(normalizedValue + " does not exist.");
+                                continue;
+                            }
+                            else
+                            if (setting.Name == Settings.kSkinDefinitionFile && setting.Value != normalizedValue)
+                            {
+                                try
+                                {
+                                    SkinDefinition skindef = SkinDefinition.Load(HttpContext.Server.MapPath(normalizedValue));
+                                    settings.Find(s => s.Name == Settings.kDefaultPageLayout).Value = skindef.layout;
+                                }
+                                catch
+                                {
+                                    SetFailureMessage("Invalid skin definition");
+                                }
+                            }
                         }
                     }
                     setting.Value = normalizedValue;
