@@ -1,5 +1,7 @@
 ﻿using System.Web;
 using System.Web.Optimization;
+using wwwplatform.Models;
+using wwwplatform.Models.Support;
 
 namespace wwwplatform
 {
@@ -8,39 +10,20 @@ namespace wwwplatform
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            bundles.Add(new ScriptBundle("~/scripts/substance").Include(
-                "~/Scripts/jquery-{version}.js",
-                "~/Scripts/jquery.validate*",
-                "~/Scripts/jquery.cookie.js",
-                "~/Scripts/respond.*",
-                "~/Scripts/jquery.isotope.js",
-                "~/Scripts/jquery.slicknav.js",
-                "~/Scripts/jquery.visible.js",
-                "~/Scripts/slimbox2.js",
-                "~/Scripts/scripts.js",
-                "~/Scripts/bootstrap.js",
-                "~/Scripts/bootstrap-switch.js",
-                //"~/Scripts/dropzone/dropzone.js",
-                "~/Scripts/jquery.dataTables.js",
-                "~/Scripts/dataTables.bootstrap.js",
-                "~/Scripts/bootbox.js",
-                "~/Scripts/custom.js"
-            ));
+            var settings = Settings.Create(new HttpContextWrapper(HttpContext.Current));
 
-            bundles.Add(new ScriptBundle("~/scripts/modernizr").Include(
-                "~/Scripts/modernizr.custom.js"
-            ));
+            string skin = settings.SkinDefinitionFile ??  "~/App_Data/Skins/Default/skin.json";
+            SkinDefinition skindef = SkinDefinition.Load(HttpContext.Current.Server.MapPath(skin));
+            HttpContext.Current.Application["Layout"] = skindef.layout;
+            foreach (var script in skindef.scripts.Keys)
+            {
+                bundles.Add(new ScriptBundle(script).Include(skindef.scripts[script].ToArray()));
+            }
 
-            bundles.Add(new StyleBundle("~/assets/css/all").Include(
-                "~/assets/css/animate.css",
-                "~/Content/bootstrap-switch/bootstrap3/bootstrap-switch.css",
-                //"~/Scripts/dropzone/basic.css",
-                //"~/Scripts/dropzone/dropzone.css",
-                "~/Content/jquery.dataTables.css",
-                "~/Content/dataTables.bootstrap.css",
-                "~/assets/css/custom.css"
-            ));
-
+            foreach (var css in skindef.css.Keys)
+            {
+                bundles.Add(new StyleBundle(css).Include(skindef.css[css].ToArray()));
+            }
         }
     }
 }

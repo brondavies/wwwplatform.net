@@ -17,14 +17,15 @@ namespace wwwplatform.Models
         private const string kAllowUserRegistration = "AllowUserRegistration";
         private const string kCanonicalHostName = "CanonicalHostName";
         private const string kDefaultPageDescription = "DefaultPageDescription";
+        private const string kDefaultPageLayout = "DefaultPageLayout";
         private const string kDefaultPageTitle = "DefaultPageTitle";
         private const string kDefaultSiteImage = "DefaultSiteImage";
-        private const string kDefaultPageLayout = "DefaultPageLayout";
         private const string kDefaultUploadPermissions = "DefaultUploadPermissions";
         private const string kEmailDefaultFrom = "EmailDefaultFrom";
         private const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
         private const string kSiteName = "SiteName";
         private const string kSiteOwner = "SiteOwner";
+        private const string kSkinDefinitionFile = "SkinDefinitionFile";
         private const string kTempDir = "TempDir";
         private const string kUserFilesDir = "UserFilesDir";
 
@@ -54,6 +55,10 @@ namespace wwwplatform.Models
                     {
                         value[item.Name] = item.Value;
                     }
+                    if (string.IsNullOrEmpty(value.SkinDefinitionFile))
+                    {
+                        value[kSkinDefinitionFile] = Context.Application["Layout"];
+                    }
                 }
                 catch { }
             });
@@ -69,6 +74,7 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kDefaultPageLayout, Kind = AppSetting.KindFile, Description = "The default page layout file" },
                 new AppSetting { Name = kDefaultPageTitle, Kind = AppSetting.KindString, Description = "The default page title" },
                 new AppSetting { Name = kDefaultSiteImage, Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
+                new AppSetting { Name = kSkinDefinitionFile, Kind = AppSetting.KindFile, Description = "The site skin definition file" },
                 new AppSetting { Name = kDefaultUploadPermissions, Kind = AppSetting.KindRole, Description = "The default permissions for files uploaded by any user" },
                 new AppSetting { Name = kEmailDefaultFrom, Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
                 new AppSetting { Name = kShowSharedFoldersInMenus, Kind = AppSetting.KindBool, DefaultValue = DefaultShowSharedFoldersInMenus, Description = "Add a link to shared folders in the navigation and footer. Shared Folder links are always available to the roles assigned." },

@@ -250,6 +250,7 @@
     <Compile Include="Models\SitePage.methods.cs">
       <DependentUpon>SitePage.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\Support\SkinDefinition.cs" />
     <Compile Include="Models\ViewModels\AccountViewModels.cs" />
     <Compile Include="Models\ApplicationDbContext.cs" />
     <Compile Include="Models\ApplicationDbContext.Config.cs">
@@ -489,6 +490,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="App_Data\Skins\Default\skin.json" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\dataTables.bootstrap.js" />
     <Content Include="Scripts\dataTables.bootstrap.min.js" />

@@ -40,6 +40,8 @@
 
         public string SiteOwner { get { return GetValue(kSiteOwner, GetConfig(kSiteOwner)); } }
 
+        public string SkinDefinitionFile { get { return GetValue(kSkinDefinitionFile, GetConfig(kSkinDefinitionFile)); } }
+
         public string TempDir { get { return GetValue(kTempDir, DefaultTempDir); } }
 
         public string UserFilesDir { get { return GetValue(kUserFilesDir, DefaultUserFilesDir); } }
