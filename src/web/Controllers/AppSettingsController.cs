@@ -28,8 +28,9 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Edit(FormCollection form)
         {
+            bool require_restart = false;
             var settings = db.AppSettings.ToList();
-            foreach(var setting in settings)
+            foreach (var setting in settings)
             {
                 if (form.AllKeys.Contains(setting.Name))
                 {
@@ -59,6 +60,7 @@ namespace wwwplatform.Controllers
                                 {
                                     SkinDefinition skindef = SkinDefinition.Load(HttpContext.Server.MapPath(normalizedValue));
                                     settings.Find(s => s.Name == Settings.kDefaultPageLayout).Value = skindef.layout;
+                                    require_restart = true;
                                 }
                                 catch
                                 {
@@ -71,10 +73,15 @@ namespace wwwplatform.Controllers
                     db.Entry(setting).State = EntityState.Modified;
                 }
             }
-            
+
             await db.SaveChangesAsync();
             CacheHelper.ClearFromCache(HttpContext, typeof(Settings));
             SetSuccessMessage("Settings updated successfully!");
+
+            if (require_restart)
+            {
+                System.Web.Hosting.HostingEnvironment.InitiateShutdown();
+            }
 
             return RedirectToAction("Index");
         }
@@ -89,13 +96,15 @@ namespace wwwplatform.Controllers
             catch { }
             return exists;
         }
-        
+
         private bool ExistsDir(string normalizedValue)
         {
             var exists = false;
-            try {
+            try
+            {
                 exists = System.IO.Directory.Exists(Server.MapPath(normalizedValue));
-            } catch { }
+            }
+            catch { }
             return exists;
         }
 
