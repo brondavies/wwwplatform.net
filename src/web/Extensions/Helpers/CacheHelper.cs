@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,11 +41,29 @@ namespace wwwplatform.Extensions.Helpers
                 constructor?.Invoke(result);
                 try
                 {
-                    HttpContext.Cache.Add(key, result, null, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+                    string cacheFilename = GetCacheFileName(HttpContext, key);
+                    CacheDependency dependency = null;
+                    if (File.Exists(cacheFilename))
+                    {
+                        dependency = new CacheDependency(cacheFilename);
+                    }
+                    HttpContext.Cache.Add(key, result, dependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
                 }
                 catch { }
             }
             return result;
+        }
+
+        internal static string GetCacheFileName<T>(HttpContextBase Context)
+        {
+            var type = typeof(T);
+            string key = type.FullName;
+            return GetCacheFileName(Context, key);
+        }
+
+        internal static string GetCacheFileName(HttpContextBase Context, string key)
+        {
+            return Context.Server.MapPath(string.Format("~/App_Data/Cache/{0}.json", key));
         }
 
         internal static void ClearFromCache(HttpContextBase HttpContext, Type type)
@@ -56,6 +75,11 @@ namespace wwwplatform.Extensions.Helpers
         internal static void ClearFromCache(HttpContextBase HttpContext, string key)
         {
             HttpContext.Cache.Remove(key);
+            string cacheFilename = GetCacheFileName(HttpContext, key);
+            if (File.Exists(cacheFilename))
+            {
+                File.Delete(cacheFilename);
+            }
         }
     }
 }

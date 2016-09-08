@@ -175,8 +175,6 @@ div.mce-panel {
     height:0;
 }
 #header #messages {
-    bottom: -40px;
-    position: absolute;
     text-align: center;
     width: 100%;
 }

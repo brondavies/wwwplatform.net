@@ -596,8 +596,6 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\scripts.js" />
-    <Content Include="Scripts\slimbox2.js" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -856,6 +854,7 @@
     <Content Include="Views\SharedFolders\Display.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\Cache\" />
     <Folder Include="Scripts\tinymce\langs\" />
     <Folder Include="Views\Database\" />
     <Folder Include="Views\MailingListSubscribers\" />

@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -44,9 +46,16 @@ namespace wwwplatform.Models
 
         static string DefaultUserFilesDir { get { return GetConfig(kUserFilesDir) ?? "~/UserFiles".ResolveLocalPath(); } }
 
+        public static string GetSettingsFileName(HttpContextBase Context)
+        {
+            return CacheHelper.GetCacheFileName<Settings>(Context);
+        }
+
         public static Settings Create(HttpContextBase Context)
         {
-            return CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) => {
+            return CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) =>
+            {
+                string settingsFilename = GetSettingsFileName(Context);
                 try
                 {
                     var db = Context.GetOwinContext().Get<ApplicationDbContext>();
@@ -55,18 +64,36 @@ namespace wwwplatform.Models
                     {
                         value[item.Name] = item.Value;
                     }
-                    if (string.IsNullOrEmpty(value.SkinDefinitionFile))
+                }
+                catch
+                {
+                    if (File.Exists(settingsFilename))
                     {
-                        value[kSkinDefinitionFile] = Context.Application["Layout"];
+                        var dictionary = JsonConvert.DeserializeObject<ObjectDictionary>(File.ReadAllText(settingsFilename));
+                        foreach (var entry in dictionary)
+                        {
+                            value[entry.Key] = entry.Value;
+                        }
                     }
                 }
-                catch { }
+                if (string.IsNullOrEmpty(value.SkinDefinitionFile))
+                {
+                    value[kSkinDefinitionFile] = Context.Application["Layout"];
+                }
+                if (!File.Exists(settingsFilename))
+                {
+                    try
+                    {
+                        File.WriteAllText(settingsFilename, JsonConvert.SerializeObject(value));
+                    }
+                    catch { }
+                }
             });
         }
 
         internal static AppSetting[] GetDefaultSettings()
         {
-            return new [] {
+            return new[] {
                 new AppSetting { Name = kAllowForgotPassword, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowForgotPassword, Description = "Allows users to reset forgotten passwords" },
                 new AppSetting { Name = kAllowUserRegistration, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowUserRegistration, Description = "Opens user registration to the public" },
                 new AppSetting { Name = kCanonicalHostName, Kind = AppSetting.KindString, Description = "The host name that should be used for this site" },
