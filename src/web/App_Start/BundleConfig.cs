@@ -22,7 +22,12 @@ namespace wwwplatform
 
             foreach (var css in skindef.css.Keys)
             {
-                bundles.Add(new StyleBundle(css).Include(skindef.css[css].ToArray()));
+                StyleBundle bundle = new StyleBundle(css);
+                foreach(string file in skindef.css[css])
+                {
+                    bundle.Include(file, new CssRewriteUrlTransform());
+                }
+                bundles.Add(bundle);
             }
         }
     }
