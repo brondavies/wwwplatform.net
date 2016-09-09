@@ -22,7 +22,7 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
                 }
             }
 
-            Assert.AreEqual("<div class=\"\"></div>", stringBuilder.ToString());
+            Assert.AreEqual("<div></div>", stringBuilder.ToString());
         }
 
         [TestMethod]
@@ -101,11 +101,11 @@ namespace wwwplatformTests.Extensions.Helpers.Bootstrap
                     element.Text = "I am a parent";
                     using (var child1 = new BootstrapElement(context) { ClassName = "inner", Text = "I am a child", Parent = element })
                     {
-                        child1.ToMvcHtmlString();
-                    }
-                    using (var child2 = new BootstrapElement(context) { ClassName = "inner2", Text = "I am another child", Parent = element })
-                    {
-                        child2.ToMvcHtmlString();
+                        using (var child2 = new BootstrapElement(context) { ClassName = "inner2", Text = "I am another child", Parent = element })
+                        {
+                            child1.ToMvcHtmlString();
+                            child2.ToMvcHtmlString();
+                        }
                     }
                     element.ToMvcHtmlString();
                 }
