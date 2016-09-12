@@ -804,7 +804,7 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.json" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\readme.md" />
-    <None Include="Views\Shared\_SelectFile.cshtml" />
+    <Content Include="Views\Shared\_SelectFile.cshtml" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
