@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Models;
 using wwwplatform.Extensions;
+using wwwplatform.Extensions.Email;
+using wwwplatform.Extensions.Logging;
+using wwwplatform.Models.ViewModels;
 
 namespace wwwplatform.Controllers
 {
@@ -58,14 +61,51 @@ namespace wwwplatform.Controllers
         // POST: MailingLists/Send
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Send(long id, string subject, string body, string attachments)
+        public async Task<ActionResult> Send(long id, ComposeEmailMessageModel model)
         {
             var mailingList = await db.ActiveMailingLists.FindAsync(id);
             if (mailingList == null)
             {
                 return HttpNotFound();
             }
-            return View(new SentEmailMessageModel { SentCount = 0 });
+            var subscribers = mailingList.Subscribers.Where(s => s.Enabled).ToList();
+            var SentCount = 0;
+            var TotalCount = 0;
+            bool success = true;
+            try
+            {
+                EmailSender sender = new EmailSender(model.subject, model.body, "");
+                sender.Settings = Settings;
+                sender.IsHTML = true;
+                sender.Body = model.body;
+                sender.FromEmail = mailingList.EmailAddress;
+                sender.Subject = model.subject;
+                if (!string.IsNullOrEmpty(model.attachments))
+                {
+                    sender.Attachments = new List<string>(model.attachments.Split(';'));
+                }
+                while (true)
+                {
+                    var addresses = subscribers.Skip(TotalCount).Take(100).ToList().Select(s => s.Email);
+                    if (addresses.Count() == 0) { break; }
+                    sender.Addresslist = string.Join(";", addresses);
+                    TotalCount += addresses.Count();
+#if DEBUG
+                    sender.Execute(true);
+#else
+                    sender.Execute(false);
+#endif
+                    SentCount = sender.Sent;
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                SetFailureMessage(e.Message);
+                success = false;
+            }
+
+            return View(new SentEmailMessageModel { SentCount = SentCount, Subject = model.subject, To = mailingList.Name, Success = success });
         }
 
         // POST: MailingLists/Create

@@ -145,7 +145,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Html.ActionLink("Shared Folders", "Index", "SharedFolders");
+                return Html.ActionLink(Settings.SharedFoldersLabel, "Index", "SharedFolders");
             }
 
             return null;

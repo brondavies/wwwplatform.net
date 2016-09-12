@@ -20,7 +20,7 @@ namespace wwwplatform.Models
         [Required]
         [DisplayName("List Address")]
         [EmailAddress(ErrorMessage = "Invalid Email Address")]
-        public string EmailAdress { get; set; }
+        public string EmailAddress { get; set; }
 
         [DisplayName("List Owner")]
         public ApplicationUser Owner { get; set; }

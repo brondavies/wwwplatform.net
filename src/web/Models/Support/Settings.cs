@@ -32,8 +32,12 @@
 
         public string DefaultUploadPermissions { get { return GetValue(kDefaultUploadPermissions, GetConfig(kDefaultUploadPermissions)); } }
 
+        public string EmailAdditionalHeaders { get { return null; } }
+
         public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
         
+        public string SharedFoldersLabel { get { return GetValue(kSharedFoldersLabel, GetConfig(kSharedFoldersLabel, "Shared Folders")); } }
+
         public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue(kShowSharedFoldersInMenus, DefaultShowSharedFoldersInMenus)); } }
 
         public string SiteName { get { return GetValue(kSiteName, GetConfig(kSiteName)); } }

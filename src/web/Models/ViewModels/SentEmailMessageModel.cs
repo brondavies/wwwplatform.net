@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,8 +9,10 @@ namespace wwwplatform.Models
 {
     public class SentEmailMessageModel
     {
-        public int SentCount;
-        public string To;
-        public string Subject;
+        [DisplayName("Number of Recipients")]
+        public int SentCount { get; set; }
+        public string To { get; set; }
+        public string Subject { get; set; }
+        public bool Success { get; set; }
     }
 }

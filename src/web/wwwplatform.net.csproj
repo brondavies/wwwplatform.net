@@ -232,6 +232,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Extensions\Email\EmailSender.cs" />
     <Compile Include="Extensions\Filters\ViewConfigurationFilter.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\AnonymousObjectConverter.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\Bootstrap.cs" />
@@ -247,6 +248,7 @@
     <Compile Include="Extensions\Helpers\Bootstrap\MenuOption.cs" />
     <Compile Include="Extensions\Helpers\CacheHelper.cs" />
     <Compile Include="Extensions\Helpers\FileStorage.cs" />
+    <Compile Include="Extensions\Logging.cs" />
     <Compile Include="Extensions\SitePageRouteConstraint.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -296,6 +298,7 @@
     <Compile Include="Models\MailingListSubscriber.cs">
       <DependentUpon>Auditable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\ViewModels\ComposeEmailMessageModel.cs" />
     <Compile Include="Models\ViewModels\ManageViewModels.cs" />
     <Compile Include="Models\Support\Roles.cs" />
     <Compile Include="Models\Support\Settings.cs" />
@@ -879,6 +882,7 @@
     <Content Include="Views\SharedFolders\_SharedFolderForm.cshtml" />
     <Content Include="Views\SharedFolders\Delete.cshtml" />
     <Content Include="Views\SharedFolders\Display.cshtml" />
+    <Content Include="Views\MailingLists\_MailingListForm.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />
