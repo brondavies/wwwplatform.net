@@ -18,7 +18,7 @@ namespace wwwplatform.Controllers
     [Extensions.Authorize(Roles.Administrators, Roles.ListManagers)]
     public class MailingListsController : BaseController
     {
-        private const string AllowedFields = "Id,Name,Description,EmailAdress";
+        private const string AllowedFields = "Id,Name,Description,EmailAddress";
 
         // GET: MailingLists
         public async Task<ActionResult> Index()
