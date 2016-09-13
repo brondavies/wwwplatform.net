@@ -162,7 +162,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult ForgotPassword()
         {
-            if (!Request.IsLocal)
+            if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
             }
