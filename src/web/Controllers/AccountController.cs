@@ -32,6 +32,10 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Manage");
+            }
             ViewBag.ReturnUrl = returnUrl;
             return View(new LoginViewModel());
         }
@@ -118,6 +122,10 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound(); //disabled
             }
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Manage");
+            }
             return View();
         }
 
@@ -165,6 +173,10 @@ namespace wwwplatform.Controllers
             if (!Request.IsLocal && !Settings.AllowForgotPassword)
             {
                 return HttpNotFound(); //disabled
+            }
+            if (Request.IsAuthenticated)
+            {
+                return RedirectToAction("Index", "Manage");
             }
             return View();
         }
