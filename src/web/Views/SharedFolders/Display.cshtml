@@ -1,5 +1,6 @@
 ﻿@using wwwplatform.Models;
 @using wwwplatform.Models.ViewModels;
+@using wwwplatform.Extensions.Helpers;
 
 @model wwwplatform.Models.SharedFolder
 
@@ -18,132 +19,170 @@
 }
 @helper FiletypeIcon(WebFile file)
 {
-    switch (file.GetFileType()) {
+    switch (file.GetFileType())
+    {
         case FileType.Code:
-WriteLiteral("file-code-o");
+            WriteLiteral("fa-file-code-o");
             break;
-    WriteLiteral("file-video-o");
-    WriteLiteral("file-audio-o");
-    WriteLiteral("file-archive-o");
-    WriteLiteral("file-image-o");
-    WriteLiteral("file-powerpoint-o");
-    WriteLiteral("file-excel-o");
-    WriteLiteral("file-word-o");
-    WriteLiteral("file-pdf-o");
-    WriteLiteral("file-text");
-    WriteLiteral("file-text-o"); }
+        case FileType.Video:
+            WriteLiteral("fa-file-video-o");
+            break;
+        case FileType.Audio:
+            WriteLiteral("fa-file-audio-o");
+            break;
+        case FileType.Archive:
+            WriteLiteral("fa-file-archive-o");
+            break;
+        case FileType.Image:
+            WriteLiteral("fa-file-image-o");
+            break;
+        case FileType.Presentation:
+            WriteLiteral("fa-file-powerpoint-o");
+            break;
+        case FileType.Spreadsheet:
+            WriteLiteral("fa-file-excel-o");
+            break;
+        case FileType.Document:
+            WriteLiteral("fa-file-word-o");
+            break;
+        case FileType.PDF:
+            WriteLiteral("fa-file-pdf-o");
+            break;
+        case FileType.Text:
+            WriteLiteral("fa-file-text-o");
+            break;
+        default:
+            WriteLiteral("fa-file-text");
+            break;
+    }
 }
-<h2>
-    <a href="@parentlink" class="btn btn-link">
-        <i class="fa fa-level-up fa-2x"></i>
-    </a>
-    @ViewBag.Title
-    <span class="h3 text-muted">
-        @Model.Description
-    </span>
-</h2>
-<section class="h3 text-right">
-    <div class="btn-group">
-        @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
-        @UploadDialogButton("Folder_" + Model.Slug, "Upload")
-        @if (isFolderOwner)
-        {
-            Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" });
-        }
-    </div>
-</section>
-@if (Model.Files.Count() == 0 && Model.SubFolders.Count() == 0)
+@helper BytesToString(long? size)
 {
-    <section class="jumbotron text-center"><h3 class="text-muted">No files or folders here</h3></section>
+string display = "";
+if (size.HasValue)
+{
+    display = FileStorage.FormatBytes(Convert.ToDouble(size));
 }
-else
-{
-    <table class="table table-striped auto-datatable clickable">
-        <thead>
-            <tr>
-                <th class="disable-sorting"></th>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Description
-                </th>
-                <th>
-                    Date
-                </th>
-                <th>
-                    Uploaded By
-                </th>
-                <th class="disable-sorting"></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var folder in Model.SubFolders)
+WriteLiteral(display);
+}
+    <h2>
+        <a href="@parentlink" class="btn btn-link">
+            <i class="fa fa-level-up fa-2x"></i>
+        </a>
+        @ViewBag.Title
+        <span class="h3 text-muted">
+            @Model.Description
+        </span>
+    </h2>
+    <section class="h3 text-right">
+        <div class="btn-group">
+            @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
+            @UploadDialogButton("Folder_" + Model.Slug, "Upload")
+            @if (isFolderOwner)
             {
-                <tr data-href="/Shared/@(folder.Slug)">
-                    <td>
-                        <i class="fa fa-folder-o fa-lg"></i>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.UpdatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => folder.UpdatedBy)
-                    </td>
-                    <td>
-                        @Html.Partial("_TableActionButtons", folder, new TableActionOptions { showDelete = isFolderOwner || folder.IsOwner(User), showEdit = folder.IsOwner(User), showDetails = false, Controller = "SharedFolders" })
-                    </td>
-                </tr>
+                Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" });
             }
-            @foreach (var item in Model.Files)
-            {
-                <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
-                    <td>
-                        <i class="fa @FiletypeIcon(item) fa-lg"></i>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Description)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedAt)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedBy)
-                    </td>
-                    <td>
-                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isFolderOwner || item.IsOwner(User), showEdit = item.IsOwner(User), detailLabel = "Download", Controller = "WebFiles" })
-                    </td>
+        </div>
+    </section>
+    @if (Model.Files.Count() == 0 && Model.SubFolders.Count() == 0)
+    {
+        <section class="jumbotron text-center"><h3 class="text-muted">No files or folders here</h3></section>
+    }
+    else
+    {
+        <table class="table table-striped auto-datatable clickable">
+            <thead>
+                <tr>
+                    <th class="disable-sorting" data-width="40px"></th>
+                    <th>
+                        Name
+                    </th>
+                    <th data-sort="asc">
+                        Description
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Uploaded By
+                    </th>
+                    <th>
+                        Size
+                    </th>
+                    <th class="disable-sorting"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-@using (Html.BeginScriptContext())
-{
-    Html.AddScriptBlock(
-        @<script type="text/javascript">
-            $(function () {
-                $(window).bind('Folder_@(Model.Slug).selected', function (event, data) {
-                    var id = data.id;
-                    var csrf = $('input[name="__RequestVerificationToken"]').val();
-                    $.post('/SharedFolders/AddFiles/@Model.Id', { files: id, '__RequestVerificationToken': csrf })
-                    .success(function () {
-                        window.location.reload(true);
-                    })
-                    .fail(function (result) {
-                        bootbox.alert('The file could not be uploaded to this shared folder.');
+            </thead>
+            <tbody>
+                @foreach (var folder in Model.SubFolders)
+                {
+                    <tr data-href="/Shared/@(folder.Slug)">
+                        <td>
+                            <i class="fa fa-folder-o fa-lg"></i>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.UpdatedAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => folder.UpdatedBy)
+                        </td>
+                        <td data-sort="0" data-order="0"></td>
+                        <td>
+                            @Html.Partial("_TableActionButtons", folder, new TableActionOptions { showDelete = isFolderOwner || folder.IsOwner(User), showEdit = folder.IsOwner(User), showDetails = false, Controller = "SharedFolders" })
+                        </td>
+                    </tr>
+                }
+                @foreach (var item in Model.Files)
+                {
+                    <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
+                        <td>
+                            <i class="fa @FiletypeIcon(item) fa-lg"></i>
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedAt)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                        </td>
+                        <td data-sort="@(item.Size)" data-order="@(item.Size)">
+                            @BytesToString(item.Size)
+                        </td>
+                        <td>
+                            @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isFolderOwner || item.IsOwner(User), showEdit = item.IsOwner(User), detailLabel = "Download", Controller = "WebFiles" })
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    @using (Html.BeginScriptContext())
+    {
+        Html.AddScriptBlock(
+            @<script type="text/javascript">
+                $(function () {
+                    $(window).bind('Folder_@(Model.Slug).selected', function (event, data) {
+                        var id = data.id;
+                        var csrf = $('input[name="__RequestVerificationToken"]').val();
+                        $.post('/SharedFolders/AddFiles/@Model.Id', { files: id, '__RequestVerificationToken': csrf })
+                        .success(function () {
+                            window.location.reload(true);
+                        })
+                        .fail(function (result) {
+                            bootbox.alert('The file could not be uploaded to this shared folder.');
+                        });
                     });
                 });
-            });
-        </script>
+            </script>
     );
-}
+    }

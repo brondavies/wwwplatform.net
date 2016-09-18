@@ -13,7 +13,9 @@ namespace wwwplatform.Models
         public string Description { get; set; }
 
         public string Location { get; set; }
-        
+
+        public long? Size { get; set; }
+
         public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

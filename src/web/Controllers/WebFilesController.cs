@@ -155,6 +155,7 @@ namespace wwwplatform.Controllers
                 string FileUrl = FileStorage.Save(new FileInfo(tempfile), HttpContext);
                 uploadResults.file.Location = FileUrl;
                 uploadResults.file.Name = Extensions.String.Coalesce(uploadResults.file.Name, Path.GetFileNameWithoutExtension(file.FileName));
+                uploadResults.file.Size = (new FileInfo(tempfile)).Length;
                 uploadResults.status = UploadResults.OK;
             }
             else

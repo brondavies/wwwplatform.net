@@ -20,5 +20,26 @@ namespace wwwplatform.Extensions.Helpers
             string newfile = file.CopyTo(Path.Combine(folder, file.Name)).FullName;
             return "/" + newfile.ToAppPath(context);
         }
+
+        public static string FormatBytes(double bytes)
+        {
+            if (bytes >= 1100) //KB
+            {
+                if (bytes >= 1100000) //MB
+                {
+                    if (bytes >= 1100000000) //GB
+                    {
+                        if (bytes >= 110000000000) //TB
+                        {
+                            return string.Format("{0} TB", Math.Round(bytes / 100000000000, 2));
+                        }
+                        return string.Format("{0} GB", Math.Round(bytes / 1000000000, 2));
+                    }
+                    return string.Format("{0} MB", Math.Round(bytes / 1000000, 1));
+                }
+                return string.Format("{0} KB", Math.Round(bytes / 1000, 1));
+            }
+            return string.Format("{0} B", Math.Round(bytes));
+        }
     }
 }
