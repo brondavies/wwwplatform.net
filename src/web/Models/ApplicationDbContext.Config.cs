@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data.Entity;
 using System.Data.Entity.ModelConfiguration;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace wwwplatform.Models
 {
@@ -31,6 +32,14 @@ namespace wwwplatform.Models
                 .HasMany(m => m.Files)
                 .WithOptional()
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SharedFolder>()
+                .HasMany(m => m.SubFolders)
+                .WithOptional()
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<SharedFolder>()
+                .HasOptional(m => m.ParentFolder);
 
             //Setup Entities with permissions
 

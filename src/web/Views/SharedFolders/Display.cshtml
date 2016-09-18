@@ -1,16 +1,50 @@
-﻿@using wwwplatform.Models.ViewModels;
+﻿@using wwwplatform.Models;
+@using wwwplatform.Models.ViewModels;
 
 @model wwwplatform.Models.SharedFolder
 
 @{
     ViewBag.Title = Model.Name;
     var isFolderOwner = Model.UpdatedBy == User.Identity.Name || User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var hasParent = Model.ParentFolderId.HasValue;
+    var parentlink = hasParent ? "/Shared/" + Model.ParentFolder.Slug : "/SharedFolders";
 }
-
-<h2>@ViewBag.Title</h2>
-
+@helper SubFolderDisplay(wwwplatform.Models.SharedFolder folder)
+{
+    <div class="col-lg-1 col-md-2 col-sm-2">
+        <i class="fa fa-folder-o fa-3x"></i>
+        @Html.ActionLink(Model.Name, Model.Slug, "Shared", new { @class = "center-block" })
+    </div>
+}
+@helper FiletypeIcon(WebFile file)
+{
+    switch (file.GetFileType()) {
+        case FileType.Code:
+WriteLiteral("file-code-o");
+            break;
+    WriteLiteral("file-video-o");
+    WriteLiteral("file-audio-o");
+    WriteLiteral("file-archive-o");
+    WriteLiteral("file-image-o");
+    WriteLiteral("file-powerpoint-o");
+    WriteLiteral("file-excel-o");
+    WriteLiteral("file-word-o");
+    WriteLiteral("file-pdf-o");
+    WriteLiteral("file-text");
+    WriteLiteral("file-text-o"); }
+}
+<h2>
+    <a href="@parentlink" class="btn btn-link">
+        <i class="fa fa-level-up fa-2x"></i>
+    </a>
+    @ViewBag.Title
+    <span class="h3 text-muted">
+        @Model.Description
+    </span>
+</h2>
 <section class="h3 text-right">
     <div class="btn-group">
+        @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
         @UploadDialogButton("Folder_" + Model.Slug, "Upload")
         @if (isFolderOwner)
         {
@@ -18,15 +52,16 @@
         }
     </div>
 </section>
-@if (Model.Files.Count() == 0)
+@if (Model.Files.Count() == 0 && Model.SubFolders.Count() == 0)
 {
-    <section class="jumbotron text-center"><h3 class="text-muted">No files to display</h3></section>
+    <section class="jumbotron text-center"><h3 class="text-muted">No files or folders here</h3></section>
 }
 else
 {
     <table class="table table-striped auto-datatable clickable">
         <thead>
             <tr>
+                <th class="disable-sorting"></th>
                 <th>
                     Name
                 </th>
@@ -43,9 +78,35 @@ else
             </tr>
         </thead>
         <tbody>
+            @foreach (var folder in Model.SubFolders)
+            {
+                <tr data-href="/Shared/@(folder.Slug)">
+                    <td>
+                        <i class="fa fa-folder-o fa-lg"></i>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.UpdatedAt)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => folder.UpdatedBy)
+                    </td>
+                    <td>
+                        @Html.Partial("_TableActionButtons", folder, new TableActionOptions { showDelete = isFolderOwner || folder.IsOwner(User), showEdit = folder.IsOwner(User), showDetails = false, Controller = "SharedFolders" })
+                    </td>
+                </tr>
+            }
             @foreach (var item in Model.Files)
             {
                 <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
+                    <td>
+                        <i class="fa @FiletypeIcon(item) fa-lg"></i>
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>

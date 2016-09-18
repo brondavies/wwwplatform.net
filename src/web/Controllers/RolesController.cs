@@ -167,7 +167,7 @@ namespace wwwplatform.Controllers
                 var result = await RoleManager.DeleteAsync(role);
                 if (result.Succeeded)
                 {
-                    SetSuccessMessage("Role {0} deleted successfully!", role.Name);
+                    SetSuccessMessage("Role {0} was deleted successfully!", role.Name);
                 }
                 else
                 {

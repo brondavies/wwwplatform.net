@@ -151,7 +151,7 @@ namespace wwwplatform.Controllers
                 var result = await UserManager.DeleteAsync(user);
                 if (result.Succeeded)
                 {
-                    SetSuccessMessage("User {0} deleted successfully!", user.FullName());
+                    SetSuccessMessage("User {0} was deleted successfully!", user.FullName());
                     return RedirectToAction("Index");
                 }
                 else

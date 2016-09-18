@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -18,5 +19,14 @@ namespace wwwplatform.Models
         public virtual ICollection<WebFile> Files { get; set; }
 
         public virtual ICollection<Permission> Permissions { get; set; }
+
+        public virtual long? ParentFolderId { get; set; }
+
+        [ForeignKey("ParentFolderId")]
+        [DisplayName("Parent Folder")]
+        public virtual SharedFolder ParentFolder { get; set; }
+
+        [InverseProperty("ParentFolder")]
+        public virtual ICollection<SharedFolder> SubFolders { get; set; }
     }
 }

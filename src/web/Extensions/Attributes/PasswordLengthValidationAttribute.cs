@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
+using wwwplatform.Models;
 
 namespace wwwplatform.Extensions.Attributes
 {
@@ -11,7 +7,7 @@ namespace wwwplatform.Extensions.Attributes
     {
         public PasswordLengthValidationAttribute() : base (100)
         {
-            MinimumLength = 8;
+            MinimumLength = int.Parse(Settings.GetConfig("MinmumPasswordLength", "8"));
             ErrorMessage = "The {0} must be at least {2} characters long.";
         }
     }

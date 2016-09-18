@@ -265,7 +265,9 @@
       <DependentUpon>Permission.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Serializers\WebFileSerializer.cs" />
-    <Compile Include="Models\SharedFolder.cs" />
+    <Compile Include="Models\SharedFolder.cs">
+      <DependentUpon>Auditable.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Permission.cs" />
     <Compile Include="Models\Serializers\AuditableSerializer.cs" />
     <Compile Include="Models\Serializers\DynamicContractResolver.cs" />

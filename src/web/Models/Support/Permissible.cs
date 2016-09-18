@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace wwwplatform.Models
 {
-    interface Permissible
+    public interface Permissible
     {
         ICollection<Permission> Permissions { get; set; }
     }

@@ -1,6 +1,8 @@
-﻿@{
+﻿@model wwwplatform.Models.SharedFolder
+
+@{
     ViewBag.Title = "Create Shared Folder";
 }
 
 <h2>Shared Folders</h2>
-@Html.Partial("_SharedFolderForm", new wwwplatform.Models.SharedFolder())
+@Html.Partial("_SharedFolderForm", Model)

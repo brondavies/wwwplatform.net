@@ -14,6 +14,8 @@ namespace wwwplatform
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+            routes.MapMvcAttributeRoutes();
+
             routes.MapRoute(
                  name: "Pages",
                  url: "{slug}",
