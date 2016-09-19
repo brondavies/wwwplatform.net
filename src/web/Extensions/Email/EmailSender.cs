@@ -22,6 +22,7 @@ namespace wwwplatform.Extensions.Email
         public string FromEmail = null;
         public string FromName = null;
         public string Addresslist;
+        public string ToName = null;
         public string BCC = null;
         public string CC = null;
         public int JobID = DateTime.Now.TimeOfDay.Seconds;
@@ -105,7 +106,7 @@ namespace wwwplatform.Extensions.Email
             {
                 try
                 {
-                    objMM.To.Add(new MailAddress(address));
+                    objMM.To.Add(new MailAddress(address, ToName));
                 }
                 catch (Exception e)
                 {

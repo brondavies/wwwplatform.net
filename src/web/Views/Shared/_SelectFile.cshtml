@@ -51,9 +51,16 @@
                     var meta = options.meta;
                     var value = options.value;
                     var modal = $('#SelectFile_' + selectFileName);
+                    $('body').append(modal);
                     var renderDate = function (data, type, full, meta) {
                         if (type === 'display') {
                             return (new Date(data)).toLocaleString().replace(',', '');
+                        }
+                        return data;
+                    };
+                    var renderIcon = function (data, type, full, meta) {
+                        if (type === 'display') {
+                            return '<i class="fa ' + data + ' fa-lg"></i>';
                         }
                         return data;
                     };
@@ -78,14 +85,16 @@
                                 // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
                                 var datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
-                                        { title: 'Name', data: 'Name', targets: 0 },
-                                        { title: 'Date', data: 'UpdatedAt', render: renderDate, targets: 1 }
+                                        { title: '', data: 'Icon', orderable: false, render: renderIcon, targets: 0 },
+                                        { title: 'Name', data: 'Name', targets: 1 },
+                                        { title: 'Date', data: 'UpdatedAt', render: renderDate, targets: 2 }
                                     ],
                                     data: files,
                                     info: false,
                                     language: {
                                         emptyTable: 'Uploaded files will be listed here.'
                                     },
+                                    order: [[1, 'asc']],
                                     paging: false, //(files.length > 10),
                                     retrieve: true
                                 });
@@ -105,8 +114,11 @@
                             // file selected?
                             var id = $('[data-role="file-id"]', modal).val();
                             var url = $('[data-role="file-url"]', modal).val();
-                            callback && callback(result, { alt: '' });
-                            eventName && $(window).trigger(eventName, { id: id, url: url, alt: '' });
+                            if (url || id) {
+                                var result = { id: id, url: url, alt: '' };
+                                callback && callback(url, result);
+                                eventName && $(window).trigger(eventName, result);
+                            }
                         });
                 });
 

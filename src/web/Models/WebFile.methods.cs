@@ -5,6 +5,7 @@ using System.Security.Principal;
 using System.Web;
 
 using Microsoft.AspNet.Identity;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace wwwplatform.Models
 {
@@ -19,6 +20,39 @@ namespace wwwplatform.Models
         public bool IsOwner(IPrincipal User)
         {
             return UpdatedBy == User.Identity.Name;
+        }
+
+        [NotMapped]
+        public string Icon
+        {
+            get
+            {
+                switch (GetFileType())
+                {
+                    case FileType.Code:
+                        return "fa-file-code-o";
+                    case FileType.Video:
+                        return "fa-file-video-o";
+                    case FileType.Audio:
+                        return "fa-file-audio-o";
+                    case FileType.Archive:
+                        return "fa-file-archive-o";
+                    case FileType.Image:
+                        return "fa-file-image-o";
+                    case FileType.Presentation:
+                        return "fa-file-powerpoint-o";
+                    case FileType.Spreadsheet:
+                        return "fa-file-excel-o";
+                    case FileType.Document:
+                        return "fa-file-word-o";
+                    case FileType.PDF:
+                        return "fa-file-pdf-o";
+                    case FileType.Text:
+                        return "fa-file-text-o";
+                    default:
+                        return "fa-file-text";
+                }
+            }
         }
 
         public FileType GetFileType()
@@ -244,7 +278,7 @@ namespace wwwplatform.Models
                 case ".pdf":
                 case ".xps":
                     return FileType.PDF;
-                    
+
                 case ".ods":
                 case ".numbers":
                 case ".sdc":
@@ -252,7 +286,7 @@ namespace wwwplatform.Models
                 case ".xlsx":
                 case ".xlsb":
                     return FileType.Spreadsheet;
-                        
+
                 case ".264":
                 case ".3g2":
                 case ".3gp":

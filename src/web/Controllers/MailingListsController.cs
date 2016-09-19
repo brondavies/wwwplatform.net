@@ -84,19 +84,20 @@ namespace wwwplatform.Controllers
                 {
                     sender.Attachments = new List<string>(model.attachments.Split(';'));
                 }
-                while (true)
+                
+                TotalCount = subscribers.Count();
+                foreach (var address in subscribers)
                 {
-                    var addresses = subscribers.Skip(TotalCount).Take(100).ToList().Select(s => s.Email);
-                    if (addresses.Count() == 0) { break; }
-                    sender.Addresslist = string.Join(";", addresses);
-                    TotalCount += addresses.Count();
+                    sender.ToName = (address.FirstName + " " + address.LastName).Trim();
+                    sender.Addresslist = address.Email;
 #if DEBUG
                     sender.Execute(true);
 #else
                     sender.Execute(false);
 #endif
-                    SentCount = sender.Sent;
                 }
+                SentCount = sender.Sent;
+                
             }
             catch (Exception e)
             {
@@ -105,7 +106,7 @@ namespace wwwplatform.Controllers
                 success = false;
             }
 
-            return View(new SentEmailMessageModel { SentCount = SentCount, Subject = model.subject, To = mailingList.Name, Success = success });
+            return View(new SentEmailMessageModel { SentCount = SentCount, TotalCount = TotalCount, Subject = model.subject, To = mailingList.Name, Success = success });
         }
 
         // POST: MailingLists/Create

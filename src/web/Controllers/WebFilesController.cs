@@ -32,6 +32,7 @@ namespace wwwplatform.Controllers
         // GET: WebFiles/Details/5
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3600)]
+        [AllowAnonymous]
         public async Task<ActionResult> Details(long? id, int v = 0)
         {
             if (id == null)
@@ -216,6 +217,14 @@ namespace wwwplatform.Controllers
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
             WebFile webFile = await db.ActiveWebFiles.FindAsync(id);
+            var folders = db.ActiveSharedFolders
+                .Where(f => f.Files.Select(w => w.Id).Contains(webFile.Id))
+                .Include(f => f.Files)
+                .ToList();
+            foreach(var folder in folders)
+            {
+                folder.Files.Remove(webFile);
+            }
             db.WebFiles.Remove(webFile);
             await db.SaveChangesAsync();
             return RedirectToAction("Index");

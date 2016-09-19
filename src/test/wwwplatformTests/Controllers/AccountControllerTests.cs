@@ -194,7 +194,7 @@ namespace wwwplatform.Controllers.Tests
             Assert.AreEqual(user.Id, resultUserId);
             Assert.AreEqual("Reset Password", resultSubject);
             Assert.IsTrue(resultBody.Contains(token));
-            Assert.IsTrue(resultBody.Contains(user.Id));
+            Assert.IsTrue(resultBody.Contains(user.Email));
         }
 
         [TestMethod]

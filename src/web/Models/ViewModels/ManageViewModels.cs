@@ -30,6 +30,7 @@ namespace wwwplatform.Models
     {
         [Required]
         [PasswordLengthValidation]
+        [PasswordComplexityValidation]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
@@ -49,6 +50,7 @@ namespace wwwplatform.Models
 
         [Required]
         [PasswordLengthValidation]
+        [PasswordComplexityValidation]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }
@@ -63,6 +65,7 @@ namespace wwwplatform.Models
     {
         [Required]
         [PasswordLengthValidation]
+        [PasswordComplexityValidation]
         [DataType(DataType.Password)]
         [Display(Name = "New password")]
         public string NewPassword { get; set; }

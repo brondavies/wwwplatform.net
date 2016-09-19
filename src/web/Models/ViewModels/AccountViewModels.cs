@@ -76,6 +76,7 @@ namespace wwwplatform.Models
 
         [Required]
         [PasswordLengthValidation]
+        [PasswordComplexityValidation]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
@@ -103,6 +104,7 @@ namespace wwwplatform.Models
 
         [Required]
         [PasswordLengthValidation]
+        [PasswordComplexityValidation]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }

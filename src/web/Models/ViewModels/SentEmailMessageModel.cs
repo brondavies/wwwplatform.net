@@ -11,6 +11,10 @@ namespace wwwplatform.Models
     {
         [DisplayName("Number of Recipients")]
         public int SentCount { get; set; }
+
+        [DisplayName("Number of Subscribers")]
+        public int TotalCount { get; set; }
+
         public string To { get; set; }
         public string Subject { get; set; }
         public bool Success { get; set; }

@@ -17,45 +17,6 @@
         @Html.ActionLink(Model.Name, Model.Slug, "Shared", new { @class = "center-block" })
     </div>
 }
-@helper FiletypeIcon(WebFile file)
-{
-    switch (file.GetFileType())
-    {
-        case FileType.Code:
-            WriteLiteral("fa-file-code-o");
-            break;
-        case FileType.Video:
-            WriteLiteral("fa-file-video-o");
-            break;
-        case FileType.Audio:
-            WriteLiteral("fa-file-audio-o");
-            break;
-        case FileType.Archive:
-            WriteLiteral("fa-file-archive-o");
-            break;
-        case FileType.Image:
-            WriteLiteral("fa-file-image-o");
-            break;
-        case FileType.Presentation:
-            WriteLiteral("fa-file-powerpoint-o");
-            break;
-        case FileType.Spreadsheet:
-            WriteLiteral("fa-file-excel-o");
-            break;
-        case FileType.Document:
-            WriteLiteral("fa-file-word-o");
-            break;
-        case FileType.PDF:
-            WriteLiteral("fa-file-pdf-o");
-            break;
-        case FileType.Text:
-            WriteLiteral("fa-file-text-o");
-            break;
-        default:
-            WriteLiteral("fa-file-text");
-            break;
-    }
-}
 @helper BytesToString(long? size)
 {
 string display = "";
@@ -141,7 +102,7 @@ WriteLiteral(display);
                 {
                     <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
                         <td>
-                            <i class="fa @FiletypeIcon(item) fa-lg"></i>
+                            <i class="fa @(item.Icon) fa-lg"></i>
                         </td>
                         <td>
                             @Html.DisplayFor(modelItem => item.Name)

@@ -95,7 +95,7 @@ namespace wwwplatformTests.Controllers
             db.CurrentUser = mockUser;
             context.HttpContext.Setup(r => r.User).Returns(mockUser);
 
-            var result = controller.Index();
+            var result = controller.Index(null);
 
             Assert.IsInstanceOfType(result.Result, typeof(ViewResult));
 
@@ -112,7 +112,7 @@ namespace wwwplatformTests.Controllers
             context.HttpContext.Setup(r => r.User).Returns(anonymousUser);
             controller.UserManager = MockApplicationUserManager();
 
-            result = controller.Index();
+            result = controller.Index(null);
             viewResult = (ViewResult)result.Result;
             model = (List<SharedFolder>)viewResult.Model;
 

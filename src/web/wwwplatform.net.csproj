@@ -211,6 +211,7 @@
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SharedFoldersController.cs" />
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
+    <Compile Include="Extensions\Attributes\PasswordComplexityValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\SerializerAttribute.cs" />
     <Compile Include="Extensions\Attributes\UsernameLengthValidationAttribute.cs" />
