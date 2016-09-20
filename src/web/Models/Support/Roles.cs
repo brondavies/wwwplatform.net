@@ -3,6 +3,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -51,6 +52,14 @@ namespace wwwplatform.Models
         {
             var roles = new string[] { Roles.Administrators, Roles.Editors, Roles.ListManagers, Roles.Public, Roles.Users };
             return (roles.Contains(role.Name));
+        }
+
+        public static bool UserInAnyRole(IPrincipal User, ApplicationRoleManager RoleManager, string[] roleIds)
+        {
+            if (!User.Identity.IsAuthenticated) { return false; }
+            if (User.IsInRole(Roles.Administrators)) { return true; }
+            var userRoles = RoleManager.Roles.Where(r => roleIds.Contains(r.Id)).ToList();
+            return userRoles.Any(r => User.IsInRole(r.Name));
         }
     }
 }

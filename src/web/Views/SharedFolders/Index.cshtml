@@ -11,9 +11,12 @@
 <h2>@ViewBag.Title</h2>
 
 <section class="h3 text-right">
+    @if (User.Identity.IsAuthenticated)
+    {
     <div class="btn-group">
         @Html.ActionLink("New Folder", "Create", null, new { @class = "btn btn-default" })
     </div>
+    }
 </section>
 
 @if (Model.Count() == 0)
@@ -26,11 +29,12 @@ else
     <table class="table table-striped auto-datatable clickable">
         <thead>
             <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                <th data-orderable="false" data-width="4px"></th>
+                <th data-order="asc">
+                    Name
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Description)
+                    Description
                 </th>
                 <th class="text-right">
                     Files
@@ -45,6 +49,9 @@ else
             @foreach (var item in Model)
             {
                 <tr data-href="/Shared/@item.Slug">
+                    <td>
+                        <i class="fa fa-folder-o fa-lg"></i>
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>

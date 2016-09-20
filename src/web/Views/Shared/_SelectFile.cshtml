@@ -85,9 +85,9 @@
                                 // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
                                 var datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
-                                        { title: '', data: 'Icon', orderable: false, render: renderIcon, targets: 0 },
-                                        { title: 'Name', data: 'Name', targets: 1 },
-                                        { title: 'Date', data: 'UpdatedAt', render: renderDate, targets: 2 }
+                                        { targets: 0, title: '', data: 'Icon', orderable: false, render: renderIcon, width:'4px' },
+                                        { targets: 1, title: 'Name', data: 'Name' },
+                                        { targets: 2, title: 'Date', data: 'UpdatedAt', render: renderDate }
                                     ],
                                     data: files,
                                     info: false,

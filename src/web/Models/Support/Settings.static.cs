@@ -25,6 +25,7 @@ namespace wwwplatform.Models
         internal const string kDefaultUploadPermissions = "DefaultUploadPermissions";
         internal const string kEmailDefaultFrom = "EmailDefaultFrom";
         internal const string kSharedFoldersLabel = "SharedFoldersLabel";
+        internal const string kSharedFoldersRootPermissions = "SharedFoldersRootPermissions";
         internal const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
         internal const string kSiteName = "SiteName";
         internal const string kSiteOwner = "SiteOwner";
@@ -98,13 +99,14 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kDefaultPageLayout, Kind = AppSetting.KindFile, Description = "The default page layout file" },
                 new AppSetting { Name = kDefaultPageTitle, Kind = AppSetting.KindString, Description = "The default page title" },
                 new AppSetting { Name = kDefaultSiteImage, Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
-                new AppSetting { Name = kSkinDefinitionFile, Kind = AppSetting.KindFile, Description = "The site skin definition file" },
                 new AppSetting { Name = kDefaultUploadPermissions, Kind = AppSetting.KindRole, Description = "The default permissions for files uploaded by any user" },
                 new AppSetting { Name = kEmailDefaultFrom, Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
                 new AppSetting { Name = kSharedFoldersLabel, Kind = AppSetting.KindString, DefaultValue = "Shared Folders", Description = "The text for the Shared Folders links" },
+                new AppSetting { Name = kSharedFoldersRootPermissions, Kind = AppSetting.KindRole, DefaultValue = "", Description = "The roles that can view the root of the shared folders directory. Shared Folder links are always available to the roles assigned." },
                 new AppSetting { Name = kShowSharedFoldersInMenus, Kind = AppSetting.KindBool, DefaultValue = DefaultShowSharedFoldersInMenus, Description = "Add a link to Shared Folders in the navigation and footer. Shared Folder links are always available to the roles assigned." },
                 new AppSetting { Name = kSiteName, Kind = AppSetting.KindString, Description = "The name of the site" },
                 new AppSetting { Name = kSiteOwner, Kind = AppSetting.KindString, Description = "The name of the site owner" },
+                new AppSetting { Name = kSkinDefinitionFile, Kind = AppSetting.KindFile, Description = "The site skin definition file" },
                 new AppSetting { Name = kTempDir, Kind = AppSetting.KindDirectory, Description = "The directory used for temporary files" },
                 new AppSetting { Name = kUserFilesDir, Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" }
             };

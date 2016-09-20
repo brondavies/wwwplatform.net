@@ -17,7 +17,7 @@
     <meta name="og:image" content="@(ViewBag.Image ?? Settings.DefaultSiteImage)">
     <meta name="og:description" content="@(ViewBag.Description ?? Settings.DefaultPageDescription)">
     <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
-    <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link rel="shortcut icon" type="image/ico" href="/favicon.ico">
     <link href="http://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     @Styles.Render("~/assets/css/all")
@@ -120,7 +120,7 @@
                                     </div>
                                 </li>
                             }
-                            if (Settings.ShowSharedFoldersInMenus)
+                            if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
                             {
                                 <li>
                                     @SharedFoldersLink()
@@ -128,6 +128,12 @@
                             }
                             <li>
                                 @MyAccountLink()
+                            </li>
+                        }
+                        else if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
+                        {
+                            <li>
+                                @SharedFoldersLink()
                             </li>
                         }
                         <li>

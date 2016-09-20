@@ -38,6 +38,8 @@
         
         public string SharedFoldersLabel { get { return GetValue(kSharedFoldersLabel, GetConfig(kSharedFoldersLabel, "Shared Folders")); } }
 
+        public string SharedFoldersRootPermissions { get { return GetValue(kSharedFoldersRootPermissions, GetConfig(kSharedFoldersRootPermissions, "")); } }
+
         public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue(kShowSharedFoldersInMenus, DefaultShowSharedFoldersInMenus)); } }
 
         public string SiteName { get { return GetValue(kSiteName, GetConfig(kSiteName)); } }

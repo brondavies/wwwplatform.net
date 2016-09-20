@@ -34,7 +34,14 @@
             });
     });
 
-    $('.auto-datatable').DataTable();
+    $('.auto-datatable').each(function () {
+        var options = {};
+        var defaultSort = $('th[data-order]', this);
+        if (defaultSort.length) {
+            options.order = [[defaultSort.index(), defaultSort.data('order')]];
+        }
+        $(this).DataTable(options);
+    });
 
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');

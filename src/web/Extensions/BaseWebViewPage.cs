@@ -141,14 +141,20 @@ namespace wwwplatform.Extensions
             return null;
         }
 
+        public bool SharedFoldersLinkIsAvailable()
+        {
+            return Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id) 
+                || UserInAnyRole(Settings.SharedFoldersRootPermissions.Split(','));
+        }
+
         public IHtmlString SharedFoldersLink()
         {
-            if (User.Identity.IsAuthenticated)
-            {
-                return Html.ActionLink(Settings.SharedFoldersLabel, "Index", "SharedFolders");
-            }
+            return Html.ActionLink(Settings.SharedFoldersLabel, "Index", "SharedFolders");
+        }
 
-            return null;
+        public bool UserInAnyRole(string[] roleIds)
+        {
+            return Roles.UserInAnyRole(User, RoleManager, roleIds);
         }
 
         public IHtmlString UploadDialogButton(string name, string text, string eventName = null, string className = null)

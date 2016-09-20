@@ -18,7 +18,7 @@ namespace wwwplatform.Models
                 folders = folders.Where(f => f.ParentFolderId == parent);
             }
 
-            if (owned && !User.IsInRole(Roles.Administrators))
+            if (owned && User.Identity.IsAuthenticated && !User.IsInRole(Roles.Administrators))
             {
                 folders = folders.Where(f => f.UpdatedBy == User.Identity.Name);
             }

@@ -18,10 +18,19 @@ namespace wwwplatform.Controllers
         private const string AllowedFields = "Id,Name,Description,ParentFolderId";
 
         // GET: SharedFolders
+        [AllowAnonymous]
         public async Task<ActionResult> Index(long? Id)
         {
-            var folders = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager, false, true, Id).ToListAsync();
-            return Auto(folders);
+            if (Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id)
+                   || Roles.UserInAnyRole(User, RoleManager, Settings.SharedFoldersRootPermissions.Split(',')))
+            {
+                var folders = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager, false, true, Id).ToListAsync();
+                return Auto(folders);
+            }
+            else
+            {
+                return RedirectToAction("Login", "Account", new { returnUrl = Request.RawUrl.ToAppPath() });
+            }
         }
 
         // GET: SharedFolders/Create
@@ -123,6 +132,7 @@ namespace wwwplatform.Controllers
         }
 
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
+        [AllowAnonymous]
         public async Task<ActionResult> Display(string slug)
         {
             string s = slug.ToLowerInvariant();

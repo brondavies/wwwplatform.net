@@ -72,6 +72,14 @@ namespace wwwplatform.Extensions
             }
         }
 
+        protected IdentityRole PublicRole
+        {
+            get
+            {
+                return RoleManager.FindByName(Roles.Public);
+            }
+        }
+
         private wwwplatform.Models.Settings _settings;
         public wwwplatform.Models.Settings Settings
         {
