@@ -60,7 +60,7 @@ namespace wwwplatform.Controllers.Tests
             return requestContext;
         }
 
-        protected IPrincipal CreateMockUser(string username)
+        protected IPrincipal CreateMockUser(string username, string usersRole = null)
         {
             var user = new Mock<IPrincipal>();
             //var mockIdentity = new Mock<IIdentity>();
@@ -69,6 +69,10 @@ namespace wwwplatform.Controllers.Tests
             mockIdentity.Setup(i => i.FindFirst(It.IsAny<string>())).Returns(mockIdClaim);
             mockIdentity.Setup(i => i.IsAuthenticated).Returns(true);
             mockIdentity.Setup(i => i.Name).Returns(username);
+            if (usersRole != null)
+            {
+                user.Setup(u => u.IsInRole(It.Is<string>(s => s == usersRole))).Returns(true);
+            }
             //can't mock extension method mockIdentity.Setup(i => i.GetUserId()).Returns(Guid.Empty.ToString());
             user.Setup(u => u.Identity).Returns(mockIdentity.Object);
             return user.Object;

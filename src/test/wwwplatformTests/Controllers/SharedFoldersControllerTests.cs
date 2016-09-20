@@ -69,6 +69,7 @@ namespace wwwplatformTests.Controllers
             var usersRole = controller.RoleManager.FindByNameAsync(Roles.Users);
             usersRole.Wait();
             var usersRole_Id = usersRole.Result.Id;
+            controller.Settings.Add("SharedFoldersRootPermissions", usersRole_Id);
 
             var webFile = db.WebFiles.Add(new WebFile
             {
@@ -90,7 +91,7 @@ namespace wwwplatformTests.Controllers
             sharedFolder.Files = new List<WebFile>(new[] { webFile });
             db.SaveChanges();
 
-            var mockUser = CreateMockUser("tull");
+            var mockUser = CreateMockUser("tull", Roles.Users);
 
             db.CurrentUser = mockUser;
             context.HttpContext.Setup(r => r.User).Returns(mockUser);
@@ -113,10 +114,7 @@ namespace wwwplatformTests.Controllers
             controller.UserManager = MockApplicationUserManager();
 
             result = controller.Index(null);
-            viewResult = (ViewResult)result.Result;
-            model = (List<SharedFolder>)viewResult.Model;
-
-            Assert.IsNull(model.Find(s => s.Name == sharedFolder.Name));
+            Assert.IsInstanceOfType(result.Result, typeof(RedirectToRouteResult));
         }
 
         [TestMethod]

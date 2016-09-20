@@ -29,7 +29,7 @@ namespace wwwplatform.Controllers
             }
             else
             {
-                return RedirectToAction("Login", "Account", new { returnUrl = Request.RawUrl.ToAppPath() });
+                return RedirectToAction("Login", "Account", new { returnUrl = Request.RawUrl.ToAppPath(HttpContext) });
             }
         }
 
