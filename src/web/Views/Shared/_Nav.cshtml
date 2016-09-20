@@ -7,7 +7,7 @@
     {
         @Html.Partial("_PageNavigation", p)
     }
-    @if (Settings.ShowSharedFoldersInMenus)
+    @if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
     {
         <li>
             @SharedFoldersLink()
