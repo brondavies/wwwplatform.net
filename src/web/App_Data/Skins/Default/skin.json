@@ -15,7 +15,7 @@
       "~/Scripts/jquery.dataTables.js",
       "~/Scripts/dataTables.bootstrap.js",
       "~/Scripts/bootbox.js",
-      "~/Scripts/custom.js"
+      "~/Scripts/platform.js"
     ]
   },
   "css": {
@@ -26,7 +26,7 @@
       //"~/Scripts/dropzone/dropzone.css",
       "~/Content/jquery.dataTables.css",
       "~/Content/dataTables.bootstrap.css",
-      "~/assets/css/custom.css"
+      "~/assets/css/platform.css"
     ]
   },
   "layout": null

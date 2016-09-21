@@ -77,6 +77,10 @@
       <HintPath>..\packages\Forloop.HtmlHelpers.1.2.0.0\lib\net45\Forloop.HtmlHelpers.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FTTLib, Version=1.0.3.0, Culture=neutral, PublicKeyToken=8c1b2cae191651c7, processorArchitecture=MSIL">
+      <HintPath>..\packages\FTTLib.dll.1.0.3\lib\net20\FTTLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -327,7 +331,7 @@
     <Content Include="apple-touch-icon-144-precomposed.png" />
     <Content Include="App_Data\aspnet-wwwplatform.net-20151226085514.mdf" />
     <Content Include="assets\css\animate.css" />
-    <Content Include="assets\css\custom.css" />
+    <Content Include="assets\css\platform.css" />
     <Content Include="assets\img\banner_image.png" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.min.css" />
@@ -501,7 +505,7 @@
     <Content Include="Scripts\bootstrap-switch.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
-    <Content Include="Scripts\custom.js" />
+    <Content Include="Scripts\platform.js" />
     <Compile Include="Models\Support\Settings.static.cs">
       <DependentUpon>Settings.cs</DependentUpon>
     </Compile>

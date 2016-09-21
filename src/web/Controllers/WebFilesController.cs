@@ -2,20 +2,23 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+
 using wwwplatform.Models;
 using wwwplatform.Extensions;
 using wwwplatform.Shared.Helpers;
-using System.IO;
 using wwwplatform.Extensions.Helpers;
 using wwwplatform.Models.ViewModels;
 using wwwplatform.Extensions.Attributes;
 using wwwplatform.Models.Serializers;
+
 using Microsoft.AspNet.Identity;
+using FTTLib;
 
 namespace wwwplatform.Controllers
 {
@@ -47,7 +50,8 @@ namespace wwwplatform.Controllers
             string inline = (v == 1) ? "inline" : "attachment";
             string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
-            string contentType = ContentTypeHelper.GetContentType(webFile.Location);
+            string contentType = FTT.GetMimeType(webFile.Location ?? "");
+            if (contentType=="") { contentType = "application/octet-stream"; }
             Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             return File(System.IO.File.OpenRead(filepath), contentType);
             //return File(filepath, contentType, filename);
@@ -56,13 +60,13 @@ namespace wwwplatform.Controllers
         // GET: WebFiles/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new WebFile());
         }
 
         // POST: WebFiles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Location")] WebFile webFile)
+        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Location")] WebFile webFile, bool redir = false)
         {
             UploadResults results = new UploadResults
             {
@@ -129,6 +133,19 @@ namespace wwwplatform.Controllers
                 results.message = ex.Message;
             }
 
+            if (redir)
+            {
+                if (results.status == UploadResults.Failed)
+                {
+                    SetFailureMessage(results.message);
+                    return View(webFile);
+                }
+                else
+                {
+                    SetSuccessMessage(results.file.Name + " uploaded successfully!");
+                    return RedirectToAction("Index");
+                }
+            }
             return Auto(results, "Created");
         }
 
@@ -173,7 +190,7 @@ namespace wwwplatform.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).FindAsync(id);
+            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager, !User.IsInRole(Roles.Administrators)).FindAsync(id);
             if (webFile == null)
             {
                 return HttpNotFound();
@@ -184,10 +201,16 @@ namespace wwwplatform.Controllers
         // POST: WebFiles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Location")] WebFile webFile, string[] permissions = null)
+        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Location")] WebFile form, string[] permissions = null)
         {
+            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager, !User.IsInRole(Roles.Administrators)).FindAsync(form.Id);
+            if (webFile == null)
+            {
+                return HttpNotFound();
+            }
             if (ModelState.IsValid)
             {
+                webFile.Update(form);
                 db.Entry(webFile).State = EntityState.Modified;
                 Permission.Apply(db, User, RoleManager, webFile, permissions);
                 await db.SaveChangesAsync();
@@ -216,7 +239,12 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
-            WebFile webFile = await db.ActiveWebFiles.FindAsync(id);
+            WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager, !User.IsInRole(Roles.Administrators))
+                .Include(f => f.Permissions).FindAsync(id);
+            if (webFile == null)
+            {
+                return HttpNotFound();
+            }
             var folders = db.ActiveSharedFolders
                 .Where(f => f.Files.Select(w => w.Id).Contains(webFile.Id))
                 .Include(f => f.Files)
@@ -225,8 +253,11 @@ namespace wwwplatform.Controllers
             {
                 folder.Files.Remove(webFile);
             }
+            db.SaveChanges();
+
             db.WebFiles.Remove(webFile);
             await db.SaveChangesAsync();
+
             return RedirectToAction("Index");
         }
     }

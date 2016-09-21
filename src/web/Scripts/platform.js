@@ -35,7 +35,7 @@
     });
 
     $('.auto-datatable').each(function () {
-        var options = {};
+        var options = { language: { emptyTable: 'No entries' } };
         var defaultSort = $('th[data-order]', this);
         if (defaultSort.length) {
             options.order = [[defaultSort.index(), defaultSort.data('order')]];
@@ -64,6 +64,8 @@
             input.value = value;
         });
     });
+
+    $.cookie('_tz', 0 - (new Date()).getTimezoneOffset());
 
     $(document.body).addClass('in');
 })

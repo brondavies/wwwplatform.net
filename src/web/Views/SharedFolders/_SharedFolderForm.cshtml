@@ -16,7 +16,7 @@
     }
     else
     {
-        permissions.Add(PublicRole.Id);
+        permissions.AddRange(Settings.SharedFoldersRootPermissions.Split(','));
     }
 }
 @using (Html.BeginForm())

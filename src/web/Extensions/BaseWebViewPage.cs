@@ -16,6 +16,7 @@ using wwwplatform.Models.ViewModels;
 using System.Data.Entity;
 using wwwplatform.Extensions.Helpers;
 using System.Web.WebPages;
+using System.Threading;
 
 namespace wwwplatform.Extensions
 {
@@ -52,6 +53,29 @@ namespace wwwplatform.Extensions
                     _Settings = Settings.Create(Context);
                 }
                 return _Settings;
+            }
+        }
+
+        private int? _UserTimeZoneOffset;
+        public int UserTimeZoneOffset
+        {
+            get
+            {
+                if (_UserTimeZoneOffset.HasValue)
+                {
+                    return _UserTimeZoneOffset.Value;
+                }
+                var cookie = Context.Request.Cookies.Get("_tz");
+                if (cookie != null)
+                {
+                    int result;
+                    if (int.TryParse(cookie.Value, out result))
+                    {
+                        _UserTimeZoneOffset = result;
+                        return result;
+                    }
+                }
+                return 0;
             }
         }
 
@@ -143,7 +167,7 @@ namespace wwwplatform.Extensions
 
         public bool SharedFoldersLinkIsAvailable()
         {
-            return Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id) 
+            return Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id)
                 || UserInAnyRole(Settings.SharedFoldersRootPermissions.Split(','));
         }
 
@@ -282,7 +306,7 @@ namespace wwwplatform.Extensions
             return _userManager;
         }
 
-        public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true, string name="permissions", string className = null)
+        public IHtmlString RoleButtonGroup(IEnumerable<string> permissions, bool includePublic = true, string name = "permissions", string className = null)
         {
             var publicRole = PublicRole;
             WriteLiteral(string.Format("<div class=\"btn-group {0}\" data-toggle=\"buttons\">", className));

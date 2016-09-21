@@ -62,7 +62,7 @@ else
                         @item.Files.Count()
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedAt)
+                        @item.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
                     </td>
                     <td>
                         @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = IsAdmin || item.IsOwner(User), showEdit = IsAdmin || item.IsOwner(User), showDetails = false })

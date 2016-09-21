@@ -11,15 +11,26 @@ namespace wwwplatform.Models
 {
     public partial class WebFile : Auditable, Permissible
     {
-        internal static IQueryable<WebFile> GetAvailableFiles(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager)
+        internal static IQueryable<WebFile> GetAvailableFiles(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool owner = false)
         {
             var files = Permission.GetPermissible<WebFile>(db, User, UserManager, RoleManager);
+            if (owner)
+            {
+                string UserName = User.Identity.Name;
+                files = files.Where(f => f.UpdatedBy == UserName);
+            }
             return files.OrderBy(f => f.Name);
         }
 
         public bool IsOwner(IPrincipal User)
         {
             return UpdatedBy == User.Identity.Name;
+        }
+
+        public void Update(WebFile update)
+        {
+            Name = update.Name;
+            Description = update.Description;
         }
 
         [NotMapped]
@@ -57,7 +68,11 @@ namespace wwwplatform.Models
 
         public FileType GetFileType()
         {
-            string ext = System.IO.Path.GetExtension(this.Location).ToLower();
+            if (string.IsNullOrEmpty(Location))
+            {
+                return FileType.Unknown;
+            }
+            string ext = System.IO.Path.GetExtension(Location).ToLower();
             switch (ext)
             {
                 case ".7z":
@@ -337,5 +352,6 @@ namespace wwwplatform.Models
         Spreadsheet,
         Text,
         Video,
+        Unknown
     }
 }

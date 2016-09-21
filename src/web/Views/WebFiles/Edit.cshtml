@@ -1,7 +1,7 @@
 ﻿@model wwwplatform.Models.WebFile
 
 @{
-    ViewBag.Title = "Files - " + Model.Name;
+    ViewBag.Title = "Uploaded Files - " + Model.Name;
     List<string> permissions = new List<string>();
     if (Model.Id > 0 && Model.Permissions != null)
     {
@@ -19,7 +19,7 @@
     }
 }
 
-<h2>Files</h2>
+<h2>Uploaded Files</h2>
 
 @using (Html.BeginForm())
 {
