@@ -20,6 +20,7 @@ namespace wwwplatform
         public Task SendAsync(IdentityMessage message)
         {
             MailMessage mailMessage = new MailMessage(Settings.GetConfig(Settings.kEmailDefaultFrom), message.Destination, message.Subject, message.Body);
+            mailMessage.IsBodyHtml = true;
             SmtpClient client = new SmtpClient();
             client.Send(mailMessage);
             return Task.FromResult(0);
