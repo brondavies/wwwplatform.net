@@ -16,7 +16,7 @@ namespace wwwplatform.Controllers
     [Extensions.Authorize(Roles.Editors, Roles.Administrators)]
     public class SitePagesController : BaseController
     {
-        const string AllowedFields = "Id,Name,Order,Description,PubDate,Layout,HTMLBody,ParentPageId,ShowInNavigation,HomePage";
+        const string AllowedFields = "Id,Name,Order,Description,PubDate,Layout,HTMLBody,ParentPageId,ShowInNavigation,HomePage,RedirectUrl";
 
         // GET: SitePages
         public async Task<ActionResult> Index()
@@ -145,6 +145,11 @@ namespace wwwplatform.Controllers
             if (sitePage == null)
             {
                 return HttpNotFound();
+            }
+
+            if (!string.IsNullOrEmpty(sitePage.RedirectUrl))
+            {
+                return Redirect(sitePage.RedirectUrl);
             }
 
             ViewBag.Layout = sitePage.Layout;

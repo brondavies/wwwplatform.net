@@ -13,7 +13,7 @@ namespace wwwplatform
         protected void Application_Start()
         {
             ApplicationDbContext.RegisterConfig();
-            AreaRegistration.RegisterAllAreas();
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);

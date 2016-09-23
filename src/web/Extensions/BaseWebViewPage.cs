@@ -86,6 +86,11 @@ namespace wwwplatform.Extensions
             return Html.Raw(JsonConvert.SerializeObject(model));
         }
 
+        public IHtmlString LI(IHtmlString inner)
+        {
+            return new HtmlString("<li>" + inner + "</li>");
+        }
+
         #endregion
 
         #region Role-based links
@@ -109,7 +114,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && (User.IsInRole(Roles.Editors) || User.IsInRole(Roles.Administrators)))
             {
-                return Html.ActionLink("Pages", "Index", "SitePages");
+                return LI(Html.ActionLink("Pages", "Index", "SitePages"));
             }
 
             return null;
@@ -119,7 +124,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
             {
-                return Html.ActionLink("Manage Roles", "Index", "Roles");
+                return LI(Html.ActionLink("Manage Roles", "Index", "Roles"));
             }
 
             return null;
@@ -129,7 +134,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
             {
-                return Html.ActionLink("Settings", "Index", "AppSettings");
+                return LI(Html.ActionLink("Settings", "Index", "AppSettings"));
             }
 
             return null;
@@ -139,7 +144,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
             {
-                return Html.ActionLink("Manage Users", "Index", "Users");
+                return LI(Html.ActionLink("Manage Users", "Index", "Users"));
             }
 
             return null;
@@ -159,7 +164,7 @@ namespace wwwplatform.Extensions
         {
             if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
             {
-                return Html.ActionLink("Mailing Lists", "Index", "MailingLists");
+                return LI(Html.ActionLink("Mailing Lists", "Index", "MailingLists"));
             }
 
             return null;
@@ -173,7 +178,7 @@ namespace wwwplatform.Extensions
 
         public IHtmlString SharedFoldersLink()
         {
-            return Html.ActionLink(Settings.SharedFoldersLabel, "Index", "SharedFolders");
+            return LI(Html.ActionLink(Settings.SharedFoldersLabel, "Index", "SharedFolders"));
         }
 
         public bool UserInAnyRole(string[] roleIds)

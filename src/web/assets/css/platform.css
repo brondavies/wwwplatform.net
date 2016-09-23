@@ -205,7 +205,6 @@ div.mce-panel {
 /* Footer Menu */
 #footer {
   background-color: #4f4e53;
-  color: #eeeeee;
   color: rgba(255, 255, 255, 0.8);
   padding-top: 15px;
   padding-bottom: 15px;
@@ -222,7 +221,6 @@ div.mce-panel {
   border: none;
 }
 #footermenu ul li a {
-  color: #eeeeee;
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
 }
@@ -324,6 +322,15 @@ table.dataTable thead th::after{
 @keyframes animatedBackground {
     0% { background-position: 0 0; }
     100% { background-position: 1096px 0; }
+}
+#pre_header .dropdown>.dropdown-toggle {
+    color: #eee;
+}
+#pre_header .dropdown>.dropdown-toggle:active,
+#pre_header .dropdown>.dropdown-toggle:focus,
+#pre_header .dropdown>.dropdown-toggle:hover {
+    color: #fff;
+    text-decoration: none;
 }
 #footer .adminMenu .dropdown-menu {
     background-color: #4f4e53;

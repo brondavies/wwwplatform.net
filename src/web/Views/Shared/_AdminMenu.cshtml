@@ -1,0 +1,16 @@
+﻿@{
+    var cssClass = ViewData["class"] ?? "dropup adminMenu";
+    var toggleClass = ViewData["toggleClass"];
+}
+<div class="@(cssClass)">
+    <a href="" class="dropdown-toggle @(toggleClass)" data-toggle="dropdown" aria-expanded="false" id="adminMenu">
+        Admin <span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" aria-labelledby="adminMenu">
+        @UserAdminLink()
+        @RolesAdminLink()
+        @PagesAdminLink()
+        @MailingListAdminLink()
+        @SettingsAdminLink()
+    </ul>
+</div>

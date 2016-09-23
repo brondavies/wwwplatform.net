@@ -30,7 +30,7 @@ namespace wwwplatform.Models
         public DateTime PubDate { get; set; }
         
         [MaxLength(150)]
-        [DisplayName("The page layout file")]
+        [DisplayName("Layout file")]
         public string Layout { get; set; }
 
         [DataType(DataType.Html), UIHint("tinymce_jquery_full"), AllowHtml]
@@ -59,6 +59,9 @@ namespace wwwplatform.Models
         [DisplayName("Set As Home Page")]
         public bool HomePage { get; set; }
         
+        [MaxLength(255)]
+        public string RedirectUrl { get; set; }
+
         public virtual ICollection<Permission> Permissions { get; set; }
     }
 }

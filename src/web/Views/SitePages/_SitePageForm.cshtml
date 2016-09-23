@@ -16,6 +16,11 @@
     {
         permissions.Add(PublicRole.Id);
     }
+    bool useRedirect = !string.IsNullOrEmpty(Model.RedirectUrl);
+    var SitePageBodyClass = useRedirect ? "out" : "in";
+    var RedirectUrlChecked = useRedirect ? "checked" : "";
+    var RedirectUrlAttributes = new Dictionary<string, object> { ["class"] = "form-control" };
+    if (!useRedirect) { RedirectUrlAttributes["disabled"] = "disabled"; }
 }
 @using (Html.BeginForm())
 {
@@ -99,14 +104,6 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Layout, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Layout, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Layout, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.ParentPage, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.DropDownListFor(model => model.ParentPageId, GetParentPageSelectList(Model.Id, Model.ParentPageId), new { @class = "form-control" })
@@ -114,6 +111,25 @@
         </div>
 
         <div class="form-group">
+            <label class="control-label col-sm-2">
+                Redirect To
+                <input @(RedirectUrlChecked) class="check-box" id="RedirectUrlEnabled" name="RedirectUrlEnabled" type="checkbox" value="true">
+            </label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.RedirectUrl, new { htmlAttributes = RedirectUrlAttributes })
+                @Html.ValidationMessageFor(model => model.RedirectUrl, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group SitePageBody fade @(SitePageBodyClass)">
+            @Html.LabelFor(model => model.Layout, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Layout, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Layout, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group SitePageBody fade @(SitePageBodyClass)">
             @Html.LabelFor(model => model.HTMLBody, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 @Html.EditorFor(model => model.HTMLBody, new { htmlAttributes = new { @class = "form-control" } })
@@ -121,4 +137,22 @@
             </div>
         </div>
     </div>
+}
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptBlock(
+    @<script>
+        $(function () {
+            $('#RedirectUrlEnabled').change(function () {
+                $('.SitePageBody').toggleClass('in out');
+                var text = $('#RedirectUrl');
+                if (this.checked) {
+                    text.removeAttr('disabled').focus();
+                } else {
+                    text.attr('disabled', 'disabled').val('');
+                }
+            });
+        });
+    </script>
+    );
 }

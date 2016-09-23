@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Web.Mvc;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Security.Principal;
-using Microsoft.AspNet.Identity;
+using System.Web;
+
 using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Models
@@ -26,11 +19,12 @@ namespace wwwplatform.Models
             ParentPageId = sitePage.ParentPageId;
             ShowInNavigation = sitePage.ShowInNavigation;
             HomePage = sitePage.HomePage;
+            RedirectUrl = sitePage.RedirectUrl;
         }
 
-        public string AppRelativeUrl()
+        public string AppRelativeUrl(HttpContextBase context = null)
         {
-            return "~/".ResolveUrl() + Slug;
+            return "~/".ResolveUrl(context) + Slug;
         }
 
         internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false)

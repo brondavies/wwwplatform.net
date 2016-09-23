@@ -51,7 +51,7 @@ namespace wwwplatform.Controllers
             string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
             string contentType = FTT.GetMimeType(webFile.Location ?? "");
-            if (contentType=="") { contentType = "application/octet-stream"; }
+            if (contentType == "") { contentType = "application/octet-stream"; }
             Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             return File(System.IO.File.OpenRead(filepath), contentType);
             //return File(filepath, contentType, filename);
@@ -249,7 +249,7 @@ namespace wwwplatform.Controllers
                 .Where(f => f.Files.Select(w => w.Id).Contains(webFile.Id))
                 .Include(f => f.Files)
                 .ToList();
-            foreach(var folder in folders)
+            foreach (var folder in folders)
             {
                 folder.Files.Remove(webFile);
             }

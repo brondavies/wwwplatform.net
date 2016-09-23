@@ -28,6 +28,17 @@
         <div class="pull-right text-right text-white">
             @if (Request.IsAuthenticated)
             {
+                if (User.IsInRole(wwwplatform.Models.Roles.Administrators) ||
+                    User.IsInRole(wwwplatform.Models.Roles.Editors) ||
+                    User.IsInRole(wwwplatform.Models.Roles.ListManagers))
+                {
+                    <ul class="list-unstyled list-inline inline">
+                        <li class="btn">
+                            @Html.Partial("_AdminMenu", viewData: new ViewDataDictionary { ["class"] = "dropdown adminMenu", ["toggleClass"] = "text-white" })
+                        </li>
+                        <li></li>
+                    </ul>
+                }
                 <span class="btn">Logged in as</span>
                 @MyAccountLink(CurrentUser.FullName(), "btn")
             }
@@ -96,35 +107,12 @@
                                 User.IsInRole(wwwplatform.Models.Roles.ListManagers))
                             {
                                 <li>
-                                    <div class="dropup adminMenu">
-                                        <a href="" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false" id="adminMenu">
-                                            Admin <span class="caret"></span>
-                                        </a>
-                                        <ul class="dropdown-menu" aria-labelledby="adminMenu">
-                                            <li>
-                                                @UserAdminLink()
-                                            </li>
-                                            <li>
-                                                @RolesAdminLink()
-                                            </li>
-                                            <li>
-                                                @PagesAdminLink()
-                                            </li>
-                                            <li>
-                                                @MailingListAdminLink()
-                                            </li>
-                                            <li>
-                                                @SettingsAdminLink()
-                                            </li>
-                                        </ul>
-                                    </div>
+                                    @Html.Partial("_AdminMenu")
                                 </li>
                             }
                             if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
                             {
-                                <li>
-                                    @SharedFoldersLink()
-                                </li>
+                                @SharedFoldersLink()
                             }
                             <li>
                                 @MyAccountLink()
@@ -132,9 +120,7 @@
                         }
                         else if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
                         {
-                            <li>
-                                @SharedFoldersLink()
-                            </li>
+                            @SharedFoldersLink()
                         }
                         <li>
                             @LoginLink()
