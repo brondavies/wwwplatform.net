@@ -305,6 +305,21 @@ table.dataTable thead th::after{
 .js-uploader.uploading form {
     visibility: hidden;
 }
+.js-uploader .progress {
+    display:none;
+}
+.js-uploader.uploading .progress {
+    /*background-color:#4CAF50;*/
+    bottom: 0;
+    /*color:#fff;*/
+    display:initial;
+    left: 0;
+    overflow: visible;
+    position: absolute;
+    right: 0;
+    top: 8px;
+    transition: width linear 1s;
+}
 .js-uploader .spinner {
     display:none;
 }
@@ -312,7 +327,7 @@ table.dataTable thead th::after{
     animation: animatedBackground 8s linear infinite;
     background-image: linear-gradient(to right, #fff, rgba(187, 187, 255, 0.5), #fff);
     border: 1px solid rgba(187, 187, 255, 0.3);
-    bottom: 0;
+    bottom: 6px;
     display:initial;
     left: 10px;
     position: absolute;

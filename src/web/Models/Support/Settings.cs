@@ -35,7 +35,9 @@
         public string EmailAdditionalHeaders { get { return null; } }
 
         public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
-        
+
+        public string RolesWithUploadPermission { get { return GetValue(kRolesWithUploadPermission, GetConfig(kRolesWithUploadPermission, "")); } }
+
         public string SharedFoldersLabel { get { return GetValue(kSharedFoldersLabel, GetConfig(kSharedFoldersLabel, "Shared Folders")); } }
 
         public string SharedFoldersRootPermissions { get { return GetValue(kSharedFoldersRootPermissions, GetConfig(kSharedFoldersRootPermissions, "")); } }

@@ -27,10 +27,15 @@ namespace wwwplatform.Models
             return UpdatedBy == User.Identity.Name;
         }
 
-        public void Update(WebFile update)
+        public void Update(WebFile update, int? timeZoneOffset)
         {
             Name = update.Name;
             Description = update.Description;
+            DisplayDate = update.DisplayDate;
+            if (timeZoneOffset.HasValue && DisplayDate.HasValue)
+            {
+                DisplayDate = DisplayDate.Value.AddMinutes(timeZoneOffset.Value);
+            }
         }
 
         [NotMapped]

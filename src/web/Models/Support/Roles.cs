@@ -59,7 +59,11 @@ namespace wwwplatform.Models
             if (!User.Identity.IsAuthenticated) { return false; }
             if (User.IsInRole(Roles.Administrators)) { return true; }
             var userRoles = RoleManager.Roles.Where(r => roleIds.Contains(r.Id)).ToList();
-            return userRoles.Any(r => User.IsInRole(r.Name));
+            foreach(var r in userRoles)
+            {
+                if (User.IsInRole(r.Name)) return true;
+            }
+            return false;
         }
     }
 }

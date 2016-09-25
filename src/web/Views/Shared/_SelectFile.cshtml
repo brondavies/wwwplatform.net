@@ -31,6 +31,7 @@
                                 <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
                             </form>
                             <div class="spinner"></div>
+                            <div class="progress"><div class="progress-bar progress-success"></div></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -54,9 +55,9 @@
                     $('body').append(modal);
                     var renderDate = function (data, type, full, meta) {
                         if (type === 'display') {
-                            return (new Date(data)).toLocaleString().replace(',', '');
+                            return (new Date(full.DisplayDate || data)).toLocaleString().replace(',', '');
                         }
-                        return data;
+                        return full.DisplayDate || data;
                     };
                     var renderIcon = function (data, type, full, meta) {
                         if (type === 'display') {
@@ -106,8 +107,45 @@
                                 });
                             });
                             $('[type="file"]', modal).change(function (event) {
-                                $(event.target).closest('form').submit();
                                 $('.js-uploader').addClass('uploading');
+                                var $form = $(event.target).closest('form');
+                                if (!submitViaAjax($form[0])) {
+                                    $form.submit();
+                                }
+
+                                function progressHandler(event) {
+                                    var $p = $('.js-uploader .progress-bar');
+                                    if (event.lengthComputable) {
+                                        var percent = Math.round(event.loaded * 100 / event.total);
+                                        $p.text(percent + '%');
+                                        $p.css({ width: percent + '%' });
+                                    } else {
+                                        $p.text('Uploading ...');
+                                    }
+                                }
+
+                                function submitViaAjax(form) {
+                                    if (FormData && XMLHttpRequest) {
+                                        var request = new XMLHttpRequest();
+                                        if (request.upload && request.open && request.send) {
+                                            request.upload.addEventListener('progress', progressHandler, false);
+                                            request.open("POST", form.action);
+                                            request.setRequestHeader("Accept", "application/json");
+                                            request.send(new FormData(form));
+                                            request.onreadystatechange = function () {
+                                                if (request.readyState == 4) {
+                                                    var response = JSON.parse(request.responseText);
+                                                    if (request.status < 300) {
+                                                        $(window).trigger('newfile.upload', response);
+                                                    } else {
+                                                        $(window).trigger('error.upload', response);
+                                                    }
+                                                }
+                                            };
+                                            return true;
+                                        }
+                                    }
+                                }
                             });
                         })
                         .one('hidden.bs.modal', function (e) {
@@ -120,18 +158,24 @@
                                 eventName && $(window).trigger(eventName, result);
                             }
                         });
-                });
 
-                $(window).bind('newfile.upload', function (event, data) {
-                    var modal = $('#SelectFile_' + selectFileName);
-                    if (data.status) {
-                        $('[data-role="file-id"]', modal).val(data.file.Id);
-                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
+                    $(window).bind('newfile.upload', function (event, data) {
+                        if (data.status) {
+                            $('[data-role="file-id"]', modal).val(data.file.Id);
+                            $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
+                            modal.modal('hide');
+                        } else if (data.message) {
+                            bootbox.alert(data.message);
+                        }
+                        $('.js-uploader').removeClass('uploading');
+                    });
+                    $(window).bind('error.upload', function (event, data) {
                         modal.modal('hide');
-                    } else if (data.message) {
-                        bootbox.alert(data.message);
-                    }
-                    $('.js-uploader').removeClass('uploading');
+                        if (data.message) {
+                            bootbox.alert(data.message);
+                        }
+                        $('.js-uploader').removeClass('uploading');
+                    });
                 });
             });
         </script>

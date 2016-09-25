@@ -45,7 +45,7 @@
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @item.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
+                        @((item.DisplayDate ?? item.UpdatedAt).AddMinutes(UserTimeZoneOffset).ToString("G"))
                     </td>
                     <td>
                         @Html.Partial("_TableActionButtons", item, new TableActionOptions { detailLabel = "Download" })

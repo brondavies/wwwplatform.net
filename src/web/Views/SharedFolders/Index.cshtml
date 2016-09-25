@@ -5,13 +5,14 @@
 @{
     ViewBag.Title = Settings.SharedFoldersLabel;
 
-    var IsAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var isAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var canUpload = isAdmin || wwwplatform.Models.Roles.UserInAnyRole(User, RoleManager, Settings.RolesWithUploadPermission.Split(','));
 }
 
 <h2>@ViewBag.Title</h2>
 
 <section class="h3 text-right">
-    @if (User.Identity.IsAuthenticated)
+    @if (canUpload)
     {
     <div class="btn-group">
         @Html.ActionLink("New Folder", "Create", null, new { @class = "btn btn-default" })
@@ -65,7 +66,7 @@ else
                         @item.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
                     </td>
                     <td>
-                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = IsAdmin || item.IsOwner(User), showEdit = IsAdmin || item.IsOwner(User), showDetails = false })
+                        @Html.Partial("_TableActionButtons", item, new TableActionOptions { showDelete = isAdmin || item.IsOwner(User), showEdit = isAdmin || item.IsOwner(User), showDetails = false })
                     </td>
                 </tr>
             }

@@ -158,15 +158,18 @@ namespace wwwplatform.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddFiles(long id, long[] files)
         {
-            SharedFolder folder = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager).FindAsync(id);
-            if (folder == null)
+            var uploadRoles = Settings.RolesWithUploadPermission.Split(',');
+            if (Roles.UserInAnyRole(User, RoleManager, uploadRoles))
             {
-                return HttpNotFound();
+                SharedFolder folder = await SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager).FindAsync(id);
+                if (folder == null)
+                {
+                    return HttpNotFound();
+                }
+                var webfiles = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).Where(f => files.Contains(f.Id)).ToListAsync();
+                foreach (var wf in webfiles) folder.Files.Add(wf);
+                await db.SaveChangesAsync();
             }
-            var webfiles = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).Where(f => files.Contains(f.Id)).ToListAsync();
-            foreach (var wf in webfiles) folder.Files.Add(wf);
-            await db.SaveChangesAsync();
-
             return Json(new { status = "OK" });
         }
 

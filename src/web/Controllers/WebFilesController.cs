@@ -26,6 +26,8 @@ namespace wwwplatform.Controllers
     [Serializer(typeof(WebFileSerializer))]
     public class WebFilesController : BaseController
     {
+        private const string AllowedFields = "Id,Name,Description,DisplayDate,Location";
+
         // GET: WebFiles
         public async Task<ActionResult> Index()
         {
@@ -66,7 +68,7 @@ namespace wwwplatform.Controllers
         // POST: WebFiles/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "Id,Name,Description,Location")] WebFile webFile, bool redir = false)
+        public async Task<ActionResult> Create([Bind(Include = AllowedFields)] WebFile webFile, bool redir = false)
         {
             UploadResults results = new UploadResults
             {
@@ -148,6 +150,16 @@ namespace wwwplatform.Controllers
             }
             return Auto(results, "Created");
         }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult Error(string id)
+        {
+            return Auto(new UploadResults {
+                message = "File upload failed. Make sure your application is configured correctly for file uploads",
+                status = UploadResults.Failed
+            });
+        }
 
         private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
         {
@@ -201,7 +213,7 @@ namespace wwwplatform.Controllers
         // POST: WebFiles/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "Id,Name,Description,Location")] WebFile form, string[] permissions = null)
+        public async Task<ActionResult> Edit([Bind(Include = AllowedFields)] WebFile form, string[] permissions = null)
         {
             WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager, !User.IsInRole(Roles.Administrators)).FindAsync(form.Id);
             if (webFile == null)
@@ -210,7 +222,7 @@ namespace wwwplatform.Controllers
             }
             if (ModelState.IsValid)
             {
-                webFile.Update(form);
+                webFile.Update(form, UserTimeZoneOffset);
                 db.Entry(webFile).State = EntityState.Modified;
                 Permission.Apply(db, User, RoleManager, webFile, permissions);
                 await db.SaveChangesAsync();

@@ -891,6 +891,7 @@
     <Content Include="Views\SharedFolders\Display.cshtml" />
     <Content Include="Views\MailingLists\_MailingListForm.cshtml" />
     <Content Include="Views\Shared\_AdminMenu.cshtml" />
+    <Content Include="Views\WebFiles\Error.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />

@@ -6,14 +6,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>File Uploaded</title>
+    <title>File Upload Failed</title>
 </head>
 <body>
     @Scripts.Render("~/Scripts/jquery")
     <script>
         parent.$(parent).trigger(
-            'newfile.upload',
+            'error.upload',
             @ToJson(Model));
     </script>
 </body>
 </html>
+

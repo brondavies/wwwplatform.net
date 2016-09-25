@@ -93,6 +93,29 @@ namespace wwwplatform.Extensions
                 _settings = value;
             }
         }
+        
+        private int? _UserTimeZoneOffset;
+        public int UserTimeZoneOffset
+        {
+            get
+            {
+                if (_UserTimeZoneOffset.HasValue)
+                {
+                    return _UserTimeZoneOffset.Value;
+                }
+                var cookie = HttpContext.Request.Cookies.Get("_tz");
+                if (cookie != null)
+                {
+                    int result;
+                    if (int.TryParse(cookie.Value, out result))
+                    {
+                        _UserTimeZoneOffset = result;
+                        return result;
+                    }
+                }
+                return 0;
+            }
+        }
 
         protected virtual JsonResult OK()
         {

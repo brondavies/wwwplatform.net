@@ -188,14 +188,19 @@ namespace wwwplatform.Extensions
 
         public IHtmlString UploadDialogButton(string name, string text, string eventName = null, string className = null)
         {
-            if (string.IsNullOrEmpty(eventName))
+            var uploadRoles = Settings.RolesWithUploadPermission.Split(',');
+            if (Roles.UserInAnyRole(User, RoleManager, uploadRoles))
             {
-                eventName = name + ".selected";
-            }
-            var script = "$(window).trigger('selectfile.show', {eventName: '" + eventName + "'});";
+                if (string.IsNullOrEmpty(eventName))
+                {
+                    eventName = name + ".selected";
+                }
+                var script = "$(window).trigger('selectfile.show', {eventName: '" + eventName + "'});";
 
-            WriteLiteral("<a href=\"#\" class=\"btn btn-default " + className + "\" onclick=\"" + script + "\">" + text + "</a>");
-            return Html.Partial("_SelectFile", new SelectFileOptions { name = name });
+                WriteLiteral("<a href=\"#\" class=\"btn btn-default " + className + "\" onclick=\"" + script + "\">" + text + "</a>");
+                return Html.Partial("_SelectFile", new SelectFileOptions { name = name });
+            }
+            return null;
         }
 
         #endregion

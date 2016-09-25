@@ -6,9 +6,12 @@
 
 @{
     ViewBag.Title = Model.Name;
-    var isFolderOwner = Model.UpdatedBy == User.Identity.Name || User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var isAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var isFolderOwner = isAdmin || Model.UpdatedBy == User.Identity.Name;
+    var canUpload = isFolderOwner || wwwplatform.Models.Roles.UserInAnyRole(User, RoleManager, Settings.RolesWithUploadPermission.Split(','));
     var hasParent = Model.ParentFolderId.HasValue;
     var parentlink = hasParent ? "/Shared/" + Model.ParentFolder.Slug : "/SharedFolders";
+    var parentName = hasParent ? Model.ParentFolder.Name : "";
 }
 @helper SubFolderDisplay(wwwplatform.Models.SharedFolder folder)
 {
@@ -27,7 +30,7 @@ if (size.HasValue)
 WriteLiteral(display);
 }
 <h2>
-    <a href="@parentlink" class="btn btn-link">
+    <a href="@parentlink" class="btn btn-link" title="@parentName">
         <i class="fa fa-level-up fa-2x"></i>
     </a>
     @ViewBag.Title
@@ -36,15 +39,14 @@ WriteLiteral(display);
     </span>
 </h2>
 <section class="h3 text-right">
-
-    @if (User.Identity.IsAuthenticated)
+    @if (canUpload)
     {
         <div class="btn-group">
             @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
             @UploadDialogButton("Folder_" + Model.Slug, "Upload")
             @if (isFolderOwner)
             {
-                Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" });
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
             }
         </div>
     }
@@ -79,7 +81,7 @@ else
         </thead>
         <tbody>
             @foreach (var folder in Model.SubFolders)
-                {
+            {
                 <tr data-href="/Shared/@(folder.Slug)">
                     <td>
                         <i class="fa fa-folder-o fa-lg"></i>
@@ -91,7 +93,7 @@ else
                         @Html.DisplayFor(modelItem => folder.Description)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => folder.UpdatedAt)
+                        @folder.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => folder.UpdatedBy)
@@ -103,7 +105,7 @@ else
                 </tr>
             }
             @foreach (var item in Model.Files)
-                {
+            {
                 <tr data-href="/WebFiles/Details/@(item.Id)?v=1" data-target="_blank">
                     <td>
                         <i class="fa @(item.Icon) fa-lg"></i>
@@ -115,7 +117,7 @@ else
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
                     <td>
-                        @item.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
+                        @((item.DisplayDate ?? item.UpdatedAt).AddMinutes(UserTimeZoneOffset).ToString("G"))
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.UpdatedBy)

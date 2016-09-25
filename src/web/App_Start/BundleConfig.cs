@@ -13,6 +13,8 @@ namespace wwwplatform
             var Context = new HttpContextWrapper(HttpContext.Current);
             var settings = Settings.Create(Context);
 
+            bundles.Add(new ScriptBundle("~/Scripts/jquery").Include("~/Scripts/jquery-{version}.js"));
+
             string skin = settings.SkinDefinitionFile ??  "~/App_Data/Skins/Default/skin.json";
             SkinDefinition skindef = SkinDefinition.Load(Context.Server.MapPath(skin));
             foreach (var script in skindef.scripts.Keys)
