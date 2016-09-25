@@ -26,6 +26,9 @@ div.mce-panel {
   background: none repeat scroll 0 0 #363539;
   height: 34px;
 }
+#pre_header ul.list-inline {
+    margin-bottom: 0;
+}
 #header .navbar.navbar-default {
     border-top-left-radius:0;
     border-top-right-radius:0;
