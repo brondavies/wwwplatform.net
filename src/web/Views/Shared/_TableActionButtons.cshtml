@@ -5,7 +5,9 @@
     bool showEdit = ViewData["showEdit"] == null;
     bool showDetails = ViewData["showDetails"] == null;
     bool showDelete = ViewData["showDelete"] == null;
+    string deleteLabel = (string)ViewData["deleteLabel"] ?? "Delete";
     string detailLabel = (string)ViewData["detailLabel"] ?? "Details";
+    string editLabel = (string)ViewData["editLabel"] ?? "Edit";
     if (ViewData["Controller"] == null)
     {
         routeValues = new { id = Model.Id };
@@ -15,10 +17,10 @@
         routeValues = new { id = Model.Id, controller = ViewData["Controller"] };
     }
 }
-<div class="btn-group nowrap pull-left">
+<div class="btn-group hidden-xs hidden-sm pull-left">
     @if (showEdit)
     {
-        @Html.ActionLink("Edit", "Edit", routeValues, new { @class = "btn btn-xs btn-primary" })
+        @Html.ActionLink(editLabel, "Edit", routeValues, new { @class = "btn btn-xs btn-primary" })
     }
 
     @if (showDetails)
@@ -28,6 +30,35 @@
 
     @if (showDelete)
     {
-        @Html.ActionLink("Delete", "Delete", routeValues, new { @class = "btn btn-xs btn-danger" })
+        @Html.ActionLink(deleteLabel, "Delete", routeValues, new { @class = "btn btn-xs btn-danger" })
     }
 </div>
+<div class="dropdown visible-xs visible-sm pull-left">
+    <a href="" class="dropdown-toggle btn btn-sm btn-default" data-toggle="dropdown" aria-expanded="false" id="tableactionbutton">
+        <span class="sr-only">Actions</span>
+        <span class="fa fa-ellipsis-v"></span>
+    </a>
+    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="tableactionbutton">
+        @if (showEdit)
+        {
+            <li>
+                @Html.ActionLink(editLabel, "Edit", routeValues, new { @class = "primary" })
+            </li>
+        }
+
+        @if (showDetails)
+        {
+            <li>
+                @Html.ActionLink(detailLabel, "Details", routeValues, new { @class = "info" })
+            </li>
+        }
+
+        @if (showDelete)
+        {
+            <li>
+                @Html.ActionLink(deleteLabel, "Delete", routeValues, new { @class = "danger" })
+            </li>
+        }
+    </ul>
+</div>
+

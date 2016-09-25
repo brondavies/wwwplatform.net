@@ -305,6 +305,9 @@ table.dataTable thead .sorting.disable-sorting {
 table.dataTable thead th::after{
     display:none!important;
 }
+.dataTables_wrapper div.row:nth-child(2) {
+    overflow: visible;
+}
 .js-uploader.uploading form {
     visibility: hidden;
 }

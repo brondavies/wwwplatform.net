@@ -64,13 +64,16 @@ else
                 <th data-order="asc">
                     Name
                 </th>
-                <th>
+                <th class="hidden-xs hidden-sm">
                     Description
                 </th>
-                <th>
+                <th class="hidden-xs">
                     Date
                 </th>
-                <th>
+                <th class="visible-xs">
+                    Date
+                </th>
+                <th class="hidden-xs hidden-sm">
                     Uploaded By
                 </th>
                 <th>
@@ -89,13 +92,16 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => folder.Name)
                     </td>
-                    <td>
+                    <td class="hidden-xs hidden-sm">
                         @Html.DisplayFor(modelItem => folder.Description)
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         @folder.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("G")
                     </td>
-                    <td>
+                    <td class="visible-xs">
+                        @folder.UpdatedAt.AddMinutes(UserTimeZoneOffset).ToString("d")
+                    </td>
+                    <td class="hidden-xs hidden-sm">
                         @Html.DisplayFor(modelItem => folder.UpdatedBy)
                     </td>
                     <td data-sort="0" data-order="0"></td>
@@ -113,13 +119,16 @@ else
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td class="hidden-xs hidden-sm">
                         @Html.DisplayFor(modelItem => item.Description)
                     </td>
-                    <td>
+                    <td class="hidden-xs">
                         @((item.DisplayDate ?? item.UpdatedAt).AddMinutes(UserTimeZoneOffset).ToString("G"))
                     </td>
-                    <td>
+                    <td class="visible-xs">
+                        @((item.DisplayDate ?? item.UpdatedAt).AddMinutes(UserTimeZoneOffset).ToString("d"))
+                    </td>
+                    <td class="hidden-xs hidden-sm">
                         @Html.DisplayFor(modelItem => item.UpdatedBy)
                     </td>
                     <td data-sort="@(item.Size)" data-order="@(item.Size)">
