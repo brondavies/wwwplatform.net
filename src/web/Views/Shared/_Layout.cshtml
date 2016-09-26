@@ -45,7 +45,10 @@
             else
             {
                 <span class="btn">Hello Guest!</span>
+                if (Settings.ShowSignInLinks)
+                {
                 @LoginLink(null, "btn bold")
+                }
             }
         </div>
     </div>
@@ -122,9 +125,12 @@
                         {
                             @SharedFoldersLink()
                         }
+                        @if (Settings.ShowSignInLinks)
+                        {
                         <li>
                             @LoginLink()
                         </li>
+                        }
                     </ul>
                 </div>
             </div>

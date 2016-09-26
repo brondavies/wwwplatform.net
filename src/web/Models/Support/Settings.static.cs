@@ -28,6 +28,7 @@ namespace wwwplatform.Models
         internal const string kSharedFoldersLabel = "SharedFoldersLabel";
         internal const string kSharedFoldersRootPermissions = "SharedFoldersRootPermissions";
         internal const string kShowSharedFoldersInMenus = "ShowSharedFoldersInMenus";
+        internal const string kShowSignInLinks = "ShowSignInLinks";
         internal const string kSiteName = "SiteName";
         internal const string kSiteOwner = "SiteOwner";
         internal const string kSkinDefinitionFile = "SkinDefinitionFile";
@@ -105,7 +106,8 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kRolesWithUploadPermission, Kind = AppSetting.KindRole, Description = "The user roles that can upload files to shared folders" },
                 new AppSetting { Name = kSharedFoldersLabel, Kind = AppSetting.KindString, DefaultValue = "Shared Folders", Description = "The text for the Shared Folders links" },
                 new AppSetting { Name = kSharedFoldersRootPermissions, Kind = AppSetting.KindRole, DefaultValue = "", Description = "The roles that can view the root of the shared folders directory. Shared Folder links are always available to the roles assigned." },
-                new AppSetting { Name = kShowSharedFoldersInMenus, Kind = AppSetting.KindBool, DefaultValue = DefaultShowSharedFoldersInMenus, Description = "Add a link to Shared Folders in the navigation and footer. Shared Folder links are always available to the roles assigned." },
+                new AppSetting { Name = kShowSharedFoldersInMenus, Kind = AppSetting.KindBool, DefaultValue = DefaultShowSharedFoldersInMenus, Description = "Add links to Shared Folders in the navigation. Shared Folder links are always available to the roles assigned." },
+                new AppSetting { Name = kShowSignInLinks, Kind = AppSetting.KindBool, DefaultValue = bool.TrueString, Description = "Add links to the sign in form in the navigation. This does not disable user sign in." },
                 new AppSetting { Name = kSiteName, Kind = AppSetting.KindString, Description = "The name of the site" },
                 new AppSetting { Name = kSiteOwner, Kind = AppSetting.KindString, Description = "The name of the site owner" },
                 new AppSetting { Name = kSkinDefinitionFile, Kind = AppSetting.KindFile, Description = "The site skin definition file" },

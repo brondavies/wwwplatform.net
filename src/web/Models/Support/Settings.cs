@@ -44,6 +44,8 @@
 
         public bool ShowSharedFoldersInMenus { get { return bool.Parse(GetValue(kShowSharedFoldersInMenus, DefaultShowSharedFoldersInMenus)); } }
 
+        public bool ShowSignInLinks { get { return bool.Parse(GetValue(kShowSignInLinks, GetConfig(kShowSignInLinks, bool.TrueString))); } }
+
         public string SiteName { get { return GetValue(kSiteName, GetConfig(kSiteName)); } }
 
         public string SiteOwner { get { return GetValue(kSiteOwner, GetConfig(kSiteOwner)); } }
