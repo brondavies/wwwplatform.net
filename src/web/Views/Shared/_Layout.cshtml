@@ -125,7 +125,7 @@
                         {
                             @SharedFoldersLink()
                         }
-                        @if (Settings.ShowSignInLinks)
+                        @if (Settings.ShowSignInLinks || Request.IsAuthenticated)
                         {
                         <li>
                             @LoginLink()
