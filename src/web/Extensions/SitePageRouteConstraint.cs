@@ -15,7 +15,7 @@ namespace wwwplatform.Extensions
         {
             string path = httpContext.Request.Url.AbsolutePath;
             string controller = path.Split("/".ToCharArray(), StringSplitOptions.RemoveEmptyEntries).First();
-            var controllers = Assembly.GetExecutingAssembly().DefinedTypes.Where(t => t.Name.EndsWith("Controller") && t.Name.StartsWith(controller));
+            var controllers = Assembly.GetExecutingAssembly().DefinedTypes.Where(t => t.Name.EndsWith("Controller") && t.Name.StartsWith(controller, StringComparison.InvariantCultureIgnoreCase));
             return controllers.Count() == 0;
         }
     }
