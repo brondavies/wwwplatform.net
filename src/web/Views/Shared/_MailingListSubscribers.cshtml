@@ -2,44 +2,48 @@
 
 @model IEnumerable<wwwplatform.Models.MailingListSubscriber>
 
-<h4 class="inline">Subscribers</h4> @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class="btn btn-sm btn-success" })
-
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.FirstName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.LastName)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Email)
-        </th>
-        <th>
-            Enabled
-        </th>
-        <th></th>
-    </tr>
-
-    @foreach (var item in Model)
-    {
+<div>
+    <h4 class="inline">Subscribers</h4>
+    @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class = "btn btn-success pull-right" })
+</div>
+<table class="table table-striped auto-datatable clickable">
+    <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Enabled)
-            </td>
-            <td>
-                @Html.Partial("_TableActionButtons", item, new TableActionOptions { Controller = "MailingListSubscribers" })
-            </td>
+            <th>
+                @Html.DisplayNameFor(model => model.FirstName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LastName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Email)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enabled)
+            </th>
+            <th class="disable-sorting"></th>
         </tr>
-    }
-
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr data-href="/MailingListSubscribers/Edit/@(item.Id)">
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @(item.Enabled ? "Yes" : "No")
+                </td>
+                <td>
+                    @Html.Partial("_TableActionButtons", item, new TableActionOptions { Controller = "MailingListSubscribers", showDetails = false, deleteLabel = "Remove" })
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>

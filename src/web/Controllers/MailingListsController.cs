@@ -88,7 +88,7 @@ namespace wwwplatform.Controllers
                 TotalCount = subscribers.Count();
                 foreach (var address in subscribers)
                 {
-                    sender.ToName = (address.FirstName + " " + address.LastName).Trim();
+                    sender.ToName = address.FullName();
                     sender.Addresslist = address.Email;
 #if DEBUG
                     sender.Execute(true);
@@ -152,6 +152,9 @@ namespace wwwplatform.Controllers
             {
                 db.Entry(mailingList).State = EntityState.Modified;
                 await db.SaveChangesAsync();
+
+                SetSuccessMessage("Mailing list {0} was updated successfully!", mailingList.Name);
+
                 return RedirectToAction("Index");
             }
             return View(mailingList);
@@ -180,43 +183,12 @@ namespace wwwplatform.Controllers
             MailingList mailingList = await db.ActiveMailingLists.FindAsync(id);
             db.MailingLists.Remove(mailingList);
             await db.SaveChangesAsync();
+
+            SetSuccessMessage("{0} was deleted successfully!", mailingList.Name);
+
             return RedirectToAction("Index");
         }
-
-        [HttpGet]
-        [AllowAnonymous]
-        public async Task<ActionResult> Subscribe(long? id)
-        {
-            MailingList mailingList = await db.ActiveMailingLists.FindAsync(id);
-            if (mailingList == null)
-            {
-                return HttpNotFound();
-            }
-
-            return View(mailingList);
-        }
-
-        [HttpPost, ActionName("Subscribe")]
-        [AllowAnonymous]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SubscriberCreate(long id, [Bind(Include = "FirstName,LastName,Email")] MailingListSubscriber mailingListSubscriber)
-        {
-            if (ModelState.IsValid)
-            {
-                MailingList mailingList = await db.ActiveMailingLists.FindAsync(id);
-                if (mailingList == null)
-                {
-                    return HttpNotFound();
-                }
-                mailingListSubscriber.MailingList = mailingList;
-                db.MailingListSubscribers.Add(mailingListSubscriber);
-                //TODO: send confirmation email
-                await db.SaveChangesAsync();
-            }
-
-            return View(mailingListSubscriber);
-        }
-
+        
         [HttpGet]
         public async Task<ActionResult> AddSubscriber(long? id)
         {

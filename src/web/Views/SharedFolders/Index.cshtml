@@ -6,7 +6,7 @@
     ViewBag.Title = Settings.SharedFoldersLabel;
 
     var isAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
-    var canUpload = isAdmin || wwwplatform.Models.Roles.UserInAnyRole(User, RoleManager, Settings.RolesWithUploadPermission.Split(','));
+    var canUpload = isAdmin || UserInAnyRole(Settings.RolesWithUploadPermission.Split(','));
 }
 
 <h2>@ViewBag.Title</h2>

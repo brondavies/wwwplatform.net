@@ -1,4 +1,6 @@
-﻿@model wwwplatform.Models.MailingListSubscriber
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.MailingListSubscriber
 
 @{
     ViewBag.Title = "Add Subscriber - " + Model.MailingList.Name;
@@ -13,35 +15,44 @@
     @SimpleAntiForgeryToken()
 
     <div class="form-horizontal">
-        <h4>Add Subscriber</h4>
+        @Html.Row(new[] { new { sm = 9 }, new { sm = 3 } }
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">Add Subscriber</h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Details", new { id = Model.MailingList.Id })
+        </span>
+        )
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         <div class="form-group">
-            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.FirstName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.LastName, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
+            @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-3" })
+            <div class="col-md-9">
                 @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
+            <div class="col-md-offset-3 col-md-9">
                 <div class="checkbox">
                     <label>
                         @Html.EditorFor(model => model.Enabled)
@@ -52,14 +63,5 @@
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
-        </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Details", "", new {  })
-</div>

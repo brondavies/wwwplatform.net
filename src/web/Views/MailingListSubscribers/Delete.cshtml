@@ -1,0 +1,49 @@
+﻿@model wwwplatform.Models.MailingListSubscriber
+
+@{
+    ViewBag.Title = "Remove List Subscriber";
+}
+
+<h2>Remove List Subscriber</h2>
+<div class="row">
+    <div class="col-sm-9">
+        <h3 class="no-margin">Are you sure you want to remove "@(Model.FullName())"?</h3>
+    </div>
+    <div class="col-sm-3 text-right">
+        @using (Html.BeginForm())
+        {
+            @SimpleAntiForgeryToken()
+            <input type="submit" value="Remove" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Details", "MailingLists", new { id = Model.MailingList.Id }, null)
+        }
+    </div>
+</div>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            Name
+        </dt>
+
+        <dd>
+            @Model.FullName()
+        </dd>
+
+        <dt>
+            List
+        </dt>
+
+        <dd>
+            @Model.MailingList.Name
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+
+        <dd>
+            @Model.Email
+        </dd>
+    </dl>
+
+</div>

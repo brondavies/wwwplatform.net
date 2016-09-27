@@ -1,12 +1,23 @@
 ﻿@model wwwplatform.Models.MailingList
 
 @{
-    ViewBag.Title = "Mailing Lists";
+    ViewBag.Title = "Delete Mailing List";
 }
 
-<h2>Delete Mailing List</h2>
-
-<h3>Are you sure you want to delete "@(Model.Name)"?</h3>
+<h2>@ViewBag.Title</h2>
+<div class="row">
+    <div class="col-sm-9">
+        <h3 class="no-margin">Are you sure you want to delete "@(Model.Name)"?</h3>
+    </div>
+    <div class="col-sm-3 text-right">
+        @using (Html.BeginForm())
+        {
+            @SimpleAntiForgeryToken()
+            <input type="submit" value="Delete" class="btn btn-danger" />
+            @Html.ActionLink("Cancel", "Index")
+        }
+    </div>
+</div>
 <div>
     <hr />
     <dl class="dl-horizontal">
@@ -51,12 +62,4 @@
         </dd>
     </dl>
 
-    @using (Html.BeginForm()) {
-        @SimpleAntiForgeryToken()
-
-        <div class="form-actions no-color">
-            <input type="submit" value="Delete" class="btn btn-danger" />
-            @Html.ActionLink("Cancel", "Index")
-        </div>
-    }
 </div>

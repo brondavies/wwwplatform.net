@@ -170,13 +170,6 @@ namespace wwwplatform.Extensions
             return null;
         }
 
-        protected virtual ActionResult ErrorResult(ModelStateDictionary modelState)
-        {
-            Response.StatusCode = (int)HttpStatusCode.BadRequest;
-            var errors = GetErrorsFromModelState(modelState);
-            return Json(new { status = Response.StatusCode, errors = errors }, JsonRequestBehavior.AllowGet);
-        }
-
         protected Dictionary<string, string[]> GetErrorsFromModelState(ModelStateDictionary modelState)
         {
             var errors = new Dictionary<string, string[]>();

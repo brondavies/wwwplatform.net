@@ -54,7 +54,7 @@ namespace wwwplatform.Models
             return (roles.Contains(role.Name));
         }
 
-        public static bool UserInAnyRole(IPrincipal User, ApplicationRoleManager RoleManager, string[] roleIds)
+        public static bool UserInAnyRole(IPrincipal User, ApplicationRoleManager RoleManager, params string[] roleIds)
         {
             if (!User.Identity.IsAuthenticated) { return false; }
             if (User.IsInRole(Roles.Administrators)) { return true; }
@@ -62,6 +62,17 @@ namespace wwwplatform.Models
             foreach(var r in userRoles)
             {
                 if (User.IsInRole(r.Name)) return true;
+            }
+            return false;
+        }
+
+        public static bool UserInAnyRole(IPrincipal User, params string[] roleNames)
+        {
+            if (!User.Identity.IsAuthenticated) { return false; }
+            if (User.IsInRole(Roles.Administrators)) { return true; }
+            foreach (var r in roleNames)
+            {
+                if (User.IsInRole(r)) return true;
             }
             return false;
         }

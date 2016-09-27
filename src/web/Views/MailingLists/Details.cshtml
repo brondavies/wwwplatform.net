@@ -1,17 +1,34 @@
-﻿@model wwwplatform.Models.MailingList
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.MailingList
 
 @{
     ViewBag.Title = "Mailing List Details - " + Model.Name;
     ViewBag.Id = Model.Id;
+
+    var columns = new[] { new { sm = 4 }, new { sm = 8 } };
+
 }
 
 <h2>Mailing List Details</h2>
 
 <div>
-    <h4 class="inline">@Model.Name</h4>
+    @Html.Row(columns
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">
+            @Model.Name
+        </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<div class="btn-group">
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+            @Html.ActionLink("Subscribe", "Create", "MailingListSubscribers", new { id = Model.Id }, new { @class = "btn btn-default" })
+        </div>
+        ).Add(
+            Html.ActionLink("Cancel", "Index")
+        )
+</div>
+<hr />
+<div>
     @Html.Partial("_MailingListSubscribers", Model.Subscribers)
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>

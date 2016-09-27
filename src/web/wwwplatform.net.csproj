@@ -262,6 +262,9 @@
     <Compile Include="Models\ApplicationDbContext.DBSets.cs">
       <DependentUpon>ApplicationDbContext.cs</DependentUpon>
     </Compile>
+    <Compile Include="Models\MailingListSubscriber.methods.cs">
+      <DependentUpon>MailingListSubscriber.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\Serializers\ApplicationUserSerializer.cs" />
     <Compile Include="Models\Support\AppSetting.cs" />
     <Compile Include="Models\Support\ObjectDictionary.cs" />
@@ -891,11 +894,17 @@
     <Content Include="Views\MailingLists\_MailingListForm.cshtml" />
     <Content Include="Views\Shared\_AdminMenu.cshtml" />
     <Content Include="Views\WebFiles\Error.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Create.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Confirm.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Verified.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Edit.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Delete.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Unsubscribe.cshtml" />
+    <Content Include="Views\MailingListSubscribers\Unsubscribed.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />
     <Folder Include="Views\Database\" />
-    <Folder Include="Views\MailingListSubscribers\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\shared\wwwplatform.Shared\wwwplatform.Shared.csproj">
