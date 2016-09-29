@@ -71,6 +71,11 @@ namespace wwwplatform.Models
             }
         }
 
+        public string GetFileName()
+        {
+            return Name + System.IO.Path.GetExtension(Location);
+        }
+
         public FileType GetFileType()
         {
             if (string.IsNullOrEmpty(Location))

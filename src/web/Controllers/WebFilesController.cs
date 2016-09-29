@@ -38,23 +38,23 @@ namespace wwwplatform.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3600)]
         [AllowAnonymous]
-        public async Task<ActionResult> Details(long? id, int v = 0)
+        public async Task<ActionResult> Details(long id, string extra = null, int v = 0)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
             WebFile webFile = await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).FindAsync(id);
             if (webFile == null)
             {
                 return HttpNotFound();
             }
+
             string inline = (v == 1) ? "inline" : "attachment";
             string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
             string contentType = FTT.GetMimeType(webFile.Location ?? "");
             if (contentType == "") { contentType = "application/octet-stream"; }
-            Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
+            if (extra == null)
+            {
+                Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
+            }
             return File(System.IO.File.OpenRead(filepath), contentType);
             //return File(filepath, contentType, filename);
         }
