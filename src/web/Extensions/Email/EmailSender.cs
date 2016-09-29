@@ -16,7 +16,7 @@ namespace wwwplatform.Extensions.Email
         public object Value { get; set; }
     }
 
-    internal class EmailSender
+    internal class EmailSender : IDisposable
     {
         public string Subject;
         public string FromEmail = null;
@@ -65,9 +65,14 @@ namespace wwwplatform.Extensions.Email
             Addresslist = addresses;
         }
 
+        SmtpClient SmtpMail;
+        int batch = 0;
         public void Execute(bool testmode = false)
         {
-            SmtpClient SmtpMail = new SmtpClient();
+            if (SmtpMail == null)
+            {
+                SmtpMail = new SmtpClient();
+            }
             MailMessage objMM = new MailMessage();
             objMM.From = new MailAddress(FromEmail ?? Settings.EmailDefaultFrom, FromName ?? Settings.SiteName ?? Settings.EmailDefaultFrom);
             objMM.Subject = Subject;
@@ -143,6 +148,7 @@ namespace wwwplatform.Extensions.Email
 
             try
             {
+                batch++;
                 if (testmode)
                 {
                     SmtpMail.EnableSsl = false;
@@ -164,6 +170,12 @@ namespace wwwplatform.Extensions.Email
                     Log.Error(e);
                 }
             }
+
+            if (batch >= Settings.MaxEmailSendBatch)
+            {
+                batch = 0;
+                SmtpMail = null;
+            }
         }
         
         private string GetFirstTo(MailAddressCollection to)
@@ -178,6 +190,26 @@ namespace wwwplatform.Extensions.Email
                 }
             }
             return first;
+        }
+
+        bool _disposed = false;
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                _disposed = true;
+                if (SmtpMail != null)
+                {
+                    SmtpMail.Dispose();
+                    SmtpMail = null;
+                }
+            }
+        }
+
+        public virtual void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
         }
     }
 }

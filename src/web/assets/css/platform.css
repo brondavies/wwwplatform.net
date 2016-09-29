@@ -311,6 +311,26 @@ table.dataTable thead th::after{
 .dataTables_wrapper div.row:nth-child(2) {
     overflow: visible;
 }
+@media screen and (max-width: 767px) {
+  div.dataTables_wrapper div.dataTables_length {
+    text-align: left;
+  }
+
+  div.dataTables_wrapper div.dataTables_filter {
+    text-align: right;
+  }
+}
+@media screen and (max-width: 640px) {
+  div.dataTables_wrapper div.dataTables_length {
+    text-align: left;
+  }
+
+  div.dataTables_wrapper div.dataTables_filter {
+    margin-top: 0;
+    text-align: right;
+  }
+}
+
 .js-uploader.uploading form {
     visibility: hidden;
 }

@@ -25,6 +25,9 @@
                 @{ deferredScript += string.Format(uploadEventScript, Model.Name); }
             </div>
             break;
+        case AppSetting.KindNumber:
+            <input type="number" name="@(Model.Name)" value="@(Model.Value)" class="form-control" />
+            break;
         case AppSetting.KindString:
         default:
             <input type="text" name="@(Model.Name)" value="@(Model.Value)" class="form-control" />

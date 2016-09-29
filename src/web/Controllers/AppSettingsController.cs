@@ -46,6 +46,16 @@ namespace wwwplatform.Controllers
                             }
                         }
                         else
+                        if (setting.Kind == AppSetting.KindNumber)
+                        {
+                            double doubleResult;
+                            if (!double.TryParse(normalizedValue, out doubleResult))
+                            {
+                                SetFailureMessage(normalizedValue + string.Format(" is not a valid value for {0}.", setting.Name));
+                                continue;
+                            }
+                        }
+                        else
                         if (setting.Kind == AppSetting.KindFile)
                         {
                             if (!ExistsFile(normalizedValue))
@@ -64,7 +74,7 @@ namespace wwwplatform.Controllers
                                 }
                                 catch
                                 {
-                                    SetFailureMessage("Invalid skin definition");
+                                    SetFailureMessage(normalizedValue + " is not a valid skin definition file.");
                                 }
                             }
                         }

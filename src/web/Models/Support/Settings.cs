@@ -36,6 +36,8 @@
 
         public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
 
+        public int MaxEmailSendBatch { get { return int.Parse(GetValue(kMaxEmailSendBatch, GetConfig(kMaxEmailSendBatch, "100"))); } }
+
         public string RolesWithUploadPermission { get { return GetValue(kRolesWithUploadPermission, GetConfig(kRolesWithUploadPermission, "")); } }
 
         public string SharedFoldersLabel { get { return GetValue(kSharedFoldersLabel, GetConfig(kSharedFoldersLabel, "Shared Folders")); } }

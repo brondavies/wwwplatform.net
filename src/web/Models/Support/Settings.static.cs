@@ -24,6 +24,7 @@ namespace wwwplatform.Models
         internal const string kDefaultSiteImage = "DefaultSiteImage";
         internal const string kDefaultUploadPermissions = "DefaultUploadPermissions";
         internal const string kEmailDefaultFrom = "EmailDefaultFrom";
+        internal const string kMaxEmailSendBatch = "MaxEmailSendBatch";
         internal const string kRolesWithUploadPermission = "RolesWithUploadPermission";
         internal const string kSharedFoldersLabel = "SharedFoldersLabel";
         internal const string kSharedFoldersRootPermissions = "SharedFoldersRootPermissions";
@@ -103,6 +104,7 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kDefaultSiteImage, Kind = AppSetting.KindUpload, Description = "The default image used for links shared via social media" },
                 new AppSetting { Name = kDefaultUploadPermissions, Kind = AppSetting.KindRole, Description = "The default permissions for files uploaded by any user" },
                 new AppSetting { Name = kEmailDefaultFrom, Kind = AppSetting.KindString, Description = "The email address used for emails sent by the system" },
+                new AppSetting { Name = kMaxEmailSendBatch, Kind = AppSetting.KindNumber, DefaultValue="100", Description = "The maximum number of emails that can be sent during a single SMTP client session" },
                 new AppSetting { Name = kRolesWithUploadPermission, Kind = AppSetting.KindRole, Description = "The user roles that can upload files to shared folders" },
                 new AppSetting { Name = kSharedFoldersLabel, Kind = AppSetting.KindString, DefaultValue = "Shared Folders", Description = "The text for the Shared Folders links" },
                 new AppSetting { Name = kSharedFoldersRootPermissions, Kind = AppSetting.KindRole, DefaultValue = "", Description = "The roles that can view the root of the shared folders directory. Shared Folder links are always available to the roles assigned." },

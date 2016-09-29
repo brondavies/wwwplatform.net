@@ -13,5 +13,6 @@ namespace wwwplatform.Models
         public const int KindFile = 3;
         public const int KindUpload = 4;
         public const int KindRole = 5;
+        public const int KindNumber = 6;
     }
 }
