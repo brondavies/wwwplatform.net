@@ -9,12 +9,14 @@
       "~/Scripts/jquery.cookie.js",
       "~/Scripts/respond.*",
       "~/Scripts/jquery.visible.js",
+      "~/Scripts/moment-with-locales.js",
       "~/Scripts/bootstrap.js",
       "~/Scripts/bootstrap-switch.js",
       //"~/Scripts/dropzone/dropzone.js",
       "~/Scripts/jquery.dataTables.js",
       "~/Scripts/dataTables.bootstrap.js",
       "~/Scripts/bootbox.js",
+      "~/Scripts/bootstrap-datetimepicker.js",
       "~/Scripts/platform.js"
     ]
   },
@@ -26,6 +28,7 @@
       //"~/Scripts/dropzone/dropzone.css",
       "~/Content/jquery.dataTables.css",
       "~/Content/dataTables.bootstrap.css",
+      "~/Content/bootstrap-datetimepicker.css",
       "~/assets/css/platform.css"
     ]
   },

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wwwplatformTests", "test\ww
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wwwplatform.Shared", "shared\wwwplatform.Shared\wwwplatform.Shared.csproj", "{7CAFD3D2-3FC8-452D-8465-2DC05C6341BF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConvertToPdf", "pdf\ConvertToPdf.csproj", "{B33DEE49-8424-413C-8CFB-2233EB59B4A6}"
+EndProject
 Global
 	GlobalSection(Performance) = preSolution
 		HasPerformanceSessions = true
@@ -30,6 +32,10 @@ Global
 		{7CAFD3D2-3FC8-452D-8465-2DC05C6341BF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CAFD3D2-3FC8-452D-8465-2DC05C6341BF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CAFD3D2-3FC8-452D-8465-2DC05C6341BF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B33DEE49-8424-413C-8CFB-2233EB59B4A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B33DEE49-8424-413C-8CFB-2233EB59B4A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B33DEE49-8424-413C-8CFB-2233EB59B4A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B33DEE49-8424-413C-8CFB-2233EB59B4A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -9,11 +9,15 @@ namespace wwwplatform.Models
 {
     public partial class SitePage : Auditable, Permissible
     {
-        internal void Update(SitePage sitePage)
+        internal void Update(SitePage sitePage, int? timeZoneOffset)
         {
             Name = sitePage.Name;
             Description = sitePage.Description;
             PubDate = sitePage.PubDate;
+            if (timeZoneOffset.HasValue)
+            {
+                PubDate = PubDate.AddMinutes(0 - timeZoneOffset.Value);
+            }
             HTMLBody = sitePage.HTMLBody;
             Order = sitePage.Order;
             ParentPageId = sitePage.ParentPageId;

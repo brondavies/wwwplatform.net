@@ -52,6 +52,7 @@ namespace wwwplatform.Controllers
         {
             if (ModelState.IsValid)
             {
+                sitePage.PubDate = sitePage.PubDate.AddMinutes(0 - UserTimeZoneOffset);
                 PreparePage(sitePage, permissions);
                 db.SitePages.Add(sitePage);
                 await db.SaveChangesAsync();
@@ -98,7 +99,7 @@ namespace wwwplatform.Controllers
                 {
                     return HttpNotFound();
                 }
-                actual.Update(sitePage);
+                actual.Update(sitePage, UserTimeZoneOffset);
                 PreparePage(actual, permissions);
                 await db.SaveChangesAsync();
                 return RedirectToAction("Index");

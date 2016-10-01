@@ -41,8 +41,10 @@
             options.order = [[defaultSort.index(), defaultSort.data('order')]];
         }
         $(this).DataTable(options);
-        $('.dataTables_filter, .dataTables_length').parent().addClass('col-xs-6')
+        $('.dataTables_filter, .dataTables_length').parent().addClass('col-xs-6');
     });
+
+    $('.datetimepicker').datetimepicker();
 
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');

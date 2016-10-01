@@ -34,7 +34,7 @@ namespace wwwplatform.Models
             DisplayDate = update.DisplayDate;
             if (timeZoneOffset.HasValue && DisplayDate.HasValue)
             {
-                DisplayDate = DisplayDate.Value.AddMinutes(timeZoneOffset.Value);
+                DisplayDate = DisplayDate.Value.AddMinutes(0 - timeZoneOffset.Value);
             }
         }
 
