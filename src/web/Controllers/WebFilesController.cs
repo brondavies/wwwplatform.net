@@ -226,6 +226,10 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
+            if (webFile.DisplayDate.HasValue)
+            {
+                webFile.DisplayDate = webFile.DisplayDate.Value.AddMinutes(0 - UserTimeZoneOffset);
+            }
             return Auto(webFile);
         }
 
