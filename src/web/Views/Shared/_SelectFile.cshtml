@@ -162,7 +162,7 @@
                     $(window).bind('newfile.upload', function (event, data) {
                         if (data.status) {
                             $('[data-role="file-id"]', modal).val(data.file.Id);
-                            $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + data.file.Id /*data.file.Location*/);
+                            $('[data-role="file-url"]', modal).val('/Download/' + data.file.Id + '/' + data.file.Name);
                             modal.modal('hide');
                         } else if (data.message) {
                             bootbox.alert(data.message);

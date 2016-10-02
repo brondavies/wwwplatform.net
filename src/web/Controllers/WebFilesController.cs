@@ -46,13 +46,13 @@ namespace wwwplatform.Controllers
                 return HttpNotFound();
             }
 
-            string inline = (v == 1) ? "inline" : "attachment";
-            string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
             string filepath = Server.MapPath(webFile.Location);
             string contentType = FTT.GetMimeType(webFile.Location ?? "");
             if (contentType == "") { contentType = "application/octet-stream"; }
             if (extra == null)
             {
+                string inline = (v == 1) ? "inline" : "attachment";
+                string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
                 Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             }
             return File(System.IO.File.OpenRead(ReconcileFileToDownload(extra, filepath)), contentType);
@@ -118,29 +118,31 @@ namespace wwwplatform.Controllers
                             results.message = "The file format was not recognized or is not an allowed file type.";
                         }
                     }
-                }
-                if (ModelState.IsValid)
-                {
-                    results.file = db.WebFiles.Add(results.file);
-                    string defaultRoleSetting = Settings.DefaultUploadPermissions;
-                    string[] defaultRoles;
-                    if (!string.IsNullOrEmpty(defaultRoleSetting))
+
+                    if (ModelState.IsValid)
                     {
-                        defaultRoles = defaultRoleSetting.Split(',');
+                        results.file = db.WebFiles.Add(results.file);
+                        string defaultRoleSetting = Settings.DefaultUploadPermissions;
+                        string[] defaultRoles;
+                        if (!string.IsNullOrEmpty(defaultRoleSetting))
+                        {
+                            defaultRoles = defaultRoleSetting.Split(',');
+                        }
+                        else
+                        {
+                            defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
+                        }
+                        Permission.Apply(db, User, RoleManager, results.file, defaultRoles); //default permissions
+                        await db.SaveChangesAsync();
+                        results.file.Name = results.file.GetFileName();
+                        results.status = UploadResults.OK;
+                        results.message = null;  //"File uploaded successfully.";
                     }
                     else
                     {
-                        defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
+                        results.status = UploadResults.Failed;
+                        results.message = ErrorsFromModelState(ModelState);
                     }
-                    Permission.Apply(db, User, RoleManager, results.file, defaultRoles); //default permissions
-                    await db.SaveChangesAsync();
-                    results.status = UploadResults.OK;
-                    results.message = null;  //"File uploaded successfully.";
-                }
-                else
-                {
-                    results.status = UploadResults.Failed;
-                    results.message = ErrorsFromModelState(ModelState);
                 }
             }
             catch (Exception ex)
