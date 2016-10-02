@@ -32,6 +32,7 @@ namespace wwwplatform.Shared.Helpers
             Process proc = new Process();
             ProcessStartInfo startinfo = new ProcessStartInfo(convertExe);
             startinfo.CreateNoWindow = true;
+            startinfo.UseShellExecute = false;
             startinfo.Arguments = string.Format("\"{0}\" \"{1}\"", inputFile, outputFile);
             proc.StartInfo = startinfo;
             bool result = proc.Start();

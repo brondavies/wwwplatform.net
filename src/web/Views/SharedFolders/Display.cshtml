@@ -22,12 +22,12 @@
 }
 @helper BytesToString(long? size)
 {
-    string display = "";
-    if (size.HasValue)
-    {
-        display = FileStorage.FormatBytes(Convert.ToDouble(size));
-    }
-    WriteLiteral(display);
+string display = "";
+if (size.HasValue)
+{
+    display = FileStorage.FormatBytes(Convert.ToDouble(size));
+}
+WriteLiteral(display);
 }
 @helper ViewerUrl(WebFile file)
 {
@@ -49,7 +49,7 @@ switch (file.GetFileType())
     case FileType.Spreadsheet:
         if (Settings.CreatePDFVersionsOfDocuments)
         {
-            WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, Path.ChangeExtension (file.GetFileName(), "pdf")));
+            WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, Path.ChangeExtension(file.GetFileName(), "pdf")));
         }
         else
         {
@@ -63,21 +63,21 @@ switch (file.GetFileType())
 }
 @helper ViewerTarget(WebFile file)
 {
-    switch (file.GetFileType())
-    {
-        //Files that can be handled in the viewer or by the browser
-        case FileType.Audio:
-        case FileType.Image:
-        case FileType.PDF:
-        case FileType.Text:
-        case FileType.Video:
-            WriteLiteral("_blank");
-            break;
-        //Files that have to be downloaded
-        default:
-            WriteLiteral("_top");
-            break;
-    }
+switch (file.GetFileType())
+{
+    //Files that can be handled in the viewer or by the browser
+    case FileType.Audio:
+    case FileType.Image:
+    case FileType.PDF:
+    case FileType.Text:
+    case FileType.Video:
+        WriteLiteral("_blank");
+        break;
+    //Files that have to be downloaded
+    default:
+        WriteLiteral("_top");
+        break;
+}
 }
 <h2>
     <a href="@parentlink" class="btn btn-link" title="@parentName">
@@ -90,13 +90,13 @@ switch (file.GetFileType())
 </h2>
 <section class="h3 text-right">
     @if (canUpload)
-        {
+    {
         <div class="btn-group">
             @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
             @UploadDialogButton("Folder_" + Model.Slug, "Upload")
             @if (isFolderOwner)
-{
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+            {
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
             }
         </div>
     }
@@ -134,7 +134,7 @@ else
         </thead>
         <tbody>
             @foreach (var folder in Model.SubFolders)
-{
+            {
                 <tr data-href="/Shared/@(folder.Slug)">
                     <td>
                         <i class="fa fa-folder-o fa-lg"></i>
@@ -161,7 +161,7 @@ else
                 </tr>
             }
             @foreach (var item in Model.Files)
-{
+            {
                 <tr data-href="@ViewerUrl(item)" data-target="@ViewerTarget(item)">
                     <td>
                         <i class="fa @(item.Icon) fa-lg"></i>
@@ -197,21 +197,21 @@ else
     if (User.Identity.IsAuthenticated)
     {
         Html.AddScriptBlock(
-        @<script type="text/javascript">
-            $(function () {
-                $(window).bind('Folder_@(Model.Slug).selected', function (event, data) {
-        var id = data.id;
-        var csrf = $('input[name="__RequestVerificationToken"]').val();
-                    $.post('/SharedFolders/AddFiles/@Model.Id', { files: id, '__RequestVerificationToken': csrf })
-                    .success(function () {
-            window.location.reload(true);
-        })
-                    .fail(function (result) {
-            bootbox.alert('The file could not be uploaded to this shared folder.');
-        });
+            @<script type="text/javascript">
+                $(function () {
+                    $(window).bind('Folder_@(Model.Slug).selected', function (event, data) {
+                        var id = data.id;
+                        var csrf = $('input[name="__RequestVerificationToken"]').val();
+                        $.post('/SharedFolders/AddFiles/@Model.Id', { files: id, '__RequestVerificationToken': csrf })
+                        .success(function () {
+                            window.location.reload(true);
+                        })
+                        .fail(function (result) {
+                            bootbox.alert('The file could not be uploaded to this shared folder.');
+                        });
+                    });
                 });
-            });
-        </script>
+            </script>
         );
     }
 }
