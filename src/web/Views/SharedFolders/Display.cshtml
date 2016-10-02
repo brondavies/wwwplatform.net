@@ -31,23 +31,35 @@
 }
 @helper ViewerUrl(WebFile file)
 {
-    switch (file.GetFileType())
-    {
-        //Files that can be handled in a viewer
-            //WriteLiteral(string.Format("/ViewerJS/#/Downloads/{0}/{1}", file.Id, file.GetFileName()));
-            //break;
-        //Files that can be handled by the browser
-        case FileType.Audio:
-        case FileType.Image:
-        case FileType.PDF:
-        case FileType.Text:
-        case FileType.Video:
-            WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, file.GetFileName()));
-            break;
-        default:
+switch (file.GetFileType())
+{
+    //Files that can be handled in a viewer
+    //WriteLiteral(string.Format("/ViewerJS/#/Downloads/{0}/{1}", file.Id, file.GetFileName()));
+    //break;
+    //Files that can be handled by the browser
+    case FileType.Audio:
+    case FileType.Image:
+    case FileType.PDF:
+    case FileType.Text:
+    case FileType.Video:
+        WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, file.GetFileName()));
+        break;
+    case FileType.Document:
+    case FileType.Presentation:
+    case FileType.Spreadsheet:
+        if (Settings.CreatePDFVersionsOfDocuments)
+        {
+            WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, Path.ChangeExtension (file.GetFileName(), "pdf")));
+        }
+        else
+        {
             WriteLiteral(string.Format("/WebFiles/Details/{0}?v=1", file.Id));
-            break;
-    }
+        }
+        break;
+    default:
+        WriteLiteral(string.Format("/WebFiles/Details/{0}?v=1", file.Id));
+        break;
+}
 }
 @helper ViewerTarget(WebFile file)
 {

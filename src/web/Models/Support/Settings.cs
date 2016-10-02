@@ -1,7 +1,13 @@
-﻿namespace wwwplatform.Models
+﻿using Newtonsoft.Json;
+using System.Web;
+
+namespace wwwplatform.Models
 {
     public partial class Settings : ObjectDictionary
     {
+        [JsonIgnore]
+        internal HttpContextBase Context;
+
         private T GetValue<T>(string key, T defaultValue)
         {
             T value = default(T);
@@ -22,7 +28,11 @@
 
         public string CanonicalHostName { get { return GetValue(kCanonicalHostName, GetConfig(kCanonicalHostName)); } }
 
-        public string DefaultPageDescription { get { return GetValue(kDefaultPageDescription, ""); } }
+        public string ConvertToPdfExe { get { return GetValue(kConvertToPdfExe, Context.Server.MapPath("~/bin/ConvertToPdf.exe")); } }
+
+        public bool CreatePDFVersionsOfDocuments { get { return bool.Parse(GetValue(kCreatePDFVersionsOfDocuments, GetConfig(kCreatePDFVersionsOfDocuments, bool.FalseString))); } }
+
+        public string DefaultPageDescription { get { return GetValue(kDefaultPageDescription, GetConfig(kDefaultPageDescription, "")); } }
 
         public string DefaultPageLayout { get { return GetValue(kDefaultPageLayout, GetConfig(kDefaultPageLayout)); } }
 

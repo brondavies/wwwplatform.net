@@ -55,8 +55,22 @@ namespace wwwplatform.Controllers
             {
                 Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             }
-            return File(System.IO.File.OpenRead(filepath), contentType);
+            return File(System.IO.File.OpenRead(ReconcileFileToDownload(extra, filepath)), contentType);
             //return File(filepath, contentType, filename);
+        }
+
+        private string ReconcileFileToDownload(string prefferedName, string filename)
+        {
+            if (!string.IsNullOrEmpty(prefferedName))
+            {
+                string extension = Path.GetExtension(prefferedName);
+                string newfilename = Path.ChangeExtension(filename, extension);
+                if (System.IO.File.Exists(newfilename))
+                {
+                    return newfilename;
+                }
+            }
+            return filename;
         }
 
         // GET: WebFiles/Create
@@ -163,8 +177,11 @@ namespace wwwplatform.Controllers
 
         private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
         {
-            //TODO: Handle document conversion to PDF and thumbnailing
             UploadImage(file, uploadResults);
+            if (uploadResults.status == UploadResults.OK && Settings.CreatePDFVersionsOfDocuments)
+            {
+                DocumentHelper.CreatePDF(Settings.ConvertToPdfExe, Server.MapPath(uploadResults.file.Location));
+            }
         }
 
         private void UploadVideoOrAudio(HttpPostedFileBase file, UploadResults uploadResults)

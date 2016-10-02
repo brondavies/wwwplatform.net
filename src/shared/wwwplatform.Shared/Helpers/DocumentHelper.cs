@@ -6,28 +6,41 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 
+using FTTLib;
+using System.Diagnostics;
+
 namespace wwwplatform.Shared.Helpers
 {
     public class DocumentHelper
     {
-        private static string[] valid_document_extensions
+        public static bool IsDocumentFile(string filename)
         {
-            get
-            {
-                return new string[] {
-                ".doc", ".docx", ".pdf", ".xls", ".xlsx", ".ppt", ".pptx", ".rtf", ".txt", ".wps", ".xps", ".epub", ".ppsx", ".ods", ".csv"
-                };
-            }
-        }
-
-        public static bool IsDocumentFile(string extension)
-        {
-            return valid_document_extensions.Contains(extension.ToLower());
+            return FTT.GetFileCategory(filename) == FileCategory.Document;
         }
 
         public static bool IsDocumentFile(HttpPostedFileBase file)
         {
-            return IsDocumentFile(Path.GetExtension(file.FileName));
+            return IsDocumentFile(file.FileName);
+        }
+
+        public static bool CreatePDF(string convertExe, string inputFile, string outputFile = null, bool wait = false)
+        {
+            if (outputFile == null)
+            {
+                outputFile = Path.ChangeExtension(inputFile, "pdf");
+            }
+            Process proc = new Process();
+            ProcessStartInfo startinfo = new ProcessStartInfo(convertExe);
+            startinfo.CreateNoWindow = true;
+            startinfo.Arguments = string.Format("\"{0}\" \"{1}\"", inputFile, outputFile);
+            proc.StartInfo = startinfo;
+            bool result = proc.Start();
+            if (result && wait)
+            {
+                proc.WaitForExit();
+                result = proc.ExitCode == 0;
+            }
+            return result;
         }
     }
 }

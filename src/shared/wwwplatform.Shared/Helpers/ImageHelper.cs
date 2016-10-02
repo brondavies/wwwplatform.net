@@ -2,26 +2,20 @@
 using System.Linq;
 using System.Web;
 
+using FTTLib;
+
 namespace wwwplatform.Shared.Helpers
 {
     public class ImageHelper
     {
-        private static string[] valid_image_extensions
+        public static bool IsImageFile(string filename)
         {
-            get
-            {
-                return new string[] { ".png", ".jpeg", ".jpg", ".bmp", ".gif", ".tif", ".tiff", ".pict", ".jp2" };
-            }
-        }
-
-        public static bool IsImageFile(string extension)
-        {
-            return valid_image_extensions.Contains(extension.ToLower());
+            return FTT.GetFileCategory(filename) == FileCategory.Image;
         }
 
         public static bool IsImageFile(HttpPostedFileBase file)
         {
-            return IsImageFile(Path.GetExtension(file.FileName));
+            return IsImageFile(file.FileName);
         }
     }
 }

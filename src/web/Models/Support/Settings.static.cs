@@ -18,6 +18,8 @@ namespace wwwplatform.Models
         internal const string kAllowForgotPassword = "AllowForgotPassword";
         internal const string kAllowUserRegistration = "AllowUserRegistration";
         internal const string kCanonicalHostName = "CanonicalHostName";
+        internal const string kConvertToPdfExe = "ConvertToPdfExe";
+        internal const string kCreatePDFVersionsOfDocuments = "CreatePDFVersionsOfDocuments";
         internal const string kDefaultPageDescription = "DefaultPageDescription";
         internal const string kDefaultPageLayout = "DefaultPageLayout";
         internal const string kDefaultPageTitle = "DefaultPageTitle";
@@ -58,7 +60,7 @@ namespace wwwplatform.Models
 
         public static Settings Create(HttpContextBase Context)
         {
-            return CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) =>
+            var settings = CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) =>
             {
                 string settingsFilename = GetSettingsFileName(Context);
                 try
@@ -90,6 +92,8 @@ namespace wwwplatform.Models
                     catch { }
                 }
             });
+            settings.Context = Context;
+            return settings;
         }
 
         internal static AppSetting[] GetDefaultSettings()
@@ -98,6 +102,7 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kAllowForgotPassword, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowForgotPassword, Description = "Allows users to reset forgotten passwords" },
                 new AppSetting { Name = kAllowUserRegistration, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowUserRegistration, Description = "Opens user registration to the public" },
                 new AppSetting { Name = kCanonicalHostName, Kind = AppSetting.KindString, Description = "The host name that should be used for this site" },
+                new AppSetting { Name = kCreatePDFVersionsOfDocuments, Kind = AppSetting.KindBool, DefaultValue="False", Description = "Creates a downloadable PDF copy of documents, spreadsheets, and presentations to PDF on the server. Requires an installation of Microsoft Office on the server." },
                 new AppSetting { Name = kDefaultPageDescription, Kind = AppSetting.KindString, Description = "The default page description" },
                 new AppSetting { Name = kDefaultPageLayout, Kind = AppSetting.KindFile, Description = "The default page layout file" },
                 new AppSetting { Name = kDefaultPageTitle, Kind = AppSetting.KindString, Description = "The default page title" },

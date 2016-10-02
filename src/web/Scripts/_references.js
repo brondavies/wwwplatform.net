@@ -1,5 +1,6 @@
 ﻿/// <autosync enabled="true" />
 /// <reference path="bootbox.min.js" />
+/// <reference path="bootstrap.min.js" />
 /// <reference path="bootstrap-datetimepicker.min.js" />
 /// <reference path="bootstrap-switch.min.js" />
 /// <reference path="datatables.bootstrap.min.js" />
