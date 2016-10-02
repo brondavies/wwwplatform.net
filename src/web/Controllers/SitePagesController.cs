@@ -84,7 +84,7 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
-            sitePage.PubDate = sitePage.PubDate.AddMinutes(0 - UserTimeZoneOffset);
+            sitePage.PubDate = sitePage.PubDate.AddMinutes(UserTimeZoneOffset);
             return View(sitePage);
         }
 

@@ -228,7 +228,7 @@ namespace wwwplatform.Controllers
             }
             if (webFile.DisplayDate.HasValue)
             {
-                webFile.DisplayDate = webFile.DisplayDate.Value.AddMinutes(0 - UserTimeZoneOffset);
+                webFile.DisplayDate = webFile.DisplayDate.Value.AddMinutes(UserTimeZoneOffset);
             }
             return Auto(webFile);
         }
