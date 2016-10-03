@@ -19,6 +19,7 @@ using wwwplatform.Models.Serializers;
 
 using Microsoft.AspNet.Identity;
 using FTTLib;
+using wwwplatform.Shared.Extensions;
 
 namespace wwwplatform.Controllers
 {
@@ -228,7 +229,7 @@ namespace wwwplatform.Controllers
             }
             if (webFile.DisplayDate.HasValue)
             {
-                webFile.DisplayDate = webFile.DisplayDate.Value.AddMinutes(UserTimeZoneOffset);
+                webFile.DisplayDate = webFile.DisplayDate.Value.ToTimezone(UserTimeZoneOffset);
             }
             return Auto(webFile);
         }

@@ -68,7 +68,7 @@
         });
     });
 
-    $.cookie('_tz', 0 - (new Date()).getTimezoneOffset());
+    $.cookie('_tz', 0 - (new Date()).getTimezoneOffset(), { path: '/' });
 
     $(document.body).addClass('in');
 })

@@ -2,7 +2,7 @@
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
-
+using wwwplatform.Shared.Extensions;
 using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Models
@@ -16,7 +16,7 @@ namespace wwwplatform.Models
             PubDate = sitePage.PubDate;
             if (timeZoneOffset.HasValue)
             {
-                PubDate = PubDate.AddMinutes(0 - timeZoneOffset.Value);
+                PubDate = PubDate.FromTimezone(timeZoneOffset.Value);
             }
             HTMLBody = sitePage.HTMLBody;
             Order = sitePage.Order;

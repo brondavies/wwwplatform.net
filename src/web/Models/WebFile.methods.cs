@@ -7,6 +7,7 @@ using System.Web;
 using Microsoft.AspNet.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
 using wwwplatform.Shared.Extensions.System;
+using wwwplatform.Shared.Extensions;
 
 namespace wwwplatform.Models
 {
@@ -35,7 +36,7 @@ namespace wwwplatform.Models
             DisplayDate = update.DisplayDate;
             if (timeZoneOffset.HasValue && DisplayDate.HasValue)
             {
-                DisplayDate = DisplayDate.Value.AddMinutes(0 - timeZoneOffset.Value);
+                DisplayDate = DisplayDate.Value.FromTimezone(timeZoneOffset.Value);
             }
         }
 

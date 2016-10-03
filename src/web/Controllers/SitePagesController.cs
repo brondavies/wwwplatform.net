@@ -10,6 +10,7 @@ using wwwplatform.Models;
 using wwwplatform.Extensions;
 using wwwplatform.Shared.Extensions.System.Collections;
 using wwwplatform.Shared.Extensions.System;
+using wwwplatform.Shared.Extensions;
 
 namespace wwwplatform.Controllers
 {
@@ -52,7 +53,7 @@ namespace wwwplatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                sitePage.PubDate = sitePage.PubDate.AddMinutes(0 - UserTimeZoneOffset);
+                sitePage.PubDate = sitePage.PubDate.FromTimezone(UserTimeZoneOffset);
                 PreparePage(sitePage, permissions);
                 db.SitePages.Add(sitePage);
                 await db.SaveChangesAsync();
@@ -84,7 +85,7 @@ namespace wwwplatform.Controllers
             {
                 return HttpNotFound();
             }
-            sitePage.PubDate = sitePage.PubDate.AddMinutes(UserTimeZoneOffset);
+            sitePage.PubDate = sitePage.PubDate.ToTimezone(UserTimeZoneOffset);
             return View(sitePage);
         }
 
