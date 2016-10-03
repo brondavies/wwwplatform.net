@@ -6,6 +6,7 @@ using System.Web;
 
 using Microsoft.AspNet.Identity;
 using System.ComponentModel.DataAnnotations.Schema;
+using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Models
 {
@@ -73,7 +74,7 @@ namespace wwwplatform.Models
 
         public string GetFileName()
         {
-            return Name + System.IO.Path.GetExtension(Location);
+            return Name.CleanFileName() + System.IO.Path.GetExtension(Location);
         }
 
         public FileType GetFileType()
