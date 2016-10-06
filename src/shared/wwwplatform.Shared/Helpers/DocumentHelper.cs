@@ -43,5 +43,26 @@ namespace wwwplatform.Shared.Helpers
             }
             return result;
         }
+
+        public static bool CreateThumbnail(string convertExe, string inputFile, string outputFile, int width, bool wait = false)
+        {
+            if (outputFile == null)
+            {
+                outputFile = Path.ChangeExtension(inputFile, "jpg");
+            }
+            Process proc = new Process();
+            ProcessStartInfo startinfo = new ProcessStartInfo(convertExe);
+            startinfo.CreateNoWindow = true;
+            startinfo.UseShellExecute = false;
+            startinfo.Arguments = string.Format("\"{0}\" \"{1}\" /w {2}", inputFile, outputFile, width);
+            proc.StartInfo = startinfo;
+            bool result = proc.Start();
+            if (result && wait)
+            {
+                proc.WaitForExit();
+                result = proc.ExitCode == 0;
+            }
+            return result;
+        }
     }
 }

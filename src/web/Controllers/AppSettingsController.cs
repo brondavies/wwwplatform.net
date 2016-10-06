@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
@@ -75,6 +76,26 @@ namespace wwwplatform.Controllers
                                 catch
                                 {
                                     SetFailureMessage(normalizedValue + " is not a valid skin definition file.");
+                                    continue;
+                                }
+                            }
+                        }
+                        if (setting.Name == Settings.kCreatePDFVersionsOfDocuments && setting.Value == bool.TrueString)
+                        {
+                            if (!System.IO.File.Exists(Settings.ConvertPdfExe))
+                            {
+                                SetFailureMessage("Cannot enable PDF conversion because ConvertPdf.exe is missing.");
+                                continue;
+                            }
+                            else
+                            {
+                                var process = Process.Start(Settings.ConvertPdfExe, "/test");
+                                process.WaitForExit();
+                                int exitcode = process.ExitCode;
+                                if ((exitcode & 7) != 7)
+                                {
+                                    SetFailureMessage("Cannot enable PDF conversion because the Microsoft Office installation is missing or incomplete.");
+                                    continue;
                                 }
                             }
                         }

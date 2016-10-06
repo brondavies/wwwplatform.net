@@ -18,7 +18,7 @@ namespace wwwplatform.Models
         internal const string kAllowForgotPassword = "AllowForgotPassword";
         internal const string kAllowUserRegistration = "AllowUserRegistration";
         internal const string kCanonicalHostName = "CanonicalHostName";
-        internal const string kConvertToPdfExe = "ConvertToPdfExe";
+        internal const string kConvertPdfExe = "ConvertPdfExe";
         internal const string kCreatePDFVersionsOfDocuments = "CreatePDFVersionsOfDocuments";
         internal const string kDefaultPageDescription = "DefaultPageDescription";
         internal const string kDefaultPageLayout = "DefaultPageLayout";
@@ -36,6 +36,8 @@ namespace wwwplatform.Models
         internal const string kSiteOwner = "SiteOwner";
         internal const string kSkinDefinitionFile = "SkinDefinitionFile";
         internal const string kTempDir = "TempDir";
+        internal const string kThumbnailQuality = "ThumbnailQuality";
+        internal const string kThumbnailSize = "ThumbnailSize";
         internal const string kUserFilesDir = "UserFilesDir";
 
         public static string GetConfig(string key, string defaultValue = null)
@@ -119,6 +121,8 @@ namespace wwwplatform.Models
                 new AppSetting { Name = kSiteOwner, Kind = AppSetting.KindString, Description = "The name of the site owner" },
                 new AppSetting { Name = kSkinDefinitionFile, Kind = AppSetting.KindFile, Description = "The site skin definition file" },
                 new AppSetting { Name = kTempDir, Kind = AppSetting.KindDirectory, Description = "The directory used for temporary files" },
+                new AppSetting { Name = kThumbnailQuality, Kind = AppSetting.KindNumber, DefaultValue = "70", Description = "(10 - 100) The image quality for thumbnails created for uploaded files." },
+                new AppSetting { Name = kThumbnailSize, Kind = AppSetting.KindNumber, DefaultValue = "320", Description = "The width of thumbnail images created for uploaded files." },
                 new AppSetting { Name = kUserFilesDir, Kind = AppSetting.KindDirectory, Description = "The directory used for files uploaded by users" }
             };
         }

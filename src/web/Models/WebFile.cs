@@ -16,6 +16,8 @@ namespace wwwplatform.Models
 
         public string Location { get; set; }
 
+        public string PreviewLocation { get; set; }
+
         public long? Size { get; set; }
 
         [DisplayName("Display Date")]

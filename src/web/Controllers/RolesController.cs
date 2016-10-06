@@ -111,7 +111,7 @@ namespace wwwplatform.Controllers
             }
             try
             {
-                role.Name = collection["roleName"];
+                role.Name = collection["Name"];
                 var result = await RoleManager.UpdateAsync(role);
                 if (result.Succeeded)
                 {

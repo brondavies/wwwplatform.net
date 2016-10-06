@@ -20,6 +20,10 @@ using wwwplatform.Models.Serializers;
 using Microsoft.AspNet.Identity;
 using FTTLib;
 using wwwplatform.Shared.Extensions;
+using ImageProcessor.Imaging.Formats;
+using System.Drawing;
+using ImageProcessor;
+using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Controllers
 {
@@ -101,7 +105,7 @@ namespace wwwplatform.Controllers
                         ModelState["Name"]?.Errors?.Clear();
                         if (ImageHelper.IsImageFile(uploadedFile))
                         {
-                            UploadImage(uploadedFile, results);
+                            UploadFile(uploadedFile, results);
                         }
                         else
                         if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
@@ -180,20 +184,35 @@ namespace wwwplatform.Controllers
 
         private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
         {
-            UploadImage(file, uploadResults);
-            if (uploadResults.status == UploadResults.OK && Settings.CreatePDFVersionsOfDocuments)
+            UploadFile(file, uploadResults);
+            string docFile = Server.MapPath(uploadResults.file.Location);
+            string pdfFile = Path.ChangeExtension(docFile, ".pdf");
+            bool createPdf = !docFile.Equals(pdfFile, StringComparison.InvariantCultureIgnoreCase);
+            if (createPdf && uploadResults.status == UploadResults.OK && Settings.CreatePDFVersionsOfDocuments)
             {
-                DocumentHelper.CreatePDF(Settings.ConvertToPdfExe, Server.MapPath(uploadResults.file.Location));
+                DocumentHelper.CreatePDF(Settings.ConvertPdfExe, docFile, pdfFile, true);
+            }
+            if (System.IO.File.Exists(pdfFile))
+            {
+                uploadResults.file.PreviewLocation = "/" + CreatePdfThumbnail(pdfFile).ToAppPath(HttpContext);
             }
         }
 
         private void UploadVideoOrAudio(HttpPostedFileBase file, UploadResults uploadResults)
         {
             //TODO: Handle video conversion to MP4 and thumbnailing
-            UploadImage(file, uploadResults);
+            UploadFile(file, uploadResults);
         }
 
         private void UploadImage(HttpPostedFileBase file, UploadResults uploadResults)
+        {
+            UploadFile(file, uploadResults);
+            if (uploadResults.status == UploadResults.OK)
+            {
+                uploadResults.file.PreviewLocation = "/" + CreateThumbnail(Server.MapPath(uploadResults.file.Location)).ToAppPath(HttpContext);
+            }
+        }
+        private void UploadFile(HttpPostedFileBase file, UploadResults uploadResults)
         {
             string extension = Path.GetExtension(file.FileName).ToLower();
             string tempfilename = Extensions.String.Random(16);
@@ -213,6 +232,40 @@ namespace wwwplatform.Controllers
                 uploadResults.status = UploadResults.Failed;
                 uploadResults.message = "The file could not be saved.";
             }
+        }
+
+        private string CreateThumbnail(string filename)
+        {
+            byte[] photoBytes = System.IO.File.ReadAllBytes(filename);
+            ISupportedImageFormat format = new JpegFormat { Quality = Settings.ThumbnailQuality };
+            Size size = new Size(Settings.ThumbnailSize, 0);
+            string thumbFile = GetThumbFileName(filename, size.Width);
+            using (var stream = System.IO.File.OpenRead(filename))
+            {
+                using (var output = System.IO.File.OpenWrite(thumbFile))
+                {
+                    using (ImageFactory imageFactory = new ImageFactory(preserveExifData: true))
+                    {
+                        imageFactory.Load(stream)
+                                    .Resize(size)
+                                    .Format(format)
+                                    .Save(output);
+                    }
+                }
+            }
+            return thumbFile;
+        }
+
+        private static string GetThumbFileName(string filename, int width)
+        {
+            return Path.ChangeExtension(filename, ".w" + width + ".jpg");
+        }
+
+        private string CreatePdfThumbnail(string filename)
+        {
+            string thumbFile = GetThumbFileName(filename, Settings.ThumbnailSize);
+            DocumentHelper.CreateThumbnail(Settings.ConvertPdfExe, filename, thumbFile, Settings.ThumbnailSize, true);
+            return thumbFile;
         }
 
         // GET: WebFiles/Edit/5

@@ -1,0 +1,42 @@
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model Microsoft.AspNet.Identity.EntityFramework.IdentityRole
+
+@{
+    ViewBag.Title = "Edit Role - " + Model.Name;
+    var columns = new[] { new { sm = 3 }, new { sm = 9 } };
+    var label = new { @class = "control-label" };
+}
+
+<h2>Edit Role</h2>
+
+@using (Html.BeginForm())
+{
+    @SimpleAntiForgeryToken()
+
+    <div class="form-horizontal">
+        @Html.Row(columns.Reverse()
+        ).Column(
+        ).Add(
+    @<h4 class="no-margin">
+        @Model.Name
+    </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<span>
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Index")
+        </span>
+        )
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.FormGroup(columns
+        ).Column(null, label).Add(
+            Html.LabelFor(model => model.Name)
+        ).Column().Add(
+            Html.FormControlFor(model => model.Name)
+        )
+        
+    </div>
+}

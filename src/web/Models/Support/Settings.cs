@@ -28,7 +28,7 @@ namespace wwwplatform.Models
 
         public string CanonicalHostName { get { return GetValue(kCanonicalHostName, GetConfig(kCanonicalHostName)); } }
 
-        public string ConvertToPdfExe { get { return GetValue(kConvertToPdfExe, Context.Server.MapPath("~/bin/ConvertToPdf.exe")); } }
+        public string ConvertPdfExe { get { return GetValue(kConvertPdfExe, Context.Server.MapPath("~/bin/ConvertPdf.exe")); } }
 
         public bool CreatePDFVersionsOfDocuments { get { return bool.Parse(GetValue(kCreatePDFVersionsOfDocuments, GetConfig(kCreatePDFVersionsOfDocuments, bool.FalseString))); } }
 
@@ -65,6 +65,10 @@ namespace wwwplatform.Models
         public string SkinDefinitionFile { get { return GetValue(kSkinDefinitionFile, GetConfig(kSkinDefinitionFile)); } }
 
         public string TempDir { get { return GetValue(kTempDir, DefaultTempDir); } }
+
+        public int ThumbnailQuality { get { return int.Parse(GetValue(kThumbnailQuality, GetConfig(kThumbnailQuality, "70"))); } }
+
+        public int ThumbnailSize { get { return int.Parse(GetValue(kThumbnailSize, GetConfig(kThumbnailSize, "320"))); } }
 
         public string UserFilesDir { get { return GetValue(kUserFilesDir, DefaultUserFilesDir); } }
     }
