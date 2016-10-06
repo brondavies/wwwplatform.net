@@ -345,6 +345,8 @@
     <Content Include="assets\css\platform.css" />
     <Content Include="assets\img\banner_image.png" />
     <Content Include="bin\ConvertPdf.exe" />
+    <Content Include="bin\gsdll32.dll" />
+    <Content Include="bin\gsdll64.dll" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
