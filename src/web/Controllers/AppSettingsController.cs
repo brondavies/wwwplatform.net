@@ -10,6 +10,7 @@ using wwwplatform.Extensions;
 using wwwplatform.Extensions.Helpers;
 using wwwplatform.Models;
 using wwwplatform.Models.Support;
+using wwwplatform.Shared.Helpers;
 
 namespace wwwplatform.Controllers
 {
@@ -89,13 +90,16 @@ namespace wwwplatform.Controllers
                             }
                             else
                             {
-                                var process = Process.Start(Settings.ConvertPdfExe, "/test");
-                                process.WaitForExit();
-                                int exitcode = process.ExitCode;
-                                if ((exitcode & 7) != 7)
+                                int exitcode = DocumentHelper.CheckConverterSetup(Settings.ConvertPdfExe, System.IO.Path.Combine(Settings.TempDir, "convertpdf.log"));
+                                if (exitcode < 0)
                                 {
-                                    SetFailureMessage("Cannot enable PDF conversion because the Microsoft Office installation is missing or incomplete.");
+                                    SetFailureMessage("(Error:{0}) Cannot enable PDF conversion because ConvertPdf.exe failed to run.", exitcode);
                                     continue;
+                                }
+                                else if ((exitcode & 7) != 7)
+                                {
+                                        SetFailureMessage("(Error:{0}) Cannot enable PDF conversion because the Microsoft Office installation is missing or incomplete.", exitcode);
+                                        continue;
                                 }
                             }
                         }

@@ -59,13 +59,34 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConvertPdf.cs" />
+    <Compile Include="ConvertPdf.conversion.cs">
+      <DependentUpon>ConvertPdf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConvertPdf.service.cs">
+      <DependentUpon>ConvertPdf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConvertPdf.startup.cs">
+      <DependentUpon>ConvertPdf.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConvertPdfOptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\ConvertPdfService.cs" />
+    <Compile Include="Service\ConvertPdfWindowsService.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Service\ConvertPdfWindowsService.Designer.cs">
+      <DependentUpon>ConvertPdfWindowsService.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Service\IConvertPdfService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -75,7 +96,7 @@
   <PropertyGroup>
     <PostBuildEvent>copy /Y $(TargetDir)\ConvertPdf.exe $(SolutionDir)\web\bin\</PostBuildEvent>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>
