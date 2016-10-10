@@ -53,6 +53,7 @@ namespace ConvertPdf
             catch (Exception ex)
             {
                 log(ex.Message);
+                log(ex.StackTrace);
                 result = -1;
             }
             return result;

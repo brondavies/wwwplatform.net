@@ -73,6 +73,16 @@ namespace wwwplatform.Models
             }
         }
 
+        public string GetUrl(Settings settings)
+        {
+            return string.Format("https://{0}/WebFiles/Details/{1}", settings.CanonicalHostName, Id);
+        }
+
+        public string GetPreviewUrl(Settings settings)
+        {
+            return string.Format("https://{0}/WebFiles/Details/{1}/preview", settings.CanonicalHostName, Id);
+        }
+
         public string GetFileName()
         {
             return Name.CleanFileName() + System.IO.Path.GetExtension(Location);

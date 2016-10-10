@@ -51,13 +51,22 @@ namespace wwwplatform.Controllers
                 return HttpNotFound();
             }
 
-            string filepath = Server.MapPath(webFile.Location);
-            string contentType = FTT.GetMimeType(webFile.Location ?? "");
+            string location = webFile.Location;
+            if (extra == "preview")
+            {
+                if (!string.IsNullOrEmpty(webFile.PreviewLocation))
+                {
+                    location = webFile.PreviewLocation;
+                }
+                extra = null;
+            }
+            string filepath = Server.MapPath(location);
+            string contentType = FTT.GetMimeType(location ?? "");
             if (contentType == "") { contentType = "application/octet-stream"; }
             if (extra == null)
             {
                 string inline = (v == 1) ? "inline" : "attachment";
-                string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(webFile.Location);
+                string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(location);
                 Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             }
             return File(System.IO.File.OpenRead(ReconcileFileToDownload(extra, filepath)), contentType);
