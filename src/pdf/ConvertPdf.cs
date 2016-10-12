@@ -15,6 +15,7 @@ namespace ConvertPdf
         private static bool uninstallService;
         private static bool useService;
         private static bool runService;
+        private static bool standalone;
         private static bool silent;
 
         private static FileStream logfile;
@@ -56,6 +57,11 @@ namespace ConvertPdf
             else if (uninstallService)
             {
                 Uninstall();
+                return;
+            }
+            else if (standalone)
+            {
+                StartServer();
                 return;
             }
 

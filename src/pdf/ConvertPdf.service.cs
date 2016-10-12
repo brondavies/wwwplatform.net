@@ -24,7 +24,15 @@ namespace ConvertPdf
             string install = string.Format("create \"{0}\" binPath= \"{1} /service\" DisplayName= \"{2}\" start= auto", ServiceName, ExecutableName, "PDF Conversion Service");
             RunAndWait(sc, install);
         }
-        
+
+        private static void StartServer()
+        {
+            ConvertPdfService.Start();
+            Console.WriteLine("Press any key to exit");
+            Console.ReadKey();
+            ConvertPdfService.Stop();
+        }
+
         private static void StartService()
         {
             ConvertPdfWindowsService service = new ConvertPdfWindowsService();

@@ -68,6 +68,10 @@ namespace ConvertPdf
                     case "/silent":
                         silent = true;
                         break;
+                    case "-standalone":
+                    case "/standalone":
+                        standalone = true;
+                        break;
                     case "-u":
                     case "/u":
                     case "-uninstall":
