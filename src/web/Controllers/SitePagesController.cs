@@ -139,6 +139,7 @@ namespace wwwplatform.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         public async Task<ActionResult> Display(string slug)
         {
             string s = slug.ToLower();
