@@ -3,6 +3,7 @@ using System.Data.Entity;
 using System.Data.Entity.Migrations;
 
 using Microsoft.AspNet.Identity.EntityFramework;
+using System.Data.Entity.Infrastructure;
 
 namespace wwwplatform.Models
 {
@@ -29,9 +30,13 @@ namespace wwwplatform.Models
             return new ApplicationDbContext();
         }
 
-        public static void Upgrade()
+        public static void Upgrade(DbConnectionInfo database = null)
         {
             var configuration = new Migrations.Configuration();
+            if (database != null)
+            {
+                configuration.TargetDatabase = database;
+            }
             var migrator = new DbMigrator(configuration);
             migrator.Update();
         }

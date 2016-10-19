@@ -6,6 +6,7 @@ using Microsoft.Office.Interop.PowerPoint;
 using Microsoft.Office.Interop.Word;
 using System;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Reflection;
 using System.ServiceModel;
@@ -103,7 +104,10 @@ namespace ConvertPdf
             var excelSheet = appExcel.Workbooks.Open(options.inputFile);
             excelSheet.ExportAsFixedFormat(XlFixedFormatType.xlTypePDF, options.outputFile, IgnorePrintAreas: true);
             excelSheet.Close(false);
+            if (appExcel.Windows.Count > 0)
+            {
             appExcel.ActiveWindow.Close(false);
+        }
         }
 
         private static void ConvertPowerPoint(bool as2007, ConvertPdfOptions options)
@@ -111,7 +115,10 @@ namespace ConvertPdf
             Microsoft.Office.Interop.PowerPoint.Application appPowerp = new Microsoft.Office.Interop.PowerPoint.Application();
             var powerpoint = as2007 ? appPowerp.Presentations.Open2007(options.inputFile) : appPowerp.Presentations.Open(options.inputFile);
             powerpoint.ExportAsFixedFormat(options.outputFile, PpFixedFormatType.ppFixedFormatTypePDF);
+            if (appPowerp.Windows.Count > 0)
+            {
             appPowerp.ActiveWindow.Close();
+        }
         }
 
         private static void ConvertWord(ConvertPdfOptions options)
@@ -120,7 +127,10 @@ namespace ConvertPdf
             var wordDocument = appWord.Documents.Open(options.inputFile);
             wordDocument.ExportAsFixedFormat(options.outputFile, WdExportFormat.wdExportFormatPDF);
             wordDocument.Close(false);
+            if (appWord.Windows.Count > 0)
+            {
             appWord.ActiveWindow.Close(false);
+        }
         }
 
         private static void ConvertPdfToImage(ConvertPdfOptions options)
@@ -143,17 +153,36 @@ namespace ConvertPdf
                             int maxHeight = Convert.ToInt32(Math.Round(ratio * image.Height));
                             using (Image thumb = ResizeImage(image, options.maxWidth, maxHeight))
                             {
-                                thumb.Save(options.outputFile);
+                                SaveImage(thumb, options.outputFile);
                             }
                         }
                         else
                         {
-                            image.Save(options.outputFile);
+                            SaveImage(image, options.outputFile);
                         }
                     }
                 }
                 gs.Close();
             }
+        }
+
+        private static void SaveImage(Image thumb, string filename)
+        {
+            string ext = Path.GetExtension(filename).ToLower();
+            var imageformat = ImageFormat.Jpeg;
+            switch (ext)
+            {
+                case ".png":
+                    imageformat = ImageFormat.Png;
+                    break;
+                case ".bmp":
+                    imageformat = ImageFormat.Bmp;
+                    break;
+                case ".gif":
+                    imageformat = ImageFormat.Gif;
+                    break;
+            }
+            thumb.Save(filename, imageformat);
         }
     }
 }

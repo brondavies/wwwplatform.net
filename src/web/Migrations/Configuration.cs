@@ -24,6 +24,25 @@ namespace wwwplatform.Migrations
         //  This method will be called after migrating to the latest version.
         protected override void Seed(ApplicationDbContext context)
         {
+            try
+            {
+                CreateDefaultContent(context);
+
+                CreateMissing<AppSetting>(context,
+                    Settings.GetDefaultSettings()
+                );
+
+                context.SaveChanges();
+            }
+            catch (Exception exception)
+            {
+                System.Diagnostics.Debugger.Break();
+                throw exception;
+            }
+        }
+
+        private void CreateDefaultContent(ApplicationDbContext context)
+        {
             var RoleManager = DependencyResolver.Current.GetService<ApplicationRoleManager>();
             if (RoleManager == null && HttpContext.Current == null) return;
             RoleManager = RoleManager ?? (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
@@ -36,38 +55,24 @@ namespace wwwplatform.Migrations
                 }
             }
 
-            try
+            if (!context.SitePages.Where(p => p.HomePage).Any())
             {
-                if (!context.SitePages.Where(p => p.HomePage).Any())
+                var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
+                var homepage = context.SitePages.Add(new SitePage
                 {
-                    var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
-                    var homepage = context.SitePages.Add(new SitePage
-                    {
-                        Description = "Default Home Page",
-                        HomePage = true,
-                        HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
-                        Name = "Home Page",
-                        Slug = "home-page",
-                        PubDate = DateTime.UtcNow
-                    });
-                    homepage.Permissions = new List<Permission>();
-                    homepage.Permissions.Add(new Permission
-                    {
-                        Grant = true,
-                        AppliesToRole_Id = publicRole.Id
-                    });
-                }
-                
-                CreateMissing<AppSetting>(context,
-                    Settings.GetDefaultSettings()
-                );
-
-                context.SaveChanges();
-            }
-            catch (Exception exception)
-            {
-                System.Diagnostics.Debugger.Break();
-                throw exception;
+                    Description = "Default Home Page",
+                    HomePage = true,
+                    HTMLBody = "<h1>Home Page</h1><p>This is the default home page.  You can edit it or set a new home page but you cannot delete it.</p>",
+                    Name = "Home Page",
+                    Slug = "home-page",
+                    PubDate = DateTime.UtcNow
+                });
+                homepage.Permissions = new List<Permission>();
+                homepage.Permissions.Add(new Permission
+                {
+                    Grant = true,
+                    AppliesToRole_Id = publicRole.Id
+                });
             }
         }
 

@@ -347,6 +347,7 @@
     <Content Include="bin\ConvertPdf.exe" />
     <Content Include="bin\gsdll32.dll" />
     <Content Include="bin\gsdll64.dll" />
+    <Content Include="bin\migrate.exe" />
     <Content Include="Content\bootstrap-datetimepicker.css" />
     <Content Include="Content\bootstrap-datetimepicker.min.css" />
     <Content Include="Content\bootstrap-switch\bootstrap2\bootstrap-switch.css" />
@@ -634,6 +635,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <Content Include="Content\bootstrap-theme.min.css.map" />
     <Content Include="Content\bootstrap-theme.css.map" />
+    <Content Include="bin\migrate.exe.config" />
     <None Include="Scripts\jquery-2.2.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.2.3.js" />
     <Content Include="Scripts\jquery-2.2.3.min.js" />
