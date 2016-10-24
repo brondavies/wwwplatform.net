@@ -13,6 +13,6 @@ namespace wwwplatform.Models.ViewModels
 
         public int status = 0;
         public string message;
-        public WebFile file;
+        public List<WebFile> files = new List<WebFile>();
     }
 }

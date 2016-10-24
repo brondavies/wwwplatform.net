@@ -103,14 +103,17 @@ namespace wwwplatform.Extensions
                 {
                     return _UserTimeZoneOffset.Value;
                 }
-                var cookie = HttpContext.Request.Cookies.Get("_tz");
-                if (cookie != null)
+                if (HttpContext.Request != null && HttpContext.Request.Cookies != null)
                 {
-                    int result;
-                    if (int.TryParse(cookie.Value, out result))
+                    var cookie = HttpContext.Request.Cookies.Get("_tz");
+                    if (cookie != null)
                     {
-                        _UserTimeZoneOffset = result;
-                        return result;
+                        int result;
+                        if (int.TryParse(cookie.Value, out result))
+                        {
+                            _UserTimeZoneOffset = result;
+                            return result;
+                        }
                     }
                 }
                 return 0;

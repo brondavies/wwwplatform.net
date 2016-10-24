@@ -100,7 +100,6 @@ namespace wwwplatform.Controllers
         {
             UploadResults results = new UploadResults
             {
-                file = webFile,
                 message = "No file upload received.",
                 status = UploadResults.Failed
             };
@@ -108,55 +107,81 @@ namespace wwwplatform.Controllers
             {
                 if (Request.Files.Count > 0)
                 {
-                    HttpPostedFileBase uploadedFile = Request.Files[0];
-                    if (uploadedFile != null && uploadedFile.ContentLength > 0)
+                    string defaultRoleSetting = Settings.DefaultUploadPermissions;
+                    string[] defaultRoles;
+                    if (!string.IsNullOrEmpty(defaultRoleSetting))
                     {
-                        ModelState["Name"]?.Errors?.Clear();
-                        if (ImageHelper.IsImageFile(uploadedFile))
-                        {
-                            UploadFile(uploadedFile, results);
-                        }
-                        else
-                        if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
-                        {
-                            UploadVideoOrAudio(uploadedFile, results);
-                        }
-                        else
-                        if (DocumentHelper.IsDocumentFile(uploadedFile))
-                        {
-                            UploadDocument(uploadedFile, results);
-                        }
-                        else
-                        {
-                            results.status = UploadResults.Failed;
-                            results.message = "The file format was not recognized or is not an allowed file type.";
-                        }
-                    }
-
-                    if (ModelState.IsValid)
-                    {
-                        results.file = db.WebFiles.Add(results.file);
-                        string defaultRoleSetting = Settings.DefaultUploadPermissions;
-                        string[] defaultRoles;
-                        if (!string.IsNullOrEmpty(defaultRoleSetting))
-                        {
-                            defaultRoles = defaultRoleSetting.Split(',');
-                        }
-                        else
-                        {
-                            defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
-                        }
-                        Permission.Apply(db, User, RoleManager, results.file, defaultRoles); //default permissions
-                        await db.SaveChangesAsync();
-                        results.file.Name = results.file.GetFileName();
-                        results.status = UploadResults.OK;
-                        results.message = null;  //"File uploaded successfully.";
+                        defaultRoles = defaultRoleSetting.Split(',');
                     }
                     else
                     {
-                        results.status = UploadResults.Failed;
-                        results.message = ErrorsFromModelState(ModelState);
+                        defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
                     }
+                    
+                    for (int i = 0; i < Request.Files.Count; i++)
+                    {
+                        HttpPostedFileBase uploadedFile = Request.Files[i];
+
+                        if (uploadedFile != null && uploadedFile.ContentLength > 0)
+                        {
+                            WebFile file = null;
+                            ModelState["Name"]?.Errors?.Clear();
+                            if (ImageHelper.IsImageFile(uploadedFile))
+                            {
+                                file = UploadFile(uploadedFile, results, db, HttpContext, Settings);
+                            }
+                            else
+                            if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
+                            {
+                                file = UploadVideoOrAudio(uploadedFile, results);
+                            }
+                            else
+                            if (DocumentHelper.IsDocumentFile(uploadedFile))
+                            {
+                                file = UploadDocument(uploadedFile, results);
+                            }
+                            else
+                            {
+                                results.status = UploadResults.Failed;
+                                results.message = "The file format was not recognized or is not an allowed file type.";
+                            }
+
+                            if (file != null)
+                            {
+                                if (webFile != null)
+                                {
+                                    file.Update(webFile, UserTimeZoneOffset);
+                                    webFile = null;
+                                }
+                                Permission.Apply(db, User, RoleManager, file, defaultRoles); //default permissions
+
+                                db.WebFiles.Add(file);
+                                await db.SaveChangesAsync();
+
+                                results.files.Add(file);
+                            }
+                        }
+                    }
+
+
+                    results.status = UploadResults.OK;
+                    results.message = null;  //"File uploaded successfully.";
+                    foreach (var wf in results.files)
+                    {
+                        if (!string.IsNullOrEmpty(webFile?.Name))
+                        {
+                            wf.Name = webFile.Name;
+                        }
+                        else
+                        {
+                            wf.Name = wf.GetFileName();
+                        }
+                    }
+                }
+                else
+                {
+                    results.status = UploadResults.Failed;
+                    results.message = ErrorsFromModelState(ModelState);
                 }
             }
             catch (Exception ex)
@@ -174,7 +199,7 @@ namespace wwwplatform.Controllers
                 }
                 else
                 {
-                    SetSuccessMessage(results.file.Name + " uploaded successfully!");
+                    SetSuccessMessage(webFile.Name + " uploaded successfully!");
                     return RedirectToAction("Index");
                 }
             }
@@ -191,10 +216,10 @@ namespace wwwplatform.Controllers
             });
         }
 
-        private void UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
+        private WebFile UploadDocument(HttpPostedFileBase file, UploadResults uploadResults)
         {
-            UploadFile(file, uploadResults);
-            string docFile = Server.MapPath(uploadResults.file.Location);
+            WebFile webfile = UploadFile(file, uploadResults, db, HttpContext, Settings);
+            string docFile = Server.MapPath(webfile.Location);
             string pdfFile = Path.ChangeExtension(docFile, ".pdf");
             bool createPdf = !docFile.Equals(pdfFile, StringComparison.InvariantCultureIgnoreCase);
             if (createPdf && uploadResults.status == UploadResults.OK && Settings.CreatePDFVersionsOfDocuments)
@@ -203,37 +228,40 @@ namespace wwwplatform.Controllers
             }
             if (System.IO.File.Exists(pdfFile))
             {
-                uploadResults.file.PreviewLocation = "/" + CreatePdfThumbnail(pdfFile).ToAppPath(HttpContext);
+                webfile.PreviewLocation = "/" + CreatePdfThumbnail(pdfFile).ToAppPath(HttpContext);
             }
+            return webfile;
         }
 
-        private void UploadVideoOrAudio(HttpPostedFileBase file, UploadResults uploadResults)
+        private WebFile UploadVideoOrAudio(HttpPostedFileBase file, UploadResults uploadResults)
         {
             //TODO: Handle video conversion to MP4 and thumbnailing
-            UploadFile(file, uploadResults);
+            return UploadFile(file, uploadResults, db, HttpContext, Settings);
         }
 
-        private void UploadImage(HttpPostedFileBase file, UploadResults uploadResults)
+        private WebFile UploadImage(HttpPostedFileBase file, UploadResults uploadResults)
         {
-            UploadFile(file, uploadResults);
+            var webfile = UploadFile(file, uploadResults, db, HttpContext, Settings);
             if (uploadResults.status == UploadResults.OK)
             {
-                uploadResults.file.PreviewLocation = "/" + CreateThumbnail(Server.MapPath(uploadResults.file.Location)).ToAppPath(HttpContext);
+                webfile.PreviewLocation = "/" + CreateThumbnail(Server.MapPath(webfile.Location)).ToAppPath(HttpContext);
             }
+            return webfile;
         }
-        private void UploadFile(HttpPostedFileBase file, UploadResults uploadResults)
+
+        internal static WebFile UploadFile(HttpPostedFileBase file, UploadResults uploadResults, ApplicationDbContext db, HttpContextBase context, Settings settings)
         {
             string extension = Path.GetExtension(file.FileName).ToLower();
             string tempfilename = Extensions.String.Random(16);
-            string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(Settings.TempDir), tempfilename), extension);
+            string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(settings.TempDir), tempfilename), extension);
             file.SaveAs(tempfile);
-
+            WebFile webfile = db.WebFiles.Create();
             if (System.IO.File.Exists(tempfile))
             {
-                string FileUrl = FileStorage.Save(new FileInfo(tempfile), HttpContext);
-                uploadResults.file.Location = FileUrl;
-                uploadResults.file.Name = Extensions.String.Coalesce(uploadResults.file.Name, Path.GetFileNameWithoutExtension(file.FileName));
-                uploadResults.file.Size = (new FileInfo(tempfile)).Length;
+                string FileUrl = FileStorage.Save(new FileInfo(tempfile), context);
+                webfile.Location = FileUrl;
+                webfile.Name = Extensions.String.Coalesce(webfile.Name, Path.GetFileNameWithoutExtension(file.FileName));
+                webfile.Size = (new FileInfo(tempfile)).Length;
                 uploadResults.status = UploadResults.OK;
             }
             else
@@ -241,6 +269,8 @@ namespace wwwplatform.Controllers
                 uploadResults.status = UploadResults.Failed;
                 uploadResults.message = "The file could not be saved.";
             }
+
+            return webfile;
         }
 
         private string CreateThumbnail(string filename)

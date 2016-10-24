@@ -31,7 +31,10 @@ namespace wwwplatform.Models
 
         public void Update(WebFile update, int? timeZoneOffset)
         {
-            Name = update.Name;
+            if (!string.IsNullOrEmpty(update.Name))
+            {
+                Name = update.Name;
+            }
             Description = update.Description;
             DisplayDate = update.DisplayDate;
             if (timeZoneOffset.HasValue && DisplayDate.HasValue)

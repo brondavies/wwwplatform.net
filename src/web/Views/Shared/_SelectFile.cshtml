@@ -7,7 +7,7 @@
 {
     Html.AddScriptBlock(
         @<div id="SelectFile_@fieldName" class="text-left h5 modal fade" tabindex="-1" role="dialog">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-lg">
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
@@ -95,8 +95,8 @@
                                     language: {
                                         emptyTable: 'Uploaded files will be listed here.'
                                     },
-                                    order: [[1, 'asc']],
-                                    paging: false, //(files.length > 10),
+                                    order: [[2, 'desc']],
+                                    paging: true,
                                     retrieve: true
                                 });
                                 $('table.file-list', modal).one('click', 'tbody>tr', function (event) {
@@ -161,8 +161,10 @@
 
                     $(window).bind('newfile.upload', function (event, data) {
                         if (data.status) {
-                            $('[data-role="file-id"]', modal).val(data.file.Id);
-                            $('[data-role="file-url"]', modal).val('/Download/' + data.file.Id + '/' + data.file.Name);
+                            var file = data.files[0];
+                            var ids = data.files.map(function (f) { return f.Id; });
+                            $('[data-role="file-id"]', modal).val(JSON.stringify(ids));
+                            $('[data-role="file-url"]', modal).val(file && '/Download/' + file.Id + '/' + file.Name);
                             modal.modal('hide');
                         } else if (data.message) {
                             bootbox.alert(data.message);

@@ -203,7 +203,10 @@ else
                     $(window).bind('Folder_@(Model.Slug).selected', function (event, data) {
                         var id = data.id;
                         var csrf = $('input[name="__RequestVerificationToken"]').val();
-                        $.post('/SharedFolders/AddFiles/@Model.Id', { files: id, '__RequestVerificationToken': csrf })
+                        $.post('/SharedFolders/AddFiles/@Model.Id', {
+                            files: eval(id),
+                            '__RequestVerificationToken': csrf
+                        })
                         .success(function () {
                             window.location.reload(true);
                         })
