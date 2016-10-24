@@ -49,14 +49,10 @@ namespace wwwplatform.Controllers
             {
                 PrepareFolder(sharedFolder, permissions);
                 db.SharedFolders.Add(sharedFolder);
-                await db.SaveChangesAsync();
 
-                if (sharedFolder.ParentFolderId.HasValue)
-                {
-                    var ParentFolder = db.SharedFolders.Find(sharedFolder.ParentFolderId);
-                    return Redirect("/Shared/" + ParentFolder.Slug);
-                }
-                return RedirectToAction("Index");
+                await db.SaveChangesAsync();
+                
+                return Redirect("/Shared/" + sharedFolder.Slug);
             }
 
             return View(sharedFolder);
@@ -123,7 +119,7 @@ namespace wwwplatform.Controllers
         public async Task<ActionResult> DeleteConfirmed(long id)
         {
             var sharedFolders = SharedFolder.GetEditableFolders(db, User);
-            SharedFolder sharedFolder = await sharedFolders.Include(f => f.Permissions).FindAsync(id);
+            SharedFolder sharedFolder = await sharedFolders.Include(f => f.Permissions).Include(f => f.Files).FindAsync(id);
             db.SharedFolders.Remove(sharedFolder);
             await db.SaveChangesAsync();
             SetSuccessMessage(string.Format("Folder {0} was deleted successfully!", sharedFolder.Name));
