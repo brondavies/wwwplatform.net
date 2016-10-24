@@ -94,7 +94,7 @@ switch (file.GetFileType())
     {
         <div class="btn-group">
             @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
-            @UploadDialogButton("Folder_" + Model.Slug, "Upload")
+            @UploadDialogButton(new SelectFileOptions { name = "Folder_" + Model.Slug, text = "Upload" })
             @if (isFolderOwner)
             {
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })

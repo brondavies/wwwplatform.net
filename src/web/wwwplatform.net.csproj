@@ -326,7 +326,7 @@
     <Compile Include="Models\ViewModels\RoleDetailModel.cs" />
     <Compile Include="Models\ViewModels\SentEmailMessageModel.cs" />
     <Compile Include="Models\ViewModels\TableActionOptions.cs" />
-    <Compile Include="Models\ViewModels\UploadDialogOptions.cs" />
+    <Compile Include="Models\ViewModels\SelectFileOptions.cs" />
     <Compile Include="Models\ViewModels\UploadResults.cs" />
     <Compile Include="Models\ViewModels\UserEditorModel.cs" />
     <Compile Include="Models\WebFile.cs">

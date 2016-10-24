@@ -1,5 +1,6 @@
-﻿@using wwwplatform.Models;
-@using wwwplatform.Extensions.Helpers.Bootstrap;
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+@using wwwplatform.Models;
+@using wwwplatform.Models.ViewModels;
 
 @model AppSetting
 
@@ -21,7 +22,7 @@
         case AppSetting.KindUpload:
             <div class="input-group">
                 <input type="text" disabled name="@(Model.Name)" value="@(Model.Value)" class="form-control" />
-                @UploadDialogButton(Model.Name, "Select File", Model.Name + "_upload", "input-group-addon")
+                @UploadDialogButton(new SelectFileOptions { name = Model.Name, text = "Select File", eventName = Model.Name + "_upload", className = "input-group-addon" })
                 @{ deferredScript += string.Format(uploadEventScript, Model.Name); }
             </div>
             break;

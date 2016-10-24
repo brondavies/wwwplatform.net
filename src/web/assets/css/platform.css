@@ -291,6 +291,12 @@ table.clickable>tbody>tr:hover {
 .table>thead>tr>th {
     border-bottom-color: rgba(0,0,0,0.05);
 }
+.file-table {
+    -moz-user-select: none;
+    -ms-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
 .dataTables_wrapper div.row {
     overflow: hidden;
 }

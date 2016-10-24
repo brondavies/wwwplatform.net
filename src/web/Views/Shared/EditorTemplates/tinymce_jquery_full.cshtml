@@ -12,7 +12,7 @@
     Html.AddScriptFile("~/Scripts/tinymce/tinymce.min.js");
     Html.AddScriptBlock(
         @<div>
-            @Html.Partial("_SelectFile", new SelectFileOptions { name = fieldName });
+            @Html.Partial("_SelectFile", new SelectFileOptions { name = fieldName, singleSelect = true });
         </div>
     );
     Html.AddScriptBlock(

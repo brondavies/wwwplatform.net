@@ -2,6 +2,7 @@
 
 @{
     var fieldName = Model.name;
+    var singleSelect = Model.singleSelect ? "true" : "false";
 }
 @using (Html.BeginScriptContext())
 {
@@ -36,7 +37,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                        <button type="button" class="btn btn-primary">OK</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" data-role="submit">OK</button>
                     </div>
                 </div>
             </div>
@@ -50,6 +51,7 @@
                     var callback = options.callback;
                     var eventName = options.eventName;
                     var meta = options.meta;
+                    var singleSelect = @singleSelect;
                     var value = options.value;
                     var modal = $('#SelectFile_' + selectFileName);
                     $('body').append(modal);
@@ -59,12 +61,20 @@
                         }
                         return full.DisplayDate || data;
                     };
-                    var renderIcon = function (data, type, full, meta) {
+                    var renderCheckbox = function (data, type) {
+                        if (type === 'display') {
+                            return '<i class="fa fa-' + (data ? 'check-' : '') + 'square-o fa-lg"></i>';
+                        }
+                        return data;
+                    };
+                    var renderIcon = function (data, type) {
                         if (type === 'display') {
                             return '<i class="fa ' + data + ' fa-lg"></i>';
                         }
                         return data;
                     };
+                    var datatable = null;
+                    var cancelled = true;
                     modal.modal('show')
                         .one('shown.bs.modal', function (e) {
                             // display user's file list
@@ -84,27 +94,60 @@
 
                             $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
                                 // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
-                                var datatable = $('table.file-list', modal).DataTable({
+                                files.every(function (f) { return !(f.Selected = false); });
+                                datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
-                                        { targets: 0, title: '', data: 'Icon', orderable: false, render: renderIcon, width:'4px' },
-                                        { targets: 1, title: 'Name', data: 'Name' },
-                                        { targets: 2, title: 'Date', data: 'UpdatedAt', render: renderDate }
+                                        { targets: 0, title: '', data: 'Selected', orderable: false, render: renderCheckbox, width: '4px', className: 'row-select' },
+                                        { targets: 1, title: '', data: 'Icon', orderable: false, render: renderIcon, width: '4px' },
+                                        { targets: 2, title: 'Name', data: 'Name' },
+                                        { targets: 3, title: 'Date', data: 'UpdatedAt', render: renderDate }
                                     ],
                                     data: files,
                                     info: false,
                                     language: {
                                         emptyTable: 'Uploaded files will be listed here.'
                                     },
-                                    order: [[2, 'desc']],
-                                    paging: true,
+                                    order: [[3, 'desc']],
+                                    paging: files.length > 10,
                                     retrieve: true
                                 });
-                                $('table.file-list', modal).one('click', 'tbody>tr', function (event) {
-                                    var id = datatable.row(this).data().Id;
-                                    $('[data-role="file-id"]', modal).val(id);
-                                    $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);
-                                    modal.modal('hide');
+                                var lastClickedRow = null;
+                                $('table.file-list', modal).on('click', 'tbody>tr', function (event) {
+                                    var row = datatable.row(this);
+                                    var data = row.data();
+                                    if (!singleSelect) {
+                                        var selected = !data.Selected;
+                                        var rowIndex = datatable.rows().nodes().indexOf(this);
+                                        var from = rowIndex;
+                                        var to = rowIndex;
+                                        if (lastClickedRow != null && event.shiftKey) {
+                                            event.preventDefault();
+                                            event.stopPropagation();
+                                            from = Math.min(rowIndex, lastClickedRow);
+                                            to = Math.max(rowIndex, lastClickedRow);
+                                        }
+                                        for (var i = from; i <= to; i++) {
+                                            row = datatable.row(datatable.rows().nodes()[i]);
+                                            row.data().Selected = selected;
+                                            if (selected) {
+                                                $(row.node()).addClass('selected');
+                                            } else {
+                                                $(row.node()).removeClass('selected');
+                                            }
+                                            row.invalidate();
+                                        }
+                                        lastClickedRow = rowIndex;
+                                    } else {
+                                        var id = data.Id;
+                                        $('[data-role="file-id"]', modal).val(id);
+                                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);
+                                        cancelled = false;
+                                        modal.modal('hide');
+                                    }
                                 });
+                            });
+                            $('[data-role=submit]', modal).click(function(event) {
+                                cancelled = false;
                             });
                             $('[type="file"]', modal).change(function (event) {
                                 $('.js-uploader').addClass('uploading');
@@ -148,14 +191,30 @@
                                 }
                             });
                         })
-                        .one('hidden.bs.modal', function (e) {
+                        .on('hidden.bs.modal', function (e) {
                             // file selected?
-                            var id = $('[data-role="file-id"]', modal).val();
-                            var url = $('[data-role="file-url"]', modal).val();
-                            if (url || id) {
-                                var result = { id: id, url: url, alt: '' };
-                                callback && callback(url, result);
-                                eventName && $(window).trigger(eventName, result);
+                            if (cancelled) {
+                                $('form', modal)[0].reset();
+                            } else {
+                                var id = $('[data-role="file-id"]', modal).val();
+                                var url = $('[data-role="file-url"]', modal).val();
+                                if (datatable) {
+                                    var rows = datatable.rows('.selected');
+                                    if (rows.indexes().length) {
+                                        id = [];
+                                        rows.data().each(function(d) {
+                                            id.push(d.Id); 
+                                            return true;
+                                        });
+                                        id = JSON.stringify(id);
+                                    }
+                                }
+                            
+                                if (url || id) {
+                                    var result = { id: id, url: url, alt: '' };
+                                    callback && callback(url, result);
+                                    eventName && $(window).trigger(eventName, result);
+                                }
                             }
                         });
 
