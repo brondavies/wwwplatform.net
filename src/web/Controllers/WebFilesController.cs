@@ -251,17 +251,35 @@ namespace wwwplatform.Controllers
 
         internal static WebFile UploadFile(HttpPostedFileBase file, UploadResults uploadResults, ApplicationDbContext db, HttpContextBase context, Settings settings)
         {
-            string extension = Path.GetExtension(file.FileName).ToLower();
+            string tempfile = GetTempFileName(file.FileName, settings);
+            file.SaveAs(tempfile);
+            return UploadFileCore(tempfile, file.FileName, uploadResults, db, context);
+        }
+
+        internal static WebFile UploadFile(byte[] bytes, string fileName, UploadResults uploadResults, ApplicationDbContext db, HttpContextBase context, Settings settings)
+        {
+            string tempfile = GetTempFileName(fileName, settings);
+            System.IO.File.WriteAllBytes(tempfile, bytes);
+            return UploadFileCore(tempfile, fileName, uploadResults, db, context);
+        }
+
+        private static string GetTempFileName(string fileName, Settings settings)
+        {
+            string extension = Path.GetExtension(fileName).ToLower();
             string tempfilename = Extensions.String.Random(16);
             string tempfile = Path.ChangeExtension(Path.Combine(Path.GetFullPath(settings.TempDir), tempfilename), extension);
-            file.SaveAs(tempfile);
+            return tempfile;
+        }
+
+        private static WebFile UploadFileCore(string filePath, string fileName, UploadResults uploadResults, ApplicationDbContext db, HttpContextBase context)
+        {
             WebFile webfile = db.WebFiles.Create();
-            if (System.IO.File.Exists(tempfile))
+            if (System.IO.File.Exists(filePath))
             {
-                string FileUrl = FileStorage.Save(new FileInfo(tempfile), context);
+                string FileUrl = FileStorage.Save(new FileInfo(filePath), context);
                 webfile.Location = FileUrl;
-                webfile.Name = Extensions.String.Coalesce(webfile.Name, Path.GetFileNameWithoutExtension(file.FileName));
-                webfile.Size = (new FileInfo(tempfile)).Length;
+                webfile.Name = Path.GetFileNameWithoutExtension(fileName);
+                webfile.Size = (new FileInfo(filePath)).Length;
                 uploadResults.status = UploadResults.OK;
             }
             else
