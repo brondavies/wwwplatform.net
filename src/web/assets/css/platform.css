@@ -403,7 +403,6 @@ table.dataTable thead th::after{
     right: 0;
     bottom: 0;
     background: rgba(0,0,0,0.5);
-    width: 600px;
     margin: auto;
     padding: 10% 30px;
     text-align: center;
@@ -420,13 +419,22 @@ table.dataTable thead th::after{
 }
 .modal-content .modal-content-drag-hover .drag-drop-box {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 50% 0;
+    top: 15px;
+    bottom: 15px;
+    left: 15px;
+    right: 15px;
+    /*padding: 50% 0;*/
     border: 2px dashed #666;
-    margin: 15px;
+    /*margin: 15px;*/
+}
+.margin-center {
+    margin: 30%;
+}
+.can-drag-and-drop{
+    display:none;
+}
+.dz-clickable .can-drag-and-drop {
+    display:inline;
 }
 .dz-drag-hover .modal-body,
 .dz-drag-hover .modal-footer,
