@@ -3,6 +3,7 @@
 @{
     var fieldName = Model.name;
     var singleSelect = Model.singleSelect ? "true" : "false";
+    var multiple = Model.singleSelect ? "" : "multiple";
 }
 @using (Html.BeginScriptContext())
 {
@@ -29,7 +30,7 @@
                             <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
                                 <a class="btn btn-primary fake-file" href="#">Select a file on your computer</a>
                                 @SimpleAntiForgeryToken()
-                                <input type="file" name="file" class="file-input" tabindex="-1" multiple="" />
+                                <input type="file" name="file" class="file-input" tabindex="-1" @(multiple) />
                             </form>
                             <div class="spinner"></div>
                             <div class="progress"><div class="progress-bar progress-success"></div></div>
@@ -38,6 +39,12 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <button type="button" class="btn btn-primary" data-dismiss="modal" data-role="submit">OK</button>
+                    </div>
+                    <div class="modal-content-drag-hover text-center">
+                        <div class="drag-drop-box">
+                            <svg class="drag-drop-icon" xmlns="http://www.w3.org/2000/svg" width="50" height="43" viewBox="0 0 50 43"><path d="M48.4 26.5c-.9 0-1.7.7-1.7 1.7v11.6h-43.3v-11.6c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v13.2c0 .9.7 1.7 1.7 1.7h46.7c.9 0 1.7-.7 1.7-1.7v-13.2c0-1-.7-1.7-1.7-1.7zm-24.5 6.1c.3.3.8.5 1.2.5.4 0 .9-.2 1.2-.5l10-11.6c.7-.7.7-1.7 0-2.4s-1.7-.7-2.4 0l-7.1 8.3v-25.3c0-.9-.7-1.7-1.7-1.7s-1.7.7-1.7 1.7v25.3l-7.1-8.3c-.7-.7-1.7-.7-2.4 0s-.7 1.7 0 2.4l10 11.6z"></path></svg>
+                            <h3>Drop files here to upload</h3>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -75,22 +82,93 @@
                     };
                     var datatable = null;
                     var cancelled = true;
+                    var triggerred = false;
+
+                    function progressHandler(event) {
+                        var $p = $('.js-uploader .progress-bar');
+                        if (event.lengthComputable) {
+                            var percent = Math.round(event.loaded * 100 / event.total);
+                            $p.text(percent + '%');
+                            $p.css({ width: percent + '%' });
+                        } else {
+                            $p.text('Uploading ...');
+                        }
+                    }
+
+                    function setupDropZone() {
+                        if (Dropzone) {
+                            function dz_issue_438(uploader) {
+                                var drag = (function (elm) {
+                                    var dragCounter = 0;
+                                    var dragTimeout = 0;
+
+                                    return {
+                                        enter: function (event) {
+                                            event.preventDefault();
+                                            dragCounter++;
+                                            elm.classList.add('dz-drag-hover');
+                                            clearTimeout(dragTimeout);
+                                        },
+                                        leave: function (event) {
+                                            dragCounter--;
+                                            if (dragCounter === 0) {
+                                                dragTimeout = setTimeout(function() {
+                                                    elm.classList.remove('dz-drag-hover');
+                                                }, 250);
+                                            }
+                                        }
+                                    }
+                                })(uploader.element);
+
+                                uploader.on('dragenter', drag.enter);
+                                uploader.on('dragleave', drag.leave);
+                            }
+                            Dropzone.options.dropzone = {
+                            };
+                            var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
+                                dragenter: function () {},
+                                dragleave: function () {},
+                                init: function () { dz_issue_438(this); },
+                                addRemoveLinks: false,
+                                maxFiles: singleSelect ? 1 : 1000,
+                                parallelUploads: 1000,
+                                uploadMultiple: true,
+                                url: '/WebFiles/Create'
+                            });
+                            filedropzone.on('sending', function (file, xhr, formData) {
+                                var csrf = '__RequestVerificationToken';
+                                for (var key of formData.keys()) {
+                                    if (key === csrf) {
+                                        return;
+                                    }
+                                }
+                                formData.append(csrf, $('input[name=' + csrf + ']').val());
+                                $('.js-uploader').addClass('uploading');
+                                xhr.upload.addEventListener('progress', progressHandler, false);
+                                cancelled = false;
+                            });
+                            filedropzone.on('success', function (file, response, request) {
+                                if (!triggerred) {
+                                    $(window).trigger('newfile.upload', response);
+                                    triggerred = true;
+                                }
+                            });
+                            filedropzone.on('error', function (file, response, request) {
+                                if (request.status < 300) {
+                                    $(window).trigger('error.upload', response);
+                                } else {
+                                    $(window).trigger('error.upload', {message: 'The server responded with an unhandled error.'});
+                                }
+                            });
+                        }
+                    }
+
                     modal.modal('show')
                         .one('shown.bs.modal', function (e) {
                             // display user's file list
                             $('[data-role="file-id"]', modal).val('');
                             $('[data-role="file-url"]', modal).val('');
-                            @*var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
-                                addRemoveLinks: true,
-                                maxFiles: 1,
-                                url: '/WebFiles/Create'
-                            });
-                            filedropzone.on('sending', function (file, xhr, formData) {
-                                formData['__RequestVerificationToken'] = $('input[name="__RequestVerificationToken"]').val();
-                            });
-                            filedropzone.on('success', function (response) {
-                                debugger;
-                            });*@
+                            setupDropZone();
 
                             $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
                                 // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
@@ -154,17 +232,6 @@
                                 var $form = $(event.target).closest('form');
                                 if (!submitViaAjax($form[0])) {
                                     $form.submit();
-                                }
-
-                                function progressHandler(event) {
-                                    var $p = $('.js-uploader .progress-bar');
-                                    if (event.lengthComputable) {
-                                        var percent = Math.round(event.loaded * 100 / event.total);
-                                        $p.text(percent + '%');
-                                        $p.css({ width: percent + '%' });
-                                    } else {
-                                        $p.text('Uploading ...');
-                                    }
                                 }
 
                                 function submitViaAjax(form) {

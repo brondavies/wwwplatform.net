@@ -117,8 +117,9 @@ namespace wwwplatform.Controllers
                     {
                         defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
                     }
-                    
-                    for (int i = 0; i < Request.Files.Count; i++)
+
+                    int fileCount = Request.Files.Count;
+                    for (int i = 0; i < fileCount; i++)
                     {
                         HttpPostedFileBase uploadedFile = Request.Files[i];
 
@@ -176,6 +177,14 @@ namespace wwwplatform.Controllers
                         {
                             wf.Name = wf.GetFileName();
                         }
+                    }
+                    if (fileCount > 1)
+                    {
+                        SetSuccessMessage("{0} files uploaded successfully", fileCount);
+                    }
+                    else
+                    {
+                        SetSuccessMessage("{0} uploaded successfully", results.files.First().Name);
                     }
                 }
                 else
