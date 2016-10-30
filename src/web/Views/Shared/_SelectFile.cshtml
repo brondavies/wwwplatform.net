@@ -58,12 +58,15 @@
             $(function () {
                 var selectFileName = '@fieldName';
                 var dzInstalled = false;
+                var initialized = false;
                 $(window).bind('selectfile.show', function (event, options) {
                     var callback = options.callback;
                     var eventName = options.eventName;
                     var meta = options.meta;
                     var singleSelect = @singleSelect;
-                    var value = options.value;
+                    var datatable = null;
+                    var cancelled = true;
+                    var triggerred = false;
                     var modal = $('#SelectFile_' + selectFileName);
                     $('body').append(modal);
                     var renderDate = function (data, type, full, meta) {
@@ -84,9 +87,6 @@
                         }
                         return data;
                     };
-                    var datatable = null;
-                    var cancelled = true;
-                    var triggerred = false;
 
                     function progressHandler(event) {
                         var $p = $('.js-uploader .progress-bar');
@@ -100,8 +100,7 @@
                     }
 
                     function setupDropZone() {
-                        if (!dzInstalled && Dropzone) {
-                            dzInstalled = true;
+                        if (Dropzone) {
                             function dz_issue_438(uploader) {
                                 var drag = (function (elm) {
                                     var dragCounter = 0;
@@ -128,9 +127,8 @@
                                 uploader.on('dragenter', drag.enter);
                                 uploader.on('dragleave', drag.leave);
                             }
-                            Dropzone.options.dropzone = {
-                            };
                             var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
+                                clickable: $('<i>')[0], 
                                 dragenter: function () {},
                                 dragleave: function () {},
                                 init: function () { dz_issue_438(this); },
@@ -170,9 +168,11 @@
 
                     modal.modal('show')
                         .one('shown.bs.modal', function (e) {
-                            // display user's file list
                             $('[data-role="file-id"]', modal).val('');
                             $('[data-role="file-url"]', modal).val('');
+                            if (initialized){ return; }
+                            initialized = true;
+                            
                             setupDropZone();
 
                             $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
@@ -317,14 +317,14 @@
                             $('[data-role="file-id"]', modal).val(JSON.stringify(ids));
                             $('[data-role="file-url"]', modal).val(file && '/Download/' + file.Id + '/' + file.Name);
                             modal.modal('hide');
-                        } else if (data.message) {
+                        } else if (data && data.message) {
                             bootbox.alert(data.message);
                         }
                         $('.js-uploader').removeClass('uploading');
                     });
                     $(window).bind('error.upload', function (event, data) {
                         modal.modal('hide');
-                        if (data.message) {
+                        if (data && data.message) {
                             bootbox.alert(data.message);
                         }
                         $('.js-uploader').removeClass('uploading');
