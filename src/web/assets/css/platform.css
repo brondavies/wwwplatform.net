@@ -451,9 +451,7 @@ table.dataTable .row-select {
     display:block;
     visibility: visible;
 }
-.dz-image {
-
-}
+.dz-preview,
 .dz-details,
 .dz-size,
 .dz-filename,
