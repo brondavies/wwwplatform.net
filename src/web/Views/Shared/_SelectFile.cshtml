@@ -180,7 +180,7 @@
                                 files.every(function (f) { return !(f.Selected = false); });
                                 datatable = $('table.file-list', modal).DataTable({
                                     columnDefs: [
-                                        { targets: 0, title: '', data: 'Selected', orderable: false, render: renderCheckbox, width: '4px', className: 'row-select' },
+                                        { targets: 0, title: '', data: 'Selected', orderable: false, render: renderCheckbox, width: '18px', className: 'row-select' },
                                         { targets: 1, title: '', data: 'Icon', orderable: false, render: renderIcon, width: '4px' },
                                         { targets: 2, title: 'Name', data: 'Name' },
                                         { targets: 3, title: 'Date', data: 'UpdatedAt', render: renderDate }
@@ -194,6 +194,35 @@
                                     paging: files.length > 10,
                                     retrieve: true
                                 });
+                                if (!singleSelect) {
+                                    $(datatable.column(0).header()).html('<i class="fa fa-square-o fa-lg"></i>')
+                                        .click(function() {
+                                            var selected = datatable.rows('.selected').count();
+                                            setRangeSelected(0, datatable.rows().count() - 1, !selected);
+                                        });
+                                }
+                                function setRangeSelected(from, to, selected) {
+                                    for (var i = from; i <= to; i++) {
+                                        row = datatable.row(datatable.rows().nodes()[i]);
+                                        row.data().Selected = selected;
+                                        if (selected) {
+                                            $(row.node()).addClass('selected');
+                                        } else {
+                                            $(row.node()).removeClass('selected');
+                                        }
+                                        row.invalidate();
+                                    }
+                                    var $h = $(datatable.column(0).header());
+                                    var selectedCount = datatable.rows('.selected').count();
+                                    if (selectedCount) {
+                                        var selectedAll = datatable.rows().count() === selectedCount;
+                                        $h.html(selectedAll 
+                                            ? '<i class="fa fa-check-square-o fa-lg"></i>'
+                                            : '<i class="fa fa-square fa-lg"></i>');
+                                    } else {
+                                        $h.html('<i class="fa fa-square-o fa-lg"></i>');
+                                    }
+                                }
                                 var lastClickedRow = null;
                                 $('table.file-list', modal).on('click', 'tbody>tr', function (event) {
                                     var row = datatable.row(this);
@@ -209,16 +238,7 @@
                                             from = Math.min(rowIndex, lastClickedRow);
                                             to = Math.max(rowIndex, lastClickedRow);
                                         }
-                                        for (var i = from; i <= to; i++) {
-                                            row = datatable.row(datatable.rows().nodes()[i]);
-                                            row.data().Selected = selected;
-                                            if (selected) {
-                                                $(row.node()).addClass('selected');
-                                            } else {
-                                                $(row.node()).removeClass('selected');
-                                            }
-                                            row.invalidate();
-                                        }
+                                        setRangeSelected(from, to, selected);
                                         lastClickedRow = rowIndex;
                                     } else {
                                         var id = data.Id;

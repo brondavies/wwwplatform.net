@@ -317,6 +317,12 @@ table.dataTable thead th::after{
 .dataTables_wrapper div.row:nth-child(2) {
     overflow: visible;
 }
+table.dataTable>thead>tr>th.row-select {
+    padding: 10px;
+}
+table.dataTable .row-select {
+    min-width: 18px;
+}
 @media screen and (max-width: 767px) {
   div.dataTables_wrapper div.dataTables_length {
     text-align: left;
