@@ -265,12 +265,10 @@ span.btn {
     width: 215px;
     z-index: 2;
 }
-.SitePages_Create .modal-backdrop,
-.SitePages_Edit .modal-backdrop {
+body>.modal-backdrop {
     z-index: 65536;
 }
-.SitePages_Create .modal,
-.SitePages_Edit .modal {
+body>.modal {
     z-index: 65537;
 }
 table.clickable>tbody>tr {
@@ -415,6 +413,7 @@ table.dataTable .row-select {
 }
 .modal-content .modal-content-drag-hover {
     background-color: #c9d7ff;
+    border-radius: 6px;
     display:none;
     opacity: 0.8;
     position: absolute;
@@ -439,7 +438,7 @@ table.dataTable .row-select {
 .can-drag-and-drop{
     display:none;
 }
-.dz-clickable .can-drag-and-drop {
+.dropzone-enabled .can-drag-and-drop {
     display:inline;
 }
 .dz-drag-hover .modal-body,

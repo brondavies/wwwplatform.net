@@ -127,6 +127,7 @@
                                 uploader.on('dragenter', drag.enter);
                                 uploader.on('dragleave', drag.leave);
                             }
+                            modal.addClass('dropzone-enabled');
                             var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
                                 clickable: $('<i>')[0], 
                                 dragenter: function () {},
