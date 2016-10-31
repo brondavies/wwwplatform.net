@@ -83,7 +83,7 @@ namespace wwwplatform.Models
 
         public string GetPreviewUrl(Settings settings)
         {
-            return string.Format("https://{0}/WebFiles/Details/{1}/preview", settings.CanonicalHostName, Id);
+            return string.Format("https://{0}/Downloads/{1}/preview", settings.CanonicalHostName, Id);
         }
 
         public string GetFileName()
