@@ -90,7 +90,9 @@ namespace wwwplatform.Controllers.Tests
 
         protected ApplicationRoleManager CreateRoleManager()
         {
-            return new ApplicationRoleManager(new RoleStore<IdentityRole>(db));
+            var rolemanager = new ApplicationRoleManager(new RoleStore<IdentityRole>(db));
+            Roles.CreateAll(rolemanager);
+            return rolemanager;
         }
 
         #endregion

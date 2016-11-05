@@ -258,6 +258,7 @@
                                 var $form = $(event.target).closest('form');
                                 if (!submitViaAjax($form[0])) {
                                     $form.submit();
+                                    cancelled = false;
                                 }
 
                                 function submitViaAjax(form) {
@@ -272,6 +273,7 @@
                                                 if (request.readyState == 4) {
                                                     var response = JSON.parse(request.responseText);
                                                     if (request.status < 300) {
+                                                        cancelled = false;
                                                         $(window).trigger('newfile.upload', response);
                                                     } else {
                                                         $(window).trigger('error.upload', response);
