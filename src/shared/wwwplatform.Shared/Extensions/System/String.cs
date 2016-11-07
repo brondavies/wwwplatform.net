@@ -35,7 +35,7 @@ namespace wwwplatform.Shared.Extensions.System
         public static string ToAbsoluteUrl(this string url, HttpContextBase context = null, bool makeSsl = false)
         {
             if (url == null) return null;
-            if (url.StartsWith("http:") || url.StartsWith("https:"))
+            if ((!makeSsl && url.StartsWith("http:")) || url.StartsWith("https:"))
             {
                 return url;
             }

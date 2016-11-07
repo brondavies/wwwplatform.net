@@ -1,4 +1,5 @@
-﻿using System;
+﻿using HtmlAgilityPack;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mail;
@@ -41,6 +42,23 @@ namespace wwwplatform.Extensions.Email
 
         public string Error = null;
 
+        private HttpContextBase _HttpContext;
+        public HttpContextBase HttpContext
+        {
+            get
+            {
+                if (_HttpContext == null)
+                {
+                    _HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
+                }
+                return _HttpContext;
+            }
+            set
+            {
+                _HttpContext = value;
+            }
+        }
+
         private Settings _Settings;
         public Settings Settings
         {
@@ -48,7 +66,7 @@ namespace wwwplatform.Extensions.Email
             {
                 if (_Settings == null)
                 {
-                    _Settings = Settings.Create(new HttpContextWrapper(HttpContext.Current));
+                    _Settings = Settings.Create(new HttpContextWrapper(System.Web.HttpContext.Current));
                 }
                 return _Settings;
             }
@@ -77,7 +95,7 @@ namespace wwwplatform.Extensions.Email
             objMM.From = new MailAddress(FromEmail ?? Settings.EmailDefaultFrom, FromName ?? Settings.SiteName ?? Settings.EmailDefaultFrom);
             objMM.Subject = Subject;
             objMM.IsBodyHtml = IsHTML;
-            objMM.Body = Body;
+            objMM.Body = IsHTML ? PrepareBodyHtml(Body) : Body;
             objMM.Headers.Add("X-JOB", JobID.ToString());
             if (!string.IsNullOrEmpty(Settings.EmailAdditionalHeaders))
             {
@@ -177,7 +195,27 @@ namespace wwwplatform.Extensions.Email
                 SmtpMail = null;
             }
         }
-        
+
+        private string PrepareBodyHtml(string html)
+        {
+            HtmlDocument doc = new HtmlDocument();
+            doc.LoadHtml(html);
+            var links = doc.DocumentNode.Descendants("a");
+            foreach (var link in links)
+            {
+                string href = link.GetAttributeValue("href", "");
+                if (!string.IsNullOrEmpty(href))
+                {
+                    if (!href.StartsWith("http"))
+                    {
+                        href = href.ToAbsoluteUrl(HttpContext, HttpContext.Request.IsSecureConnection);
+                        link.Attributes["href"].Value = href;
+                    }
+                }
+            }
+            return doc.DocumentNode.OuterHtml;
+        }
+
         private string GetFirstTo(MailAddressCollection to)
         {
             string first = "none";

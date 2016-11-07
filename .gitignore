@@ -1,5 +1,6 @@
 temp/
 src/web/App_Data/Cache/
+src/web/App_Data/smtpout/
 !/src/web/App_Data/Cache/.keep
 src/web/App_Data/logs/*.xml
 src/web/UserFiles/
