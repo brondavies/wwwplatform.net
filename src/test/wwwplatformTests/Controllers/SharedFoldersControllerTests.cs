@@ -46,11 +46,11 @@ namespace wwwplatformTests.Controllers
             string[] permissions = new string[] { usersRole_Id };
             var result = controller.Create(sharedFolder, permissions);
 
-            Assert.IsInstanceOfType(result.Result, typeof(RedirectToRouteResult));
+            Assert.IsInstanceOfType(result.Result, typeof(RedirectResult));
 
-            var viewResult = (RedirectToRouteResult)result.Result;
+            var viewResult = (RedirectResult)result.Result;
 
-            Assert.AreEqual("Index", viewResult.RouteValues["action"]);
+            Assert.IsTrue(viewResult.Url.Contains(sharedFolder.Slug));
         }
 
         [TestMethod]

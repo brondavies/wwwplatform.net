@@ -282,7 +282,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
 
         public static MvcHtmlString FormDropDown(this HtmlHelper html, FormDropDownOptions options, dynamic additionalViewData = null)
         {
-            return DropDownHelper(html, additionalViewData, options).ToMvcHtmlString();
+            return DropDownHelper(html, HtmlHelper.AnonymousObjectToHtmlAttributes(additionalViewData), options).ToMvcHtmlString();
         }
 
         private static BootstrapDropDown DropDownHelper(this HtmlHelper htmlHelper, IDictionary<string, object> htmlAttributes, FormDropDownOptions options)

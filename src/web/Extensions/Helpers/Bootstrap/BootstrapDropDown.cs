@@ -35,7 +35,7 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
                     _viewContext.Writer.Write(hidden.ToString(TagRenderMode.SelfClosing));
                 }
 
-                var toggle = new BootstrapButton(_viewContext, toggleAttributes) { Text = Convert.ToString(FieldValue) + " " };
+                var toggle = new BootstrapButton(_viewContext, toggleAttributes) { Text = GetValueText(FieldValue) + " " };
                 toggle.ClassName += " dropdown-toggle";
                 var caret = new BootstrapElement(_viewContext) { TagName = "span", ClassName = "caret" };
                 var menu = new BootstrapMenu(_viewContext, null) { Options = Options };
@@ -46,6 +46,22 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
                 return this;
             }
             return null;
+        }
+
+        private string GetValueText(object value)
+        {
+            string stringValue = Convert.ToString(value);
+            if (Options != null)
+            {
+                foreach (var option in Options)
+                {
+                    if (Convert.ToString(option.Value).Equals(stringValue))
+                    {
+                        return option.Text ?? stringValue;
+                    }
+                }
+            }
+            return stringValue;
         }
     }
 }
