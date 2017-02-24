@@ -27,7 +27,7 @@ namespace wwwplatform.Models.ViewModels
             UserName = user.UserName;
             //required but not used for edit
             ConfirmPassword =
-            Password = "**********";
+            Password = "V!Y@r#v$mrQLrcD0UGmUIPGy86sOhnNF";
             if (user.Id != null)
             {
                 permissions = user.Roles.Select(r => r.RoleId).ToArray();

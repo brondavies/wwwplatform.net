@@ -103,6 +103,7 @@ namespace wwwplatform.Controllers
                 var result = await UserManager.UpdateAsync(user);
                 if (result == IdentityResult.Success)
                 {
+                    ModelState.Clear();
                     SetSuccessMessage("User information for {0} was saved successfully!", user.FullName());
                     return RedirectToAction("Index");
                 }

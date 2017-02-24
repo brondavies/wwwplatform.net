@@ -318,7 +318,7 @@
                             var file = data.files[0];
                             var ids = data.files.map(function (f) { return f.Id; });
                             $('[data-role="file-id"]', modal).val(JSON.stringify(ids));
-                            $('[data-role="file-url"]', modal).val(file && '/Download/' + file.Id + '/' + file.Name);
+                            $('[data-role="file-url"]', modal).val(file && '/Downloads/' + file.Id + '/' + file.Name);
                             modal.modal('hide');
                         } else if (data && data.message) {
                             bootbox.alert(data.message);

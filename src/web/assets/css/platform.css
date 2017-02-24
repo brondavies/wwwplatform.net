@@ -465,3 +465,7 @@ table.dataTable .row-select {
 .dz-error-mark {
     display:none;
 }
+form[action="/AppSettings/Edit"] .btn-group.btn-group-xs label.btn {
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
