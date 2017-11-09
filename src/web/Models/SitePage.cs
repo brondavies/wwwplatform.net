@@ -8,6 +8,7 @@ using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 using System.ComponentModel.DataAnnotations.Schema;
+using wwwplatform.Extensions.Attributes;
 
 namespace wwwplatform.Models
 {
@@ -31,6 +32,7 @@ namespace wwwplatform.Models
         
         [MaxLength(150)]
         [DisplayName("Layout file")]
+        [FileExists]
         public string Layout { get; set; }
 
         [DataType(DataType.Html), UIHint("tinymce_jquery_full"), AllowHtml]

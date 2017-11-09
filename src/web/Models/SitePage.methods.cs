@@ -11,19 +11,16 @@ namespace wwwplatform.Models
     {
         internal void Update(SitePage sitePage, int? timeZoneOffset)
         {
-            Name = sitePage.Name;
             Description = sitePage.Description;
-            PubDate = sitePage.PubDate;
-            if (timeZoneOffset.HasValue)
-            {
-                PubDate = PubDate.FromTimezone(timeZoneOffset.Value);
-            }
+            HomePage = sitePage.HomePage;
             HTMLBody = sitePage.HTMLBody;
+            Layout = sitePage.Layout;
+            Name = sitePage.Name;
             Order = sitePage.Order;
             ParentPageId = sitePage.ParentPageId;
-            ShowInNavigation = sitePage.ShowInNavigation;
-            HomePage = sitePage.HomePage;
+            PubDate = (timeZoneOffset.HasValue) ? PubDate.FromTimezone(timeZoneOffset.Value) : sitePage.PubDate;
             RedirectUrl = sitePage.RedirectUrl;
+            ShowInNavigation = sitePage.ShowInNavigation;
         }
 
         public string AppRelativeUrl(HttpContextBase context = null)

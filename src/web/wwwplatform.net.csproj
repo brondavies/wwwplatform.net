@@ -30,6 +30,7 @@
     <IntermediateOutputPath>$(ProjectDir)..\temp</IntermediateOutputPath>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
+    <Use64BitIISExpress />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -223,6 +224,7 @@
     <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\SharedFoldersController.cs" />
     <Compile Include="Extensions\Attributes\ConfirmPasswordValidationAttribute.cs" />
+    <Compile Include="Extensions\Attributes\FileExistsAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordComplexityValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\PasswordLengthValidationAttribute.cs" />
     <Compile Include="Extensions\Attributes\SerializerAttribute.cs" />

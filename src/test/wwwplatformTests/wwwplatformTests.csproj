@@ -139,6 +139,7 @@
   <ItemGroup>
     <Compile Include="Controllers\AccountControllerTests.cs" />
     <Compile Include="Controllers\SharedFoldersControllerTests.cs" />
+    <Compile Include="Controllers\SitePagesControllerTests.cs" />
     <Compile Include="Controllers\WebFilesControllerTests.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapDropDownTests.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapElementTests.cs" />
