@@ -65,6 +65,7 @@ namespace wwwplatform.Models
             var settings = CacheHelper.GetFromCacheOrDefault<Settings>(Context, (value) =>
             {
                 string settingsFilename = GetSettingsFileName(Context);
+                bool saveFile = false;
                 try
                 {
                     var db = Context.GetOwinContext().Get<ApplicationDbContext>();
@@ -73,10 +74,11 @@ namespace wwwplatform.Models
                     {
                         value[item.Name] = item.Value;
                     }
+                    saveFile = true;
                 }
-                catch
+                catch(Exception e)
                 {
-                    if (File.Exists(settingsFilename))
+                    if (e.Source != "Microsoft.Owin.Host.SystemWeb" && File.Exists(settingsFilename))
                     {
                         var dictionary = JsonConvert.DeserializeObject<ObjectDictionary>(File.ReadAllText(settingsFilename));
                         foreach (var entry in dictionary)
@@ -85,7 +87,7 @@ namespace wwwplatform.Models
                         }
                     }
                 }
-                if (!File.Exists(settingsFilename))
+                if (saveFile || !File.Exists(settingsFilename))
                 {
                     try
                     {

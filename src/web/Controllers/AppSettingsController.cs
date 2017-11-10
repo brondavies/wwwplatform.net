@@ -31,7 +31,7 @@ namespace wwwplatform.Controllers
         public async Task<ActionResult> Edit(FormCollection form)
         {
             bool require_restart = false;
-            var settings = db.AppSettings.ToList();
+            var settings = await db.AppSettings.ToListAsync();
             foreach (var setting in settings)
             {
                 if (form.AllKeys.Contains(setting.Name))
