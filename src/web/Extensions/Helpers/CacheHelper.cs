@@ -38,9 +38,9 @@ namespace wwwplatform.Extensions.Helpers
             if (result == null)
             {
                 result = (T)Activator.CreateInstance(type, true);
-                constructor?.Invoke(result);
                 try
                 {
+                    constructor?.Invoke(result);
                     string cacheFilename = GetCacheFileName(HttpContext, key);
                     CacheDependency dependency = null;
                     if (File.Exists(cacheFilename))

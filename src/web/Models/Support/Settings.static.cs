@@ -68,7 +68,7 @@ namespace wwwplatform.Models
                 bool saveFile = false;
                 try
                 {
-                    var db = Context.GetOwinContext().Get<ApplicationDbContext>();
+                    ApplicationDbContext db = GetDBContext(Context);
                     var list = db.AppSettings.ToList();
                     foreach (var item in list)
                     {
@@ -76,7 +76,7 @@ namespace wwwplatform.Models
                     }
                     saveFile = true;
                 }
-                catch(Exception e)
+                catch (Exception e)
                 {
                     if (e.Source != "Microsoft.Owin.Host.SystemWeb" && File.Exists(settingsFilename))
                     {
@@ -85,6 +85,10 @@ namespace wwwplatform.Models
                         {
                             value[entry.Key] = entry.Value;
                         }
+                    }
+                    else
+                    {
+                        throw;
                     }
                 }
                 if (saveFile || !File.Exists(settingsFilename))
@@ -98,6 +102,16 @@ namespace wwwplatform.Models
             });
             settings.Context = Context;
             return settings;
+        }
+
+        private static ApplicationDbContext GetDBContext(HttpContextBase Context)
+        {
+            try
+            {
+                return Context.GetOwinContext().Get<ApplicationDbContext>();
+            }
+            catch { }
+            return ApplicationDbContext.Create();
         }
 
         internal static AppSetting[] GetDefaultSettings()

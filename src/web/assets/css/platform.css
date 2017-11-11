@@ -181,6 +181,9 @@ div.mce-panel {
       left: 12px;
     }
 }
+a.nav-btn-account {
+    padding-left: 0;
+}
 /*page-nav*/
 /*messages*/
 .h0 {
