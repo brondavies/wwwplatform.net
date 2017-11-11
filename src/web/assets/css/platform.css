@@ -440,8 +440,14 @@ table.dataTable .row-select {
     border: 2px dashed #666;
     /*margin: 15px;*/
 }
-.margin-center {
-    margin: 30%;
+.vertical-center {
+    position: relative;
+    top: 50%;
+    -moz-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    -o-transform: translateY(-50%);
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
 }
 .can-drag-and-drop{
     display:none;
