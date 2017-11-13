@@ -24,6 +24,7 @@ using ImageProcessor.Imaging.Formats;
 using System.Drawing;
 using ImageProcessor;
 using wwwplatform.Shared.Extensions.System;
+using System.Web.ModelBinding;
 
 namespace wwwplatform.Controllers
 {
@@ -34,9 +35,24 @@ namespace wwwplatform.Controllers
         private const string AllowedFields = "Id,Name,Description,DisplayDate,Location";
 
         // GET: WebFiles
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index([QueryString]string t = null)
         {
-            return Auto(await WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).ToListAsync());
+            var files = WebFile.GetAvailableFiles(db, User, UserManager, RoleManager);
+            if (!string.IsNullOrEmpty(t))
+            {
+                switch (t)
+                {
+                    case "image":
+                        t = FileType.Image.ToString();
+                        files = files.Where(f => f.Filetype == t);
+                        break;
+                    case "media":
+                        t = FileType.Video.ToString();
+                        files = files.Where(f => f.Filetype == t);
+                        break;
+                }
+            }
+            return Auto(await files.ToListAsync());
         }
 
         // GET: WebFiles/Details/5

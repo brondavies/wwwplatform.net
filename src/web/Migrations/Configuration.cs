@@ -33,6 +33,8 @@ namespace wwwplatform.Migrations
                 );
 
                 context.SaveChanges();
+
+                UpgradeWebFiles(context);
             }
             catch (Exception exception)
             {
@@ -45,7 +47,8 @@ namespace wwwplatform.Migrations
         {
             var RoleManager = DependencyResolver.Current.GetService<ApplicationRoleManager>();
             if (RoleManager == null && HttpContext.Current == null) return;
-            RoleManager = RoleManager ?? (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
+            if (RoleManager == null) return;
+            RoleManager = RoleManager ?? GetRoleManager();
             var results = Roles.CreateAll(RoleManager);
             foreach (var result in results)
             {
@@ -74,6 +77,34 @@ namespace wwwplatform.Migrations
                     AppliesToRole_Id = publicRole.Id
                 });
             }
+        }
+
+        private void UpgradeWebFiles(ApplicationDbContext context)
+        {
+            var skip = 0;
+            var take = 100;
+            var count = 0;
+            do
+            {
+                var files = context.ActiveWebFiles.Where(f => f.Filetype == null).OrderBy(f => f.Id).Skip(skip).Take(take).ToList();
+                foreach(var file in files)
+                {
+                    context.Entry(file).State = EntityState.Modified;
+                }
+                context.SaveChanges();
+                count = files.Count;
+                skip += take;
+            } while (count == take);
+        }
+
+        private ApplicationRoleManager GetRoleManager()
+        {
+            try
+            {
+                return (new HttpContextWrapper(HttpContext.Current)).GetOwinContext().Get<ApplicationRoleManager>();
+            }
+            catch { }
+            return null;
         }
 
         private void CreateMissing<TEntity>(ApplicationDbContext context, params TEntity[] entities) where TEntity : class

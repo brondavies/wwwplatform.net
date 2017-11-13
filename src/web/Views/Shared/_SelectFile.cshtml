@@ -59,14 +59,15 @@
                 var selectFileName = '@fieldName';
                 var dzInstalled = false;
                 var initialized = false;
+                var singleSelect = @singleSelect;
+                var datatable = null;
+                var cancelled = true;
                 $(window).bind('selectfile.show', function (event, options) {
                     var callback = options.callback;
                     var eventName = options.eventName;
                     var meta = options.meta;
-                    var singleSelect = @singleSelect;
-                    var datatable = null;
-                    var cancelled = true;
                     var triggerred = false;
+                    cancelled = true;
                     var modal = $('#SelectFile_' + selectFileName);
                     $('body').append(modal);
                     var renderDate = function (data, type, full, meta) {
@@ -99,6 +100,79 @@
                         }
                     }
 
+                    function setupDataTable() {
+                        datatable = $('table.file-list', modal).DataTable({
+                            columnDefs: [
+                                { targets: 0, title: '', data: 'Selected', orderable: false, render: renderCheckbox, width: '18px', className: 'row-select' },
+                                { targets: 1, title: '', data: 'Icon', orderable: false, render: renderIcon, width: '4px' },
+                                { targets: 2, title: 'Name', data: 'Name' },
+                                { targets: 3, title: 'Date', data: 'UpdatedAt', render: renderDate }
+                            ],
+                            data: [],
+                            info: false,
+                            language: {
+                                emptyTable: 'Uploaded files will be listed here.'
+                            },
+                            order: [[3, 'desc']],
+                            paging: true, //files.length > 10,
+                            retrieve: true
+                        });
+                        if (!singleSelect) {
+                            $(datatable.column(0).header()).html('<i class="fa fa-square-o fa-lg"></i>')
+                                .click(function () {
+                                    var selected = datatable.rows('.selected').count();
+                                    setRangeSelected(0, datatable.rows().count() - 1, !selected);
+                                });
+                        }
+                        function setRangeSelected(from, to, selected) {
+                            for (var i = from; i <= to; i++) {
+                                row = datatable.row(datatable.rows().nodes()[i]);
+                                row.data().Selected = selected;
+                                if (selected) {
+                                    $(row.node()).addClass('selected');
+                                } else {
+                                    $(row.node()).removeClass('selected');
+                                }
+                                row.invalidate();
+                            }
+                            var $h = $(datatable.column(0).header());
+                            var selectedCount = datatable.rows('.selected').count();
+                            if (selectedCount) {
+                                var selectedAll = datatable.rows().count() === selectedCount;
+                                $h.html(selectedAll
+                                    ? '<i class="fa fa-check-square-o fa-lg"></i>'
+                                    : '<i class="fa fa-square fa-lg"></i>');
+                            } else {
+                                $h.html('<i class="fa fa-square-o fa-lg"></i>');
+                            }
+                        }
+                        var lastClickedRow = null;
+                        $('table.file-list', modal).on('click', 'tbody>tr', function (event) {
+                            var row = datatable.row(this);
+                            var data = row.data();
+                            if (!singleSelect) {
+                                var selected = !data.Selected;
+                                var rowIndex = datatable.rows().nodes().indexOf(this);
+                                var from = rowIndex;
+                                var to = rowIndex;
+                                if (lastClickedRow != null && event.shiftKey) {
+                                    event.preventDefault();
+                                    event.stopPropagation();
+                                    from = Math.min(rowIndex, lastClickedRow);
+                                    to = Math.max(rowIndex, lastClickedRow);
+                                }
+                                setRangeSelected(from, to, selected);
+                                lastClickedRow = rowIndex;
+                            } else {
+                                var id = data.Id;
+                                $('[data-role="file-id"]', modal).val(id);
+                                $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);
+                                cancelled = false;
+                                modal.modal('hide');
+                            }
+                        });
+                    }
+
                     function setupDropZone() {
                         if (Dropzone) {
                             function dz_issue_438(uploader) {
@@ -129,7 +203,7 @@
                             }
                             modal.addClass('dropzone-enabled');
                             var filedropzone = new Dropzone('#SelectFile_' + selectFileName, {
-                                clickable: $('<i>')[0], 
+                                clickable: $('<i>')[0],
                                 dragenter: function () {},
                                 dragleave: function () {},
                                 init: function () { dz_issue_438(this); },
@@ -171,85 +245,21 @@
                         .one('shown.bs.modal', function (e) {
                             $('[data-role="file-id"]', modal).val('');
                             $('[data-role="file-url"]', modal).val('');
-                            if (initialized){ return; }
+                            var query = meta && meta.filetype ? '?t=' + meta.filetype : '';
+                            $.getJSON('@Url.Action("Index", "WebFiles")' + query, function (files) {
+                                // files = [{Id:, Name:, Preview:, Icon:, Location:, UpdatedAt:}]
+                                files.every(function (f) { return !(f.Selected = false); });
+                                datatable.rows().remove();
+                                datatable.rows.add(files).draw();
+                            });
+
+                            if (initialized) { return; }
                             initialized = true;
-                            
+
+                            setupDataTable();
+
                             setupDropZone();
 
-                            $.getJSON('@Url.Action("Index", "WebFiles")', function (files) {
-                                // files = [{Id:, Name:, Preview:, Location:, UpdatedAt:}]
-                                files.every(function (f) { return !(f.Selected = false); });
-                                datatable = $('table.file-list', modal).DataTable({
-                                    columnDefs: [
-                                        { targets: 0, title: '', data: 'Selected', orderable: false, render: renderCheckbox, width: '18px', className: 'row-select' },
-                                        { targets: 1, title: '', data: 'Icon', orderable: false, render: renderIcon, width: '4px' },
-                                        { targets: 2, title: 'Name', data: 'Name' },
-                                        { targets: 3, title: 'Date', data: 'UpdatedAt', render: renderDate }
-                                    ],
-                                    data: files,
-                                    info: false,
-                                    language: {
-                                        emptyTable: 'Uploaded files will be listed here.'
-                                    },
-                                    order: [[3, 'desc']],
-                                    paging: files.length > 10,
-                                    retrieve: true
-                                });
-                                if (!singleSelect) {
-                                    $(datatable.column(0).header()).html('<i class="fa fa-square-o fa-lg"></i>')
-                                        .click(function() {
-                                            var selected = datatable.rows('.selected').count();
-                                            setRangeSelected(0, datatable.rows().count() - 1, !selected);
-                                        });
-                                }
-                                function setRangeSelected(from, to, selected) {
-                                    for (var i = from; i <= to; i++) {
-                                        row = datatable.row(datatable.rows().nodes()[i]);
-                                        row.data().Selected = selected;
-                                        if (selected) {
-                                            $(row.node()).addClass('selected');
-                                        } else {
-                                            $(row.node()).removeClass('selected');
-                                        }
-                                        row.invalidate();
-                                    }
-                                    var $h = $(datatable.column(0).header());
-                                    var selectedCount = datatable.rows('.selected').count();
-                                    if (selectedCount) {
-                                        var selectedAll = datatable.rows().count() === selectedCount;
-                                        $h.html(selectedAll 
-                                            ? '<i class="fa fa-check-square-o fa-lg"></i>'
-                                            : '<i class="fa fa-square fa-lg"></i>');
-                                    } else {
-                                        $h.html('<i class="fa fa-square-o fa-lg"></i>');
-                                    }
-                                }
-                                var lastClickedRow = null;
-                                $('table.file-list', modal).on('click', 'tbody>tr', function (event) {
-                                    var row = datatable.row(this);
-                                    var data = row.data();
-                                    if (!singleSelect) {
-                                        var selected = !data.Selected;
-                                        var rowIndex = datatable.rows().nodes().indexOf(this);
-                                        var from = rowIndex;
-                                        var to = rowIndex;
-                                        if (lastClickedRow != null && event.shiftKey) {
-                                            event.preventDefault();
-                                            event.stopPropagation();
-                                            from = Math.min(rowIndex, lastClickedRow);
-                                            to = Math.max(rowIndex, lastClickedRow);
-                                        }
-                                        setRangeSelected(from, to, selected);
-                                        lastClickedRow = rowIndex;
-                                    } else {
-                                        var id = data.Id;
-                                        $('[data-role="file-id"]', modal).val(id);
-                                        $('[data-role="file-url"]', modal).val('/WebFiles/Details/' + id);
-                                        cancelled = false;
-                                        modal.modal('hide');
-                                    }
-                                });
-                            });
                             $('[data-role=submit]', modal).click(function(event) {
                                 cancelled = false;
                             });
@@ -286,7 +296,7 @@
                                 }
                             });
                         })
-                        .on('hidden.bs.modal', function (e) {
+                        .one('hidden.bs.modal', function (e) {
                             // file selected?
                             if (cancelled) {
                                 $('form', modal)[0].reset();
@@ -298,13 +308,13 @@
                                     if (rows.indexes().length) {
                                         id = [];
                                         rows.data().each(function(d) {
-                                            id.push(d.Id); 
+                                            id.push(d.Id);
                                             return true;
                                         });
                                         id = JSON.stringify(id);
                                     }
                                 }
-                            
+
                                 if (url || id) {
                                     var result = { id: id, url: url, alt: '' };
                                     callback && callback(url, result);
@@ -329,6 +339,8 @@
                         modal.modal('hide');
                         if (data && data.message) {
                             bootbox.alert(data.message);
+                        } else {
+                            // debug: bootbox.alert('An unexpected error occurred during the upload.');
                         }
                         $('.js-uploader').removeClass('uploading');
                     });

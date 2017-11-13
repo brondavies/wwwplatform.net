@@ -34,12 +34,22 @@ namespace wwwplatform.Models
             var httpcontext = GetHttpContext();
             if (httpcontext != null)
             {
-                var owincontext = httpcontext.GetOwinContext();
+                var owincontext = GetOwinContext(httpcontext);
                 if (owincontext != null)
                 {
                     return owincontext.Request.User;
                 }
             }
+            return null;
+        }
+
+        private static Microsoft.Owin.IOwinContext GetOwinContext(HttpContextBase httpcontext)
+        {
+            try
+            {
+                return httpcontext.GetOwinContext();
+            }
+            catch { }
             return null;
         }
 

@@ -9,6 +9,8 @@ namespace wwwplatform.Models
     [Table(name: "WebFile")]
     public partial class WebFile : Auditable, Permissible
     {
+        private string _filetype;
+
         [Required]
         public string Name { get; set; }
 
@@ -22,6 +24,8 @@ namespace wwwplatform.Models
 
         [DisplayName("Display Date")]
         public DateTime? DisplayDate { get; set; }
+
+        public string Filetype { get { return _filetype ?? GetFileType().ToString(); } set { _filetype = value; } }
 
         public virtual ICollection<Permission> Permissions { get; set; }
     }
