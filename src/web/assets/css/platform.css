@@ -348,9 +348,16 @@ table.dataTable .row-select {
     text-align: right;
   }
 }
-
-.js-uploader.uploading form {
-    visibility: hidden;
+div.dataTables_wrapper table>tbody>tr>td {
+    padding-right: 0;
+}
+table.dataTable thead>tr>th.sorting_asc,
+table.dataTable thead>tr>th.sorting_desc,
+table.dataTable thead>tr>th.sorting,
+table.dataTable thead>tr>td.sorting_asc,
+table.dataTable thead>tr>td.sorting_desc,
+table.dataTable thead>tr>td.sorting {
+    padding-right: 25px;
 }
 .js-uploader .progress {
     display:none;
