@@ -76,9 +76,9 @@ namespace wwwplatform.Models
                     }
                     saveFile = true;
                 }
-                catch (Exception e)
+                catch
                 {
-                    if (e.Source != "Microsoft.Owin.Host.SystemWeb" && File.Exists(settingsFilename))
+                    if (File.Exists(settingsFilename))
                     {
                         var dictionary = JsonConvert.DeserializeObject<ObjectDictionary>(File.ReadAllText(settingsFilename));
                         foreach (var entry in dictionary)
