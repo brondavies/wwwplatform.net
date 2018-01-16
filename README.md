@@ -21,7 +21,7 @@ git clone ssh://git@github.com/brondavies/wwwplatform.net.git
 ```
 
 ## Setup
-wwwplatform&#46;net uses ASP.NET MVC and Entity Framework along with many other third-party components and packages.  You should be familiar with these technologies before continuing
+wwwplatform&#46;net uses [ASP.NET MVC](https://www.asp.net/mvc) and [Entity Framework](https://docs.microsoft.com/en-us/ef/) along with many other third-party components and packages.  You should be familiar with these technologies before continuing
 
 ### Name Your Project
 At this point you may want to rename the solution file to `yourproject.sln` so you can more easily identify which project it is if you have more than one project based on wwwplatform. You can safely check this in and still merge updates from the base repo.  You should **not** rename the .csproj files as this will make it more difficult to merge in updates from the base repo.
@@ -32,7 +32,7 @@ The default database connection string "DefaultConnection" is set in the web&#46
 **Note:** I recommend editing the Web.Debug.config file for local debugging changes or Web.Release.config for production changes so that merging changes to Web.config from the original repo is easier.
 
 ### First Admin User
-When you run the app for the first time, the database will be initialized with [Entity Framework](https://docs.microsoft.com/en-us/ef/) auto-migrations. (more info on migrations below) You will be presented with the default home page. However, there are no default admin users or any other built-in users.  Instead, navigate to http://localhost:53812/Account/Register and create an account. ***The first account you create will become an Administrator automatically.*** Subsequent accounts will be created as members of the Users role.
+When you run the app for the first time, the database will be initialized with Entity Framework auto-migrations. (more info on migrations below) You will be presented with the default home page. However, there are no default admin users or any other built-in users.  Instead, navigate to http://localhost:53812/Account/Register and create an account. ***The first account you create will become an Administrator automatically.*** Subsequent accounts will be created as members of the Users role.
 
 ## Deploy
 You can choose any method for deploying your app that you like (File system, FTP, WebDeploy, Azure, etc.) These methods will all behave the same upon first start up.  The default behavior is to use auto-migrations to create the database schema but you must have a connection string pointing to an existing database (preferrably one that is empty). On subsequent updates to your deployed site, you should **not** opt to delete existing files in the target because you may have files uploaded in the UserFiles directory.
