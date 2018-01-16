@@ -62,7 +62,7 @@ namespace wwwplatform.Models
 
         public string SiteOwner { get { return GetValue(kSiteOwner, GetConfig(kSiteOwner)); } }
 
-        public string SkinDefinitionFile { get { return GetValue(kSkinDefinitionFile, GetConfig(kSkinDefinitionFile)); } }
+        public string SkinDefinitionFile { get { return GetValue(kSkinDefinitionFile, DefaultSkinDefinitionFile); } }
 
         public string TempDir { get { return GetValue(kTempDir, DefaultTempDir); } }
 

@@ -55,6 +55,8 @@ namespace wwwplatform.Models
 
         static string DefaultUserFilesDir { get { return GetConfig(kUserFilesDir) ?? "~/UserFiles".ResolveLocalPath(); } }
 
+        static string DefaultSkinDefinitionFile { get { return GetConfig(kSkinDefinitionFile) ?? "~/App_Data/Skins/Default/skin.json"; } }
+
         public static string GetSettingsFileName(HttpContextBase Context)
         {
             return CacheHelper.GetCacheFileName<Settings>(Context);

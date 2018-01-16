@@ -72,7 +72,6 @@ namespace wwwplatform.Controllers
                                 {
                                     SkinDefinition skindef = SkinDefinition.Load(HttpContext.Server.MapPath(normalizedValue));
                                     settings.Find(s => s.Name == Settings.kDefaultPageLayout).Value = skindef.layout;
-                                    require_restart = true;
                                 }
                                 catch
                                 {
@@ -81,7 +80,7 @@ namespace wwwplatform.Controllers
                                 }
                             }
                         }
-                        if (setting.Name == Settings.kCreatePDFVersionsOfDocuments && setting.Value == bool.TrueString)
+                        if (setting.Name == Settings.kCreatePDFVersionsOfDocuments && normalizedValue == bool.TrueString)
                         {
                             if (!System.IO.File.Exists(Settings.ConvertPdfExe))
                             {
@@ -104,6 +103,10 @@ namespace wwwplatform.Controllers
                             }
                         }
                     }
+                    if (setting.Name == Settings.kSkinDefinitionFile && setting.Value != normalizedValue)
+                    {
+                        require_restart = true;
+                    }
                     setting.Value = normalizedValue;
                     db.Entry(setting).State = EntityState.Modified;
                 }
@@ -115,7 +118,7 @@ namespace wwwplatform.Controllers
 
             if (require_restart)
             {
-                System.Web.Hosting.HostingEnvironment.InitiateShutdown();
+                HttpRuntime.UnloadAppDomain();
             }
 
             return RedirectToAction("Index");

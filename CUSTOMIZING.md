@@ -1,5 +1,14 @@
 # Customizing
 wwwplatform&#46;net is designed to be extended and customized while using generally accepted standard tools and components.
+- [Customizing](#customizing)
+    - [Database Schema](#database-schema)
+        - [Custom Models](#custom-models)
+        - [Auditable Models](#auditable-models)
+        - [Permissible Models](#permissible-models)
+        - [Migrations](#migrations)
+    - [Views Layouts, and Skins](#views-layouts-and-skins)
+        - [Custom Skins](#custom-skins)
+        - [Custom Layouts](#custom-layouts)
 
 ## Database Schema
 wwwplatform&#46;net uses [Entity Framework](https://docs.microsoft.com/en-us/ef/) (EF) to abstract the database layer into code.
@@ -51,3 +60,28 @@ modelBuilder.Entity<ModelName>()
     .WithOptional()
     .WillCascadeOnDelete(false);
 ```
+
+### Migrations
+You may have noticed that wwwplatform&#46;net does not have any of its own migrations.
+This is so that the developer can control how migrations are applied.
+By default the migration method is to auto-create migrations on the fly, meaning whatever changed in ApplicationDbContext will be applied on next startup.
+While this makes it easy to do development, it can make database updates unpredictable and difficult to manage.
+I recommend disabling auto-migrate and creating your migrations when you first create the project and any time you merge updates from the original repo.
+
+## Views Layouts, and Skins
+"Out of the box", wwwplatform&#46;net implements a fairly basic [Bootstrap 3](https://getbootstrap.com/docs/3.3/) based UI.  For simple pages, this will probably be enough. But adding your own styling is fairly easy.  You can start with adding your own controllers and views and of course editing the existing cshtml files.
+
+### Custom Skins
+One way to change the look of the entire site is with the use of skins.
+Open up [src/web/App_Data/Skins/Default/skin.json](src/web/App_Data/Skins/Default/skin.json).
+You can copy this file and edit it to create your custom skin.
+There are three attributes for `scripts`, `css`, and `layout`.
+Under `scripts` you will notice an asset group for `"~/scripts/modernizr"` and `"~/scripts/substance"`. These are rendered and minified by the asset pipeline in Views/Shared/_Layout.cshtml (the default layout). By including asset groups of scripts and css in your custom skin, you can apply different layouts, behaviors and styling to individual pages or change the way default pages look and function.
+
+The `layout` attribute can be set to a custom layout or left `null` to use the default layout file. The syntax for the layout file location is `~/Views/Shared/_Layout.cshtml` (the default). You can also change the default layout page by setting the "Default Page Layout" value on the settings page so that you don't have to create an entirely different skin.
+
+Only one skin can be active at a time. To change the skin that is used for the site, set the "Skin Definition File" value on the settings page. Changing the "Skin Definition File" value will restart the web app to reload all bundles.
+
+### Custom Layouts
+The default layout will be used for all of the built-in pages such as login, registration, site page editor, mailing lists, etc. unless you edit those views manually.
+For all other pages and views you can set a custom layout individually.

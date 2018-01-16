@@ -37,9 +37,9 @@ namespace wwwplatform.Extensions.Helpers
             catch { }
             if (result == null)
             {
-                result = (T)Activator.CreateInstance(type, true);
                 try
                 {
+                    result = (T)Activator.CreateInstance(type, true);
                     constructor?.Invoke(result);
                     string cacheFilename = GetCacheFileName(HttpContext, key);
                     CacheDependency dependency = null;
@@ -47,11 +47,16 @@ namespace wwwplatform.Extensions.Helpers
                     {
                         dependency = new CacheDependency(cacheFilename);
                     }
-                    HttpContext.Cache.Add(key, result, dependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
+                    PutCache(HttpContext, key, result, dependency);
                 }
                 catch { }
             }
             return result;
+        }
+        
+        internal static void PutCache(HttpContextBase HttpContext, string key, object value, CacheDependency dependency = null)
+        {
+            HttpContext.Cache.Add(key, value, dependency, Cache.NoAbsoluteExpiration, Cache.NoSlidingExpiration, CacheItemPriority.Default, null);
         }
 
         internal static string GetCacheFileName<T>(HttpContextBase Context)
