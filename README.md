@@ -40,10 +40,10 @@ You can choose any method for deploying your app that you like (File system, FTP
 **Note:** Remember that Visual Studio will not deploy files in your project directory that are not associated to the project in wwwplatform.net.csproj
 
 ### Database Migrations
-Every time the app starts up, the database will be checked for consistency with the model and auto-migrations applied. You can disable this behavior by setting the value of `AutoMigrateDatabaseToLatestVersion` in web&#46;config to `False`. If you do, you will have to run the migrations manually or as part of the deployment. For custom build and deployment environments, the utility `migrate.exe` is provided to enable running migrations as part of a script.  Simply call `bin\migrate.exe` from your deployment script.  You can optionally pass a connection string to `migrate.exe` *See [Migrate.cs](src/migrate/Migrate.cs)*.
+Every time the app starts up, the database will be checked for consistency with the model and auto-migrations applied. You can disable this behavior by setting the value of `AutoMigrateDatabaseToLatestVersion` in web&#46;config to `False`. If you do, you will have to run the migrations manually or as part of the deployment. For custom build and deployment environments, the utility `migrate.exe` is provided to enable running migrations as part of a script.  Simply call `bin\migrate.exe` from your deployment script and it will read the web&#46;config for the connection string.  You can also optionally pass a connection string to `migrate.exe` *See [Migrate.cs](src/migrate/Migrate.cs)*.
 
 ### App Settings
-The page at `/AppSettings` allows changes to basic site settings which are stored in the database.  Most of these are self-explanatory but others can actually cause your site to stop loading if not set correctly.  Here's a [quick reference](appsettings.md).
+The page at `/AppSettings` allows changes to basic site settings which are stored in the database.  Most of these are self-explanatory but others can actually cause your site to stop loading if not set correctly.  Here's a [quick reference](APPSETTINGS.md).
 
 ## Customization
 For in-depth documentation on customizing and developing new functionality in wwwplatform&#46;net, read [CUSTOMIZING.MD](CUSTOMIZING.MD)
