@@ -100,7 +100,7 @@ namespace wwwplatform.Controllers.Tests
             controller.RoleManager = CreateRoleManager();
             controller.UserManager = MockApplicationUserManager();
             controller.SignInManager = MockApplicationSignInManager();
-            Roles.CreateAll(controller.RoleManager);
+            Roles.CreateAll(db, controller.RoleManager);
             
             var model = new RegisterViewModel
             {

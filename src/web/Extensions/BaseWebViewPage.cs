@@ -172,7 +172,7 @@ namespace wwwplatform.Extensions
 
         public bool SharedFoldersLinkIsAvailable()
         {
-            return Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id)
+            return (PublicRole != null && Settings.SharedFoldersRootPermissions.Contains(PublicRole.Id))
                 || UserInAnyRole(Settings.SharedFoldersRootPermissions.Split(','));
         }
 

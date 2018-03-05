@@ -46,10 +46,8 @@ namespace wwwplatform.Migrations
         private void CreateDefaultContent(ApplicationDbContext context)
         {
             var RoleManager = DependencyResolver.Current.GetService<ApplicationRoleManager>();
-            if (RoleManager == null && HttpContext.Current == null) return;
-            if (RoleManager == null) return;
             RoleManager = RoleManager ?? GetRoleManager();
-            var results = Roles.CreateAll(RoleManager);
+            var results = Roles.CreateAll(context, RoleManager);
             foreach (var result in results)
             {
                 if (result != null)
@@ -60,7 +58,7 @@ namespace wwwplatform.Migrations
 
             if (!context.SitePages.Where(p => p.HomePage).Any())
             {
-                var publicRole = RoleManager.Roles.Where(r => r.Name == Roles.Public).First();
+                var publicRole = RoleManager?.Roles.Where(r => r.Name == Roles.Public).First();
                 var homepage = context.SitePages.Add(new SitePage
                 {
                     Description = "Default Home Page",
@@ -71,11 +69,14 @@ namespace wwwplatform.Migrations
                     PubDate = DateTime.UtcNow
                 });
                 homepage.Permissions = new List<Permission>();
-                homepage.Permissions.Add(new Permission
+                if (publicRole != null)
                 {
-                    Grant = true,
-                    AppliesToRole_Id = publicRole.Id
-                });
+                    homepage.Permissions.Add(new Permission
+                    {
+                        Grant = true,
+                        AppliesToRole_Id = publicRole.Id
+                    });
+                }
             }
         }
 

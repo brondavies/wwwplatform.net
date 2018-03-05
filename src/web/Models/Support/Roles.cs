@@ -17,19 +17,42 @@ namespace wwwplatform.Models
         public const string Users = "Users";
         public const string Public = "Public";
 
-        public static IEnumerable<IdentityResult> CreateAll(ApplicationRoleManager RoleManager)
+        public static IEnumerable<IdentityResult> CreateAll(ApplicationDbContext context, ApplicationRoleManager roleManager)
         {
-            if (RoleManager.RoleExists("ListManagers"))
+            if (roleManager != null && roleManager.RoleExists("ListManagers"))
             {
-                RoleManager.Delete(RoleManager.Roles.First(r => r.Name == "ListManagers"));
+                roleManager.Delete(roleManager.Roles.First(r => r.Name == "ListManagers"));
             }
-                return new IdentityResult[] {
-                CreateRole(Roles.Administrators, RoleManager),
-                CreateRole(Roles.Editors, RoleManager),
-                CreateRole(Roles.ListManagers, RoleManager),
-                CreateRole(Roles.Public, RoleManager),
-                CreateRole(Roles.Users, RoleManager)
-            };
+            return CreateAll(context, roleManager, Administrators, Editors, ListManagers, Users, Public);
+        }
+
+        private static IEnumerable<IdentityResult> CreateAll(ApplicationDbContext context, ApplicationRoleManager roleManager, params string[] roles)
+        {
+            IdentityResult[] created = new IdentityResult[roles.Length];
+            int index = 0;
+            foreach (var role in roles)
+            {
+                created[index] = (roleManager != null) ? CreateRole(role, roleManager) : CreateRole(role, context);
+                index++;
+            }
+            return created;
+        }
+
+        private static IdentityResult CreateRole(string role, ApplicationDbContext context)
+        {
+            try
+            {
+                string roleId = context.Database.SqlQuery<string>("SELECT Id FROM dbo.AspNetRoles WHERE Name=@p0", role).FirstOrDefault();
+                if (string.IsNullOrEmpty(roleId))
+                {
+                    context.Database.ExecuteSqlCommand("INSERT dbo.AspNetRoles (Id, Name) VALUES (@p0, @p1)", Guid.NewGuid().ToString(), role);
+                }
+            }
+            catch (Exception e)
+            {
+                return new IdentityResult(e.Message);
+            }
+            return null;
         }
 
         private static IdentityResult CreateRole(string roleName, ApplicationRoleManager RoleManager)
@@ -59,7 +82,7 @@ namespace wwwplatform.Models
             if (!User.Identity.IsAuthenticated) { return false; }
             if (User.IsInRole(Roles.Administrators)) { return true; }
             var userRoles = RoleManager.Roles.Where(r => roleIds.Contains(r.Id)).ToList();
-            foreach(var r in userRoles)
+            foreach (var r in userRoles)
             {
                 if (User.IsInRole(r.Name)) return true;
             }

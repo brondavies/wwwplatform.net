@@ -91,7 +91,7 @@ namespace wwwplatform.Controllers.Tests
         protected ApplicationRoleManager CreateRoleManager()
         {
             var rolemanager = new ApplicationRoleManager(new RoleStore<IdentityRole>(db));
-            Roles.CreateAll(rolemanager);
+            Roles.CreateAll(db, rolemanager);
             return rolemanager;
         }
 

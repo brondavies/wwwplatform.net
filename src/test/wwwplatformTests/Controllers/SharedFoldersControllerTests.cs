@@ -69,7 +69,7 @@ namespace wwwplatformTests.Controllers
             var usersRole = controller.RoleManager.FindByNameAsync(Roles.Users);
             usersRole.Wait();
             var usersRole_Id = usersRole.Result.Id;
-            controller.Settings.Add("SharedFoldersRootPermissions", usersRole_Id);
+            controller.Settings["SharedFoldersRootPermissions"] = usersRole_Id;
 
             var webFile = db.WebFiles.Add(new WebFile
             {

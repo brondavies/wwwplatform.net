@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Extensions;
+using wwwplatform.Models;
 
 namespace wwwplatform.Controllers
 {
@@ -22,6 +23,12 @@ namespace wwwplatform.Controllers
         public ActionResult Setup()
         {
             return View();
+        }
+
+        public ActionResult Upgrade()
+        {
+            ApplicationDbContext.Upgrade();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Uninstall()

@@ -13,7 +13,7 @@ namespace wwwplatform.Models
         internal static IQueryable<T> GetPermissible<T>(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager)
             where T : Auditable, Permissible
         {
-            var publicRoleId = RoleManager.FindByName(Roles.Public).Id;
+            var publicRoleId = RoleManager.FindByName(Roles.Public)?.Id;
             var items = (IQueryable<T>)db.Active<T>();
             if (User.Identity.IsAuthenticated)
             {
