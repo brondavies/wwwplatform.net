@@ -42,10 +42,11 @@ namespace wwwplatform.Models
         {
             try
             {
-                string roleId = context.Database.SqlQuery<string>("SELECT Id FROM dbo.AspNetRoles WHERE Name=@p0", role).FirstOrDefault();
-                if (string.IsNullOrEmpty(roleId))
+                IdentityRole existing = context.Roles.Where(r => r.Name == role).FirstOrDefault();
+                if (existing == null)
                 {
-                    context.Database.ExecuteSqlCommand("INSERT dbo.AspNetRoles (Id, Name) VALUES (@p0, @p1)", Guid.NewGuid().ToString(), role);
+                    context.Roles.Add(new IdentityRole { Id = Guid.NewGuid().ToString(), Name = role });
+                    context.SaveChanges();
                 }
             }
             catch (Exception e)
