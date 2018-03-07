@@ -8,6 +8,6 @@
         public string eventName;
         public string className;
         public string dialogTitle;
-        public bool showExisting;
+        public bool showExisting = true;
     }
 }
