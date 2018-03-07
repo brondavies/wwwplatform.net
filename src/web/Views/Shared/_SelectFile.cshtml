@@ -4,6 +4,8 @@
     var fieldName = Model.name;
     var singleSelect = Model.singleSelect ? "true" : "false";
     var multiple = Model.singleSelect ? "" : "multiple";
+    var showExisting = Model.showExisting ? "true" : "false";
+    var dialogTitle = Model.dialogTitle ?? "Select or Upload File";
 }
 @using (Html.BeginScriptContext())
 {
@@ -13,11 +15,12 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title">Select or Upload File</h4>
+                        <h4 class="modal-title">@dialogTitle</h4>
                     </div>
                     <div class="modal-body">
                         <input type="hidden" data-role="file-url" />
                         <input type="hidden" data-role="file-id" />
+                        @if (Model.showExisting) {
                         <div class="file-table">
                             <table class="table table-striped clickable file-list">
                                 <thead>
@@ -25,6 +28,7 @@
                                 <tbody></tbody>
                             </table>
                         </div>
+                        }
                         <div class="js-uploader">
                             <iframe id="iframe_@fieldName" name="iframe_@fieldName" class="hidden"></iframe>
                             <form action="~/WebFiles/Create" method="post" enctype="multipart/form-data" target="iframe_@fieldName">
@@ -60,6 +64,7 @@
                 var dzInstalled = false;
                 var initialized = false;
                 var singleSelect = @singleSelect;
+                var showDatatable = @showExisting;
                 var datatable = null;
                 var cancelled = true;
                 $(window).bind('selectfile.show', function (event, options) {
@@ -246,17 +251,21 @@
                             $('[data-role="file-id"]', modal).val('');
                             $('[data-role="file-url"]', modal).val('');
                             var query = meta && meta.filetype ? '?t=' + meta.filetype : '';
-                            $.getJSON('@Url.Action("Index", "WebFiles")' + query, function (files) {
-                                // files = [{Id:, Name:, Preview:, Icon:, Location:, UpdatedAt:}]
-                                files.every(function (f) { return !(f.Selected = false); });
-                                datatable.rows().remove();
-                                datatable.rows.add(files).draw();
-                            });
+                            if (showDatatable) {
+                                $.getJSON('@Url.Action("Index", "WebFiles")' + query, function (files) {
+                                    // files = [{Id:, Name:, Preview:, Icon:, Location:, UpdatedAt:}]
+                                    files.every(function (f) { return !(f.Selected = false); });
+                                    datatable.rows().remove();
+                                    datatable.rows.add(files).draw();
+                                });
+                            }
 
                             if (initialized) { return; }
                             initialized = true;
 
-                            setupDataTable();
+                            if (showDatatable) {
+                                setupDataTable();
+                            }
 
                             setupDropZone();
 

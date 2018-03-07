@@ -7,5 +7,7 @@
         public string text;
         public string eventName;
         public string className;
+        public string dialogTitle;
+        public bool showExisting;
     }
 }
