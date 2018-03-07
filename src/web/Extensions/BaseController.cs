@@ -1,25 +1,17 @@
 ﻿using System;
-using System.Globalization;
 using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
-using Microsoft.Owin.Security;
 using wwwplatform.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
-using System.Data.Entity;
-using System.Net;
 using System.Collections.Generic;
-using System.Collections.Specialized;
 using System.Web.Routing;
-using wwwplatform.Models.Serializers;
 using Newtonsoft.Json;
-using System.Web.Caching;
 using Newtonsoft.Json.Serialization;
 using wwwplatform.Extensions.Helpers;
+using System.Data.Entity.Validation;
 
 namespace wwwplatform.Extensions
 {
@@ -206,6 +198,14 @@ namespace wwwplatform.Extensions
             while (exception != null && !string.IsNullOrEmpty(exception.Message))
             {
                 list.Add(exception.Message);
+                if (exception is DbEntityValidationException)
+                {
+                    var validationException = (DbEntityValidationException)exception;
+                    foreach (var e in validationException.EntityValidationErrors)
+                    {
+                        list.AddRange(e.ValidationErrors.Select(ve => $"{ve.PropertyName}: {ve.ErrorMessage}"));
+                    }
+                }
                 exception = exception.InnerException;
             }
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
@@ -246,6 +246,15 @@ namespace wwwplatform.Extensions
             {
                 var errors = ErrorsFromModelState(ModelState);
                 SetFailureMessage(errors);
+            }
+        }
+        
+        protected override void OnException(ExceptionContext filterContext)
+        {
+            base.OnException(filterContext);
+            if (!filterContext.ExceptionHandled)
+            {
+                Logging.Log.Error(ErrorsFromException(filterContext.Exception));
             }
         }
 

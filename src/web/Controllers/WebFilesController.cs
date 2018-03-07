@@ -121,92 +121,100 @@ namespace wwwplatform.Controllers
             };
             try
             {
-                if (Request.Files.Count > 0)
+                var uploadRoles = Settings.RolesWithUploadPermission.Split(',');
+                if (Roles.UserInAnyRole(User, RoleManager, uploadRoles))
                 {
-                    string defaultRoleSetting = Settings.DefaultUploadPermissions;
-                    string[] defaultRoles;
-                    if (!string.IsNullOrEmpty(defaultRoleSetting))
+                    if (Request.Files.Count > 0)
                     {
-                        defaultRoles = defaultRoleSetting.Split(',');
-                    }
-                    else
-                    {
-                        defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
-                    }
-
-                    int fileCount = Request.Files.Count;
-                    for (int i = 0; i < fileCount; i++)
-                    {
-                        HttpPostedFileBase uploadedFile = Request.Files[i];
-
-                        if (uploadedFile != null && uploadedFile.ContentLength > 0)
+                        string defaultRoleSetting = Settings.DefaultUploadPermissions;
+                        string[] defaultRoles;
+                        if (!string.IsNullOrEmpty(defaultRoleSetting))
                         {
-                            WebFile file = null;
-                            ModelState["Name"]?.Errors?.Clear();
-                            if (ImageHelper.IsImageFile(uploadedFile))
-                            {
-                                file = UploadFile(uploadedFile, results, db, HttpContext, Settings);
-                            }
-                            else
-                            if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
-                            {
-                                file = UploadVideoOrAudio(uploadedFile, results);
-                            }
-                            else
-                            if (DocumentHelper.IsDocumentFile(uploadedFile))
-                            {
-                                file = UploadDocument(uploadedFile, results);
-                            }
-                            else
-                            {
-                                results.status = UploadResults.Failed;
-                                results.message = "The file format was not recognized or is not an allowed file type.";
-                            }
-
-                            if (file != null)
-                            {
-                                if (webFile != null)
-                                {
-                                    file.Update(webFile, UserTimeZoneOffset);
-                                    webFile = null;
-                                }
-                                Permission.Apply(db, User, RoleManager, file, defaultRoles); //default permissions
-
-                                db.WebFiles.Add(file);
-                                await db.SaveChangesAsync();
-
-                                results.files.Add(file);
-                            }
-                        }
-                    }
-
-
-                    results.status = UploadResults.OK;
-                    results.message = null;  //"File uploaded successfully.";
-                    foreach (var wf in results.files)
-                    {
-                        if (!string.IsNullOrEmpty(webFile?.Name))
-                        {
-                            wf.Name = webFile.Name;
+                            defaultRoles = defaultRoleSetting.Split(',');
                         }
                         else
                         {
-                            wf.Name = wf.GetFileName();
+                            defaultRoles = new string[] { RoleManager.FindByName(Roles.Users)?.Id };
                         }
-                    }
-                    if (fileCount > 1)
-                    {
-                        SetSuccessMessage("{0} files uploaded successfully", fileCount);
+
+                        int fileCount = Request.Files.Count;
+                        for (int i = 0; i < fileCount; i++)
+                        {
+                            HttpPostedFileBase uploadedFile = Request.Files[i];
+
+                            if (uploadedFile != null && uploadedFile.ContentLength > 0)
+                            {
+                                WebFile file = null;
+                                ModelState["Name"]?.Errors?.Clear();
+                                if (ImageHelper.IsImageFile(uploadedFile))
+                                {
+                                    file = UploadFile(uploadedFile, results, db, HttpContext, Settings);
+                                }
+                                else
+                                if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))
+                                {
+                                    file = UploadVideoOrAudio(uploadedFile, results);
+                                }
+                                else
+                                if (DocumentHelper.IsDocumentFile(uploadedFile))
+                                {
+                                    file = UploadDocument(uploadedFile, results);
+                                }
+                                else
+                                {
+                                    results.status = UploadResults.Failed;
+                                    results.message = "The file format was not recognized or is not an allowed file type.";
+                                }
+
+                                if (file != null)
+                                {
+                                    if (webFile != null)
+                                    {
+                                        file.Update(webFile, UserTimeZoneOffset);
+                                        webFile = null;
+                                    }
+                                    Permission.Apply(db, User, RoleManager, file, defaultRoles); //default permissions
+
+                                    db.WebFiles.Add(file);
+                                    await db.SaveChangesAsync();
+
+                                    results.files.Add(file);
+                                }
+                            }
+                        }
+
+
+                        results.status = UploadResults.OK;
+                        results.message = null;  //"File uploaded successfully.";
+                        foreach (var wf in results.files)
+                        {
+                            if (!string.IsNullOrEmpty(webFile?.Name))
+                            {
+                                wf.Name = webFile.Name;
+                            }
+                            else
+                            {
+                                wf.Name = wf.GetFileName();
+                            }
+                        }
+                        if (fileCount > 1)
+                        {
+                            SetSuccessMessage("{0} files uploaded successfully", fileCount);
+                        }
+                        else
+                        {
+                            SetSuccessMessage("{0} uploaded successfully", results.files.First().Name);
+                        }
                     }
                     else
                     {
-                        SetSuccessMessage("{0} uploaded successfully", results.files.First().Name);
+                        results.status = UploadResults.Failed;
+                        results.message = ErrorsFromModelState(ModelState);
                     }
                 }
                 else
                 {
-                    results.status = UploadResults.Failed;
-                    results.message = ErrorsFromModelState(ModelState);
+                    return new HttpUnauthorizedResult("Permission denied");
                 }
             }
             catch (Exception ex)
