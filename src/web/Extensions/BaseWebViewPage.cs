@@ -17,6 +17,7 @@ using System.Data.Entity;
 using wwwplatform.Extensions.Helpers;
 using System.Web.WebPages;
 using System.Threading;
+using System.Linq.Expressions;
 
 namespace wwwplatform.Extensions
 {
@@ -203,6 +204,34 @@ namespace wwwplatform.Extensions
             return null;
         }
 
+        public IEnumerable<SelectListItem> CreateSelectList<Y>(IEnumerable<Y> options,
+                                                               Expression<Func<Y, bool>> selected,
+                                                               Expression<Func<Y, object>> display,
+                                                               Expression<Func<Y, object>> value,
+                                                               bool required = false) where Y : new()
+        {
+            List<SelectListItem> list = new List<SelectListItem>();
+            var selectedEvaluator = selected.Compile();
+            var displayEvaluator = display.Compile();
+            var valueEvaluator = value.Compile();
+
+            if (!required)
+            {
+                list.Add(new SelectListItem { Text = "None", Value = "", Selected = selectedEvaluator(new Y()) });
+            }
+            new List<Y>(options).ForEach((Y option) =>
+            {
+                var item = new SelectListItem
+                {
+                    Value = Convert.ToString(valueEvaluator(option)),
+                    Text = Convert.ToString(displayEvaluator(option)),
+                    Selected = selectedEvaluator(option)
+                };
+                list.Add(item);
+            });
+            return list;
+        }
+
         #endregion
 
         #region Simple Anti Forgery Token
@@ -228,19 +257,7 @@ namespace wwwplatform.Extensions
         public IEnumerable<SelectListItem> GetParentPageSelectList(long Id, long? selected)
         {
             var otherpages = db.ActiveSitePages.Where(p => p.HomePage == false && p.Id != Id).ToList();
-            List<SelectListItem> list = new List<SelectListItem>();
-            list.Add(new SelectListItem { Text = "None", Value = "", Selected = !selected.HasValue });
-            otherpages.ForEach((SitePage p) =>
-            {
-                var item = new SelectListItem();
-                item.Value = Convert.ToString(p.Id);
-                item.Text = p.Name;
-                if (selected.HasValue)
-                {
-                    item.Selected = p.Id == selected.Value;
-                }
-                list.Add(item);
-            });
+            var list = CreateSelectList(otherpages, m => m.Id == selected.GetValueOrDefault(), m => m.Name, m => m.Id);
             return list;
         }
 

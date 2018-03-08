@@ -16,6 +16,7 @@ namespace wwwplatform.Models
         public const string ListManagers = "List Managers";
         public const string Users = "Users";
         public const string Public = "Public";
+        public const string Guests = "Guests";
 
         public static IEnumerable<IdentityResult> CreateAll(ApplicationDbContext context, ApplicationRoleManager roleManager)
         {
@@ -23,7 +24,7 @@ namespace wwwplatform.Models
             {
                 roleManager.Delete(roleManager.Roles.First(r => r.Name == "ListManagers"));
             }
-            return CreateAll(context, roleManager, Administrators, Editors, ListManagers, Users, Public);
+            return CreateAll(context, roleManager, Administrators, Editors, ListManagers, Users, Public, Guests);
         }
 
         private static IEnumerable<IdentityResult> CreateAll(ApplicationDbContext context, ApplicationRoleManager roleManager, params string[] roles)
@@ -74,7 +75,7 @@ namespace wwwplatform.Models
 
         public static bool IsBuiltinRole(IdentityRole role)
         {
-            var roles = new string[] { Roles.Administrators, Roles.Editors, Roles.ListManagers, Roles.Public, Roles.Users };
+            var roles = new string[] { Roles.Administrators, Roles.Editors, Roles.ListManagers, Roles.Public, Roles.Users, Roles.Guests };
             return (roles.Contains(role.Name));
         }
 
