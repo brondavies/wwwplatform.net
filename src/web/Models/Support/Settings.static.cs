@@ -1,13 +1,9 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using wwwplatform.Extensions.Helpers;
 using wwwplatform.Shared.Extensions.System;
 
@@ -42,7 +38,7 @@ namespace wwwplatform.Models
 
         public static string GetConfig(string key, string defaultValue = null)
         {
-            return ConfigurationManager.AppSettings[key] ?? defaultValue;
+            return WebConfigurationManager.AppSettings[key] ?? defaultValue;
         }
 
         static string DefaultAllowForgotPassword { get { return GetConfig(kAllowForgotPassword, bool.FalseString); } }
