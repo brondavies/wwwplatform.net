@@ -18,7 +18,7 @@ namespace wwwplatform.Models
             Name = sitePage.Name;
             Order = sitePage.Order;
             ParentPageId = sitePage.ParentPageId;
-            PubDate = (timeZoneOffset.HasValue) ? PubDate.FromTimezone(timeZoneOffset.Value) : sitePage.PubDate;
+            PubDate = (timeZoneOffset.HasValue) ? sitePage.PubDate.FromTimezone(timeZoneOffset.Value) : sitePage.PubDate;
             RedirectUrl = sitePage.RedirectUrl;
             ShowInNavigation = sitePage.ShowInNavigation;
         }

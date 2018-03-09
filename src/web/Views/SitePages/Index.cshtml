@@ -1,4 +1,5 @@
 ﻿@using wwwplatform.Shared.Extensions.System;
+@using wwwplatform.Shared.Extensions;
 
 @model IEnumerable<wwwplatform.Models.SitePage>
 
@@ -21,49 +22,49 @@
 else
 {
     <section class="margin-bottom-40">
-    <table class="table table-striped auto-datatable clickable">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Name)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PubDate)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UpdatedBy)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.UpdatedAt)
-                </th>
-                <th class="disable-sorting"></th>
-            </tr>
-        </thead>
-
-        <tbody>
-            @foreach (var item in Model)
-            {
-                <tr data-href="/SitePages/Details/@item.Id">
-                    <td>
-                        <a href="@(item.Slug.ToAppPath())">
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </a>
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.PubDate)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedBy)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UpdatedAt)
-                    </td>
-                    <td>
-                        @Html.Partial("_TableActionButtons", item)
-                    </td>
+        <table class="table table-striped auto-datatable clickable">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PubDate)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdatedBy)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.UpdatedAt)
+                    </th>
+                    <th class="disable-sorting"></th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr data-href="/SitePages/Details/@item.Id">
+                        <td>
+                            <a href="@(item.Slug.ToAppPath())">
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </a>
+                        </td>
+                        <td>
+                            @(item.PubDate.ToTimezone(UserTimeZoneOffset).ToString("G"))
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.UpdatedBy)
+                        </td>
+                        <td>
+                            @(item.UpdatedAt.ToTimezone(UserTimeZoneOffset).ToString("G"))
+                        </td>
+                        <td>
+                            @Html.Partial("_TableActionButtons", item)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </section>
 }
