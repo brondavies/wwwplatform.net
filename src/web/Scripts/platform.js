@@ -45,7 +45,8 @@
     });
 
     $('.datetimepicker').each(function () {
-        $(this).datetimepicker($(this).data());
+        var data = $(this).data();
+        $(this).datetimepicker({ format: data.format });
     });
 
     $(document).on('click', '[data-href]', function (event) {
