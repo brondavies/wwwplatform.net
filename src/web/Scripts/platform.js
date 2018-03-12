@@ -44,7 +44,9 @@
         $('.dataTables_filter, .dataTables_length').parent().addClass('col-xs-6');
     });
 
-    $('.datetimepicker').datetimepicker();
+    $('.datetimepicker').each(function () {
+        $(this).datetimepicker($(this).data());
+    });
 
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');
