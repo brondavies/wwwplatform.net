@@ -29,15 +29,15 @@ namespace wwwplatform.Extensions.Helpers
                 {
                     if (bytes >= 1100000000) //GB
                     {
-                        if (bytes >= 110000000000) //TB
+                        if (bytes >= 1100000000000) //TB
                         {
-                            return string.Format("{0} TB", Math.Round(bytes / 100000000000, 2));
+                            return string.Format("{0} TB", Math.Round(bytes / 1099511627776, 2));
                         }
-                        return string.Format("{0} GB", Math.Round(bytes / 1000000000, 2));
+                        return string.Format("{0} GB", Math.Round(bytes / 1073741824, 2));
                     }
-                    return string.Format("{0} MB", Math.Round(bytes / 1000000, 1));
+                    return string.Format("{0} MB", Math.Round(bytes / 1048576, 1));
                 }
-                return string.Format("{0} KB", Math.Round(bytes / 1000, 1));
+                return string.Format("{0} KB", Math.Round(bytes / 1024, 1));
             }
             return string.Format("{0} B", Math.Round(bytes));
         }

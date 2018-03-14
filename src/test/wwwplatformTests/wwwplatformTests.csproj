@@ -143,6 +143,7 @@
     <Compile Include="Controllers\WebFilesControllerTests.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapDropDownTests.cs" />
     <Compile Include="Extensions\Helpers\Bootstrap\BootstrapElementTests.cs" />
+    <Compile Include="Extensions\Helpers\FileStorageTests.cs" />
     <Compile Include="Extensions\StringExtensionsTests.cs" />
     <Compile Include="Extensions\System\StringTests.cs" />
     <Compile Include="Support\ControllerTestBase.cs" />
