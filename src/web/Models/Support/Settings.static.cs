@@ -11,6 +11,7 @@ namespace wwwplatform.Models
 {
     public partial class Settings : ObjectDictionary
     {
+        internal const string kAdditionalUploadAllowedFileTypes = "AdditionalUploadAllowedFileTypes";
         internal const string kAllowForgotPassword = "AllowForgotPassword";
         internal const string kAllowUserRegistration = "AllowUserRegistration";
         internal const string kCanonicalHostName = "CanonicalHostName";
@@ -115,6 +116,7 @@ namespace wwwplatform.Models
         internal static AppSetting[] GetDefaultSettings()
         {
             return new[] {
+                new AppSetting { Name = kAdditionalUploadAllowedFileTypes, Kind = AppSetting.KindString, Description = "Additional file types that can be uploaded" },
                 new AppSetting { Name = kAllowForgotPassword, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowForgotPassword, Description = "Allows users to reset forgotten passwords" },
                 new AppSetting { Name = kAllowUserRegistration, Kind = AppSetting.KindBool, DefaultValue = DefaultAllowUserRegistration, Description = "Opens user registration to the public" },
                 new AppSetting { Name = kCanonicalHostName, Kind = AppSetting.KindString, Description = "The host name that should be used for this site" },

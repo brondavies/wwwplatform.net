@@ -161,6 +161,11 @@ namespace wwwplatform.Controllers
                                     file = UploadDocument(uploadedFile, results);
                                 }
                                 else
+                                if (IsAllowedFileType(uploadedFile))
+                                {
+                                    file = UploadFile(uploadedFile, results, db, HttpContext, Settings);
+                                }
+                                else
                                 {
                                     results.status = UploadResults.Failed;
                                     results.message = "The file format was not recognized or is not an allowed file type.";
@@ -183,9 +188,11 @@ namespace wwwplatform.Controllers
                             }
                         }
 
-
-                        results.status = UploadResults.OK;
-                        results.message = null;  //"File uploaded successfully.";
+                        if (results.status != UploadResults.Failed)
+                        {
+                            results.status = UploadResults.OK;
+                            results.message = null;  //"File uploaded successfully.";
+                        }
                         foreach (var wf in results.files)
                         {
                             if (!string.IsNullOrEmpty(webFile?.Name))
@@ -201,7 +208,7 @@ namespace wwwplatform.Controllers
                         {
                             SetSuccessMessage("{0} files uploaded successfully", fileCount);
                         }
-                        else
+                        else if (results.files.Count > 0)
                         {
                             SetSuccessMessage("{0} uploaded successfully", results.files.First().Name);
                         }
@@ -238,7 +245,13 @@ namespace wwwplatform.Controllers
             }
             return Auto(results, "Created");
         }
-        
+
+        private bool IsAllowedFileType(HttpPostedFileBase uploadedFile)
+        {
+            string extension = Path.GetExtension(uploadedFile.FileName).Replace(".", "");
+            return Settings.AdditionalUploadAllowedFileTypes.Contains(extension, StringComparer.InvariantCultureIgnoreCase);
+        }
+
         [HttpGet]
         [AllowAnonymous]
         public ActionResult Error(string id)

@@ -1,5 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 using System.Web;
+
+using Newtonsoft.Json;
 
 namespace wwwplatform.Models
 {
@@ -21,6 +23,8 @@ namespace wwwplatform.Models
             catch { }
             return value != null ? value : defaultValue;
         }
+
+        public string[] AdditionalUploadAllowedFileTypes { get { return Convert.ToString(GetValue(kAdditionalUploadAllowedFileTypes, GetConfig(kAdditionalUploadAllowedFileTypes, ""))).Split(','); } }
 
         public bool AllowForgotPassword { get { return bool.Parse(GetValue(kAllowForgotPassword, DefaultAllowForgotPassword)); } }
 
