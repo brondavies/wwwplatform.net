@@ -2,21 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity.Owin;
 using System.Web.Mvc.Html;
-using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Newtonsoft.Json;
 using wwwplatform.Models.ViewModels;
 using System.Data.Entity;
-using wwwplatform.Extensions.Helpers;
 using System.Web.WebPages;
-using System.Threading;
 using System.Linq.Expressions;
 
 namespace wwwplatform.Extensions
@@ -153,9 +148,17 @@ namespace wwwplatform.Extensions
 
         public IHtmlString MyAccountLink(string text = null, string className = null)
         {
+            bool myAccount = Settings.ManageMyAccountLink;
             if (User.Identity.IsAuthenticated)
             {
-                return Html.ActionLink(linkText: text ?? "My Account", actionName: "Index", controllerName: "Manage", routeValues: null, htmlAttributes: new { @class = className });
+                if (!myAccount && text != null)
+                {
+                    return new HtmlString(text);
+                }
+                else if (myAccount)
+                {
+                    return Html.ActionLink(linkText: text ?? "My Account", actionName: "Index", controllerName: "Manage", routeValues: null, htmlAttributes: new { @class = className });
+                }
             }
 
             return null;

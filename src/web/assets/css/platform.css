@@ -103,13 +103,13 @@ div.mce-panel {
       min-width: 200px;
       z-index: 20;
     }
-    #page-nav ul ul li {
+    #page-nav ul ul > li {
       min-height: 22px;
       float: none;
       position: relative;
     }
-    #page-nav ul ul li a,
-    #page-nav ul ul li span {
+    #page-nav ul ul > li a,
+    #page-nav ul ul > li span {
       background-color: transparent;
       box-shadow: none;
       display: block;
@@ -118,23 +118,23 @@ div.mce-panel {
       text-transform: none;
       border-top: 1px solid rgba(0, 0, 0, 0.05);
     }
-    #page-nav ul ul li:first-child a {
+    #page-nav ul ul > li:first-child a {
       border: none;
     }
-    #page-nav ul ul li a:active,
-    #page-nav ul ul li a:focus,
-    #page-nav ul ul li a:hover {
+    #page-nav ul ul > li a:active,
+    #page-nav ul ul > li a:focus,
+    #page-nav ul ul > li a:hover {
       text-decoration: none;
       background-color: rgba(0, 0, 0, 0.05);
     }
-    #page-nav ul ul li:hover a {
+    #page-nav ul ul > li:hover a {
       text-decoration: none;
     }
     #page-nav ul ul ul:before {
       display: none;
     }
     #page-nav li ul,
-    #page-nav li ul li ul {
+    #page-nav li ul > li ul {
       position: absolute;
       height: auto;
       min-width: 200px;
@@ -149,17 +149,17 @@ div.mce-panel {
       z-index: 1000;
     }
     #page-nav li:hover > ul,
-    #page-nav li ul li:hover > ul {
+    #page-nav li ul > li:hover > ul {
       display: block;
       opacity: 1;
       visibility: visible;
       top: 60px;
     }
-    #page-nav li ul li ul {
+    #page-nav li ul > li ul {
       left: 220px;
       top: 0;
     }
-    #page-nav li ul li:hover > ul {
+    #page-nav li ul > li:hover > ul {
       top: 0px;
       left: 200px;
     }
@@ -221,19 +221,19 @@ a.nav-btn-account {
 #footermenu ul {
   margin: 0;
 }
-#footermenu ul li {
+#footermenu ul > li {
   border-right: 1px solid rgba(255, 255, 255, 0.2);
   padding-left: 10px;
   padding-right: 10px;
 }
-#footermenu ul li:last-child {
+#footermenu ul > li:last-child {
   border: none;
 }
-#footermenu ul li a {
+#footermenu ul > li a {
   color: rgba(255, 255, 255, 0.8);
   font-size: 14px;
 }
-#footermenu ul li a:hover {
+#footermenu ul > li a:hover {
   color: #ffffff;
 }
 #copyright p {
@@ -484,4 +484,14 @@ table.dataTable thead>tr>td.sorting {
 form[action="/AppSettings/Edit"] .btn-group.btn-group-xs label.btn {
     padding-top: 8px;
     padding-bottom: 8px;
+}
+ul > li:empty {
+    display: none;
+}
+.gutter-left {
+    margin-left: 15px;
+}
+
+.gutter-right {
+    margin-right: 15px;
 }

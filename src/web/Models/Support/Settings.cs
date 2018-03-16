@@ -50,6 +50,8 @@ namespace wwwplatform.Models
 
         public string EmailDefaultFrom { get { return GetValue(kEmailDefaultFrom, GetConfig(kEmailDefaultFrom)); } }
 
+        public bool ManageMyAccountLink { get { return bool.Parse(GetValue(kManageMyAccountLink, GetConfig(kManageMyAccountLink, bool.TrueString))); } }
+
         public int MaxEmailSendBatch { get { return int.Parse(GetValue(kMaxEmailSendBatch, GetConfig(kMaxEmailSendBatch, "100"))); } }
 
         public string RolesWithUploadPermission { get { return GetValue(kRolesWithUploadPermission, GetConfig(kRolesWithUploadPermission, "")); } }
