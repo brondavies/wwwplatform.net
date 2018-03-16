@@ -28,6 +28,10 @@ namespace wwwplatform.Controllers
         // GET: /Manage/Index
         public async Task<ActionResult> Index(ManageMessageId? message)
         {
+            if (!Settings.ManageMyAccountLink)
+            {
+                return new HttpUnauthorizedResult();
+            }
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -252,6 +256,10 @@ namespace wwwplatform.Controllers
         // GET: /Manage/ManageLogins
         public async Task<ActionResult> ManageLogins(ManageMessageId? message)
         {
+            if (!Settings.ManageMyAccountLink)
+            {
+                return new HttpUnauthorizedResult();
+            }
             ViewBag.StatusMessage =
                 message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
                 : message == ManageMessageId.Error ? "An error has occurred."

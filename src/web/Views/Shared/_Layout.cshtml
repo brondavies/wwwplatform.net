@@ -26,7 +26,7 @@
 </head>
 <body class="fade @(PageCssClass)">
     <div id="pre_header" class="visible-sm visible-md visible-lg">
-        <div class="pull-right text-right text-white">
+        <div class="pull-right text-right text-white gutter-right">
             @if (Request.IsAuthenticated)
             {
                 if (User.IsInRole(wwwplatform.Models.Roles.Administrators) ||
@@ -34,10 +34,9 @@
                     User.IsInRole(wwwplatform.Models.Roles.ListManagers))
                 {
                     <ul class="list-unstyled list-inline inline">
-                        <li class="btn">
-                            @Html.Partial("_AdminMenu", viewData: new ViewDataDictionary { ["class"] = "dropdown adminMenu", ["toggleClass"] = "text-white" })
+                        <li class="btn">@Html.Partial("_AdminMenu", viewData: new ViewDataDictionary { ["class"] = "dropdown adminMenu", ["toggleClass"] = "text-white" })</li>
+                        <li>
                         </li>
-                        <li></li>
                     </ul>
                 }
                 <span class="btn">Logged in as</span>
@@ -110,17 +109,13 @@
                                 User.IsInRole(wwwplatform.Models.Roles.Editors) ||
                                 User.IsInRole(wwwplatform.Models.Roles.ListManagers))
                             {
-                                <li>
-                                    @Html.Partial("_AdminMenu")
-                                </li>
+                                <li>@Html.Partial("_AdminMenu")</li>
                             }
                             if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
                             {
                                 @SharedFoldersLink()
                             }
-                            <li>
-                                @MyAccountLink()
-                            </li>
+                            <li>@MyAccountLink()</li>
                         }
                         else if (Settings.ShowSharedFoldersInMenus && SharedFoldersLinkIsAvailable())
                         {
@@ -128,9 +123,7 @@
                         }
                         @if (Settings.ShowSignInLinks || Request.IsAuthenticated)
                         {
-                        <li>
-                            @LoginLink()
-                        </li>
+                        <li>@LoginLink()</li>
                         }
                     </ul>
                 </div>
