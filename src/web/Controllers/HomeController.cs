@@ -12,9 +12,13 @@ namespace wwwplatform.Controllers
     {
         public ActionResult Index()
         {
-            var page = db.ActiveSitePages.Where(p => p.HomePage == true).FirstOrDefault();
+            var page = SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, false, false).Where(p => p.HomePage == true).FirstOrDefault();
             if (page == null)
             {
+                if (db.ActiveSitePages.Where(p => p.HomePage == true).Any())
+                {
+                    return new HttpUnauthorizedResult("Access Denied");
+                }
                 return RedirectToAction("Setup");
             }
             return View(page);
