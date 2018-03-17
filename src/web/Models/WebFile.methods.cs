@@ -91,6 +91,14 @@ namespace wwwplatform.Models
             return Name.CleanFileName() + System.IO.Path.GetExtension(Location);
         }
 
+        public string OriginalFileName
+        {
+            get
+            {
+                return Name + System.IO.Path.GetExtension(Location);
+            }
+        }
+
         public FileType GetFileType()
         {
             if (string.IsNullOrEmpty(Location))

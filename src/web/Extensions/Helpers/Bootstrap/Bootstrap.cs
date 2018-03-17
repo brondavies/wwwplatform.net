@@ -69,6 +69,11 @@ namespace wwwplatform.Extensions.Helpers.Bootstrap
 
         #region BootstrapFormGroup
 
+        public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper)
+        {
+            return FormGroupHelper(htmlHelper, new RouteValueDictionary(), null, null);
+        }
+
         public static BootstrapFormGroup FormGroup(this HtmlHelper htmlHelper, IEnumerable<object> columnSizes)
         {
             return FormGroupHelper(htmlHelper, new RouteValueDictionary(), BootstrapColumnSizes.Convert(columnSizes), null);

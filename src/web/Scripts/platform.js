@@ -55,6 +55,10 @@
         if (event.target.tagName != 'A' && href) {
             window.open(href, target, true);
         }
+    }).on('click', '[data-event]', function (event) {
+        var $this = $(this);
+        var eventname = $this.data('event');
+        $(window).trigger(eventname, [this, $this.data(), event]);
     });
 
     $('.dropdown input[type="hidden"]').each(function (i, input) {

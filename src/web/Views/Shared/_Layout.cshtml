@@ -47,7 +47,7 @@
                 <a class="btn disabled">Hello Guest!</a>
                 if (Settings.ShowSignInLinks)
                 {
-                @LoginLink(null, "btn bold")
+                    @LoginLink(null, "btn bold")
                 }
             }
         </div>
@@ -123,7 +123,7 @@
                         }
                         @if (Settings.ShowSignInLinks || Request.IsAuthenticated)
                         {
-                        <li>@LoginLink()</li>
+                            <li>@LoginLink()</li>
                         }
                     </ul>
                 </div>
@@ -131,6 +131,7 @@
         </div>
     </div>
     <!-- End Footer Menu -->
+    @RenderSection("modals", required: false)
     @Scripts.Render("~/scripts/substance")
     @RenderSection("scripts", required: false)
     @Html.RenderScripts()
