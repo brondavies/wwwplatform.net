@@ -21,6 +21,13 @@ namespace wwwplatform.Controllers
                 }
                 return RedirectToAction("Setup");
             }
+
+            if (!string.IsNullOrEmpty(page.RedirectUrl))
+            {
+                return Redirect(page.RedirectUrl);
+            }
+
+            ViewBag.Layout = page.Layout;
             return View(page);
         }
 
