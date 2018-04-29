@@ -21,7 +21,9 @@ When you run the app for the first time, the database will be initialized with E
 # Deploy
 You can choose any method for deploying your app that you like (File system, FTP, WebDeploy, Azure, etc.) These methods will all behave the same upon first start up.  The default behavior is to use auto-migrations to create the database schema but you must have a connection string pointing to an existing database (preferrably one that is empty). On subsequent updates to your deployed site, you should **not** opt to delete existing files in the target because you may have files uploaded in the UserFiles directory.
 
-**Note:** Remember that Visual Studio will not deploy files in your project directory that are not associated to the project in wwwplatform.net.csproj
+> **Note:** Remember that Visual Studio will not deploy files in your project directory that are not associated to the project in wwwplatform.net.csproj
+
+Once you have files deployed you should also make sure that the `/App_Data` and `/UserFiles` directories are writable by the account running your application pool.
 
 ## Database Migrations
 Every time the app starts up, the database will be checked for consistency with the model and auto-migrations applied. You can disable this behavior by setting the value of `AutoMigrateDatabaseToLatestVersion` in web&#46;config to `False`. If you do, you will have to run the migrations manually or as part of the deployment. For custom build and deployment environments, the utility `migrate.exe` is provided to enable running migrations as part of a script.  Simply call `bin\migrate.exe` from your deployment script and it will read the web&#46;config for the connection string.  You can also optionally pass a connection string to `migrate.exe` *See [Migrate.cs](src/migrate/Migrate.cs)*.
