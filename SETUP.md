@@ -1,11 +1,15 @@
 # Setup
 - [Setup](#setup)
+    - [Dependencies](#dependencies)
     - [Name Your Project](#name-your-project)
     - [Connection String](#connection-string)
     - [First Admin User](#first-admin-user)
 - [Deploy](#deploy)
     - [Database Migrations](#database-migrations)
     - [App Settings](#app-settings)
+
+## Dependencies
+There are some binaries not included with the project due to licensing restrictions.  Namely `gsdll32.dll` and `gsdll64.dll`.  These can be downloaded from the [Artifex Software](https://www.artifex.com/) github downloads page at https://github.com/ArtifexSoftware/ghostpdl-downloads/releases. Use of these libraries is subject to the license terms set forth at https://www.ghostscript.com/download/gsdnld.html  You should download the executables `gs<version>w32.exe` and `gs<version>w64.exe` and extract the required dlls from these executable installers using [7-Zip](https://www.7-zip.org/) and copy them into the `src/web/bin` directory
 
 ## Name Your Project
 At this point you may want to rename the solution file to `yourproject.sln` so you can more easily identify which project it is if you have more than one project based on wwwplatform. You can safely check this in and still merge updates from the base repo.  You should **not** rename the .csproj files as this will make it more difficult to merge in updates from the base repo.
