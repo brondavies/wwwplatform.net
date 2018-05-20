@@ -491,7 +491,9 @@ ul > li:empty {
 .gutter-left {
     margin-left: 15px;
 }
-
 .gutter-right {
     margin-right: 15px;
+}
+.SitePageBody.out {
+    pointer-events: none;
 }

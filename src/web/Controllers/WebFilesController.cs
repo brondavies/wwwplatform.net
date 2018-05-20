@@ -216,7 +216,7 @@ namespace wwwplatform.Controllers
                     else
                     {
                         results.status = UploadResults.Failed;
-                        results.message = ErrorsFromModelState(ModelState);
+                        results.message = ErrorsFromModelState(ModelState) ?? results.message;
                     }
                 }
                 else

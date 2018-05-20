@@ -21,7 +21,7 @@
 
 <h2>Uploaded Files</h2>
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Create", "WebFiles", POST, htmlAttributes: new { enctype = "multipart/form-data" }))
 {
     @SimpleAntiForgeryToken()
 
