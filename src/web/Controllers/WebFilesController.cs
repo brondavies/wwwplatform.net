@@ -76,7 +76,7 @@ namespace wwwplatform.Controllers
                 }
                 extra = null;
             }
-            string filepath = Server.MapPath(location);
+            string filepath = location.IsRootedPath() ? location : Server.MapPath(location);
             string contentType = FTT.GetMimeType(location ?? "");
             if (contentType == "") { contentType = "application/octet-stream"; }
             if (extra == null)

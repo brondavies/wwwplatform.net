@@ -93,5 +93,24 @@ namespace wwwplatform.Shared.Extensions.System.Tests
             string nullString = null;
             Assert.IsNull(nullString.CleanFileName());
         }
+
+        [TestMethod]
+        public void IsLocalPathTest()
+        {
+            Assert.IsFalse("".IsRootedPath());
+
+            Assert.IsFalse("test".IsRootedPath());
+
+            Assert.IsFalse("/this/is/a/test".IsRootedPath());
+
+            Assert.IsTrue(@"\\this\is\a\test".IsRootedPath());
+
+            Assert.IsTrue(@"C:\Windows\System32".IsRootedPath());
+
+            Assert.IsTrue(@"\Windows\System32".IsRootedPath());
+
+            string nullString = null;
+            Assert.IsFalse(nullString.IsRootedPath());
+        }
     }
 }

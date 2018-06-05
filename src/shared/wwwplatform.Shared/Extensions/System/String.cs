@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Web;
@@ -13,7 +14,7 @@ namespace wwwplatform.Shared.Extensions.System
         /// <returns>A new string with the absolute URL</returns>
         public static string ToAppPath(this string filename, HttpContextBase context = null)
         {
-            if (filename == null) { filename = "";  }
+            if (filename == null) { filename = ""; }
             string appPath = (context ?? new HttpContextWrapper(HttpContext.Current)).Server.MapPath("~");
             return filename.Replace(appPath, "").Replace("\\", "/");
         }
@@ -116,6 +117,27 @@ namespace wwwplatform.Shared.Extensions.System
             if (string.IsNullOrEmpty(value)) { return value; }
             Regex regex = new Regex("[^a-zA-Z0-9]", RegexOptions.IgnoreCase);
             return string.Join("-", regex.Replace(value, "-").Split("-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
+        }
+
+        /// <summary>
+        /// Returns True when the path is "rooted" meaning it is not a partial path specification
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>bool</returns>
+        public static bool IsRootedPath(this string value)
+        {
+            if (string.IsNullOrEmpty(value))
+            {
+                return false;
+            }
+            else if (value.StartsWith("/") && Path.DirectorySeparatorChar != '/')
+            {
+                return false;
+            }
+            else
+            {
+                return Path.IsPathRooted(value);
+            }
         }
     }
 }
