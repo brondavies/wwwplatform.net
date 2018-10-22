@@ -104,5 +104,5 @@
 }
 @using (Html.BeginScriptContext())
 {
-    Html.AddScriptBlock("$(window).bind('Poster_upload.selected', function(event, data){data.url && $('[name=\"Poster\"]').val(data.url.substr(data.url.lastIndexOf('/')+1)); data.id && $('[name=\"PosterId\"]').val(data.id);});");
+    Html.AddScriptBlock("$(window).bind('Poster_upload.selected', function(event, data){data.url && $('[name=\"Poster\"]').val(data.url.split('/').pop()); data.id && $('[name=\"PosterId\"]').val(data.id);});");
 }
