@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace wwwplatform.Extensions
+namespace wwwplatform.Extensions.Attributes
 {
     public class AuthorizeAttribute : System.Web.Mvc.AuthorizeAttribute
     {

@@ -1,4 +1,4 @@
-﻿@using Microsoft.AspNet.Identity.EntityFramework;
+﻿@using wwwplatform.Models.ViewModels;
 
 @model wwwplatform.Models.SharedFolder
 
@@ -38,7 +38,7 @@
         {
             Html.HiddenFor(model => model.Id);
         }
-        
+
         @Html.HiddenFor(model => model.ParentFolderId)
 
         <div class="form-group">
@@ -58,6 +58,42 @@
         </div>
 
         <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <label>
+                    @Html.EditorFor(model => model.Podcast)
+                    Publish Podcast
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    @Html.HiddenFor(model => model.PosterId)
+                    <input name="Poster" type="text" value="@(Model.Poster?.GetFileName())" readonly class="form-control" />
+                    @UploadDialogButton(new SelectFileOptions { name = "Poster_" + Model.Slug, text = "Upload", eventName = "Poster_upload", className = "input-group-addon", singleSelect = true })
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PodcastCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PodcastCategory, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PodcastCategory, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.PodcastSubCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.PodcastSubCategory, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.PodcastSubCategory, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
             <label class="control-label col-md-2">Permissions</label>
             <div class="col-md-10">
                 @RoleButtonGroup(permissions)
@@ -65,4 +101,8 @@
         </div>
 
     </div>
+}
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptBlock("$(window).bind('Poster_upload.selected', function(event, data){data.url && $('[name=\"Poster\"]').val(data.url.substr(data.url.lastIndexOf('/')+1)); data.id && $('[name=\"PosterId\"]').val(data.id);});");
 }

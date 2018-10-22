@@ -90,17 +90,21 @@ switch (file.GetFileType())
     </span>
 </h2>
 <section class="h3 text-right">
+    <div class="btn-group">
     @if (canUpload)
     {
-        <div class="btn-group">
-            @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
-            @UploadDialogButton(new SelectFileOptions { name = "Folder_" + Model.Slug, text = "Upload" })
-            @if (isFolderOwner)
-            {
-                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
-            }
-        </div>
+        @Html.ActionLink("New Folder", "Create", "SharedFolders", new { ParentFolderId = Model.Id }, new { @class = "btn btn-default" })
+        @UploadDialogButton(new SelectFileOptions { name = "Folder_" + Model.Slug, text = "Upload" })
+        if (isFolderOwner)
+        {
+            @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+        }
     }
+    @if (Model.Podcast)
+    {
+        @Html.ActionLink("Podcast", "Podcast", null, new { @class = "btn btn-default" })
+    }
+    </div>
 </section>
 @if (Model.Files.Count() == 0 && Model.SubFolders.Count() == 0)
 {

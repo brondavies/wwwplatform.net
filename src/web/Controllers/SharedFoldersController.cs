@@ -7,15 +7,16 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Extensions;
+using wwwplatform.Extensions.Attributes;
 using wwwplatform.Models;
 using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize]
+    [Extensions.Attributes.Authorize]
     public class SharedFoldersController : BaseController
     {
-        private const string AllowedFields = "Id,Name,Description,ParentFolderId";
+        private const string AllowedFields = "Id,Name,Description,ParentFolderId,Podcast,PosterId,PodcastCategory,PodcastSubCategory";
 
         // GET: SharedFolders
         [AllowAnonymous]
@@ -131,22 +132,46 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Display(string slug)
         {
+            var folder = await FindFolderWithSlug(slug, true);
+            if (folder == null)
+            {
+                return HttpNotFound();
+            }
+            return View(folder);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
+        [AllowAnonymous]
+        [ContentTypeHeader("application/xml")]
+        public async Task<ActionResult> Podcast(string slug)
+        {
+            var folder = await FindFolderWithSlug(slug);
+            if (folder == null)
+            {
+                return HttpNotFound();
+            }
+            return PartialView("Podcast", folder);
+        }
+
+        private async Task<SharedFolder> FindFolderWithSlug(string slug, bool andSubfolders = false)
+        {
             string s = slug.ToLowerInvariant();
             var folders = SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager);
             var folder = await folders.Where(p => p.Slug == s).FirstOrDefaultAsync();
 
             if (folder == null)
             {
-                return HttpNotFound();
+                return null;
             }
 
             var ids = folder.Files?.Select(f => f.Id) ?? new List<long>();
             folder.Files = WebFile.GetAvailableFiles(db, User, UserManager, RoleManager).Where(f => ids.Contains(f.Id)).ToList();
-
-            ids = folder.SubFolders?.Select(f => f.Id) ?? new List<long>();
-            folder.SubFolders = SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager).Where(f => ids.Contains(f.Id)).ToList();
-
-            return View(folder);
+            if (andSubfolders)
+            {
+                ids = folder.SubFolders?.Select(f => f.Id) ?? new List<long>();
+                folder.SubFolders = SharedFolder.GetAvailableFolders(db, User, UserManager, RoleManager).Where(f => ids.Contains(f.Id)).ToList();
+            }
+            return folder;
         }
 
         // POST: SharedFolders/Edit/5

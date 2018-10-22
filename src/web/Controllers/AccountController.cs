@@ -14,7 +14,7 @@ using wwwplatform.Extensions;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize]
+    [Extensions.Attributes.Authorize]
     public class AccountController : BaseAccountController
     {
         public AccountController()

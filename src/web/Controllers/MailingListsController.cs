@@ -15,7 +15,7 @@ using wwwplatform.Models.ViewModels;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators, Roles.ListManagers)]
+    [Extensions.Attributes.Authorize(Roles.Administrators, Roles.ListManagers)]
     public class MailingListsController : BaseController
     {
         private const string AllowedFields = "Id,Name,Description,EmailAddress";

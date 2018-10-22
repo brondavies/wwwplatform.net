@@ -16,6 +16,19 @@ namespace wwwplatform.Models
 
         public string Description { get; set; }
 
+        public bool Podcast { get; set; }
+
+        [DisplayName("Podcast Category")]
+        public string PodcastCategory { get; set; }
+
+        [DisplayName("Podcast Sub-category")]
+        public string PodcastSubCategory { get; set; }
+
+        public virtual long? PosterId { get; set; }
+
+        [ForeignKey("PosterId")]
+        public virtual WebFile Poster { get; set; }
+        
         public virtual ICollection<WebFile> Files { get; set; }
 
         public virtual ICollection<Permission> Permissions { get; set; }

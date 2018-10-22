@@ -30,6 +30,10 @@ namespace wwwplatform.Models
             Name = folder.Name;
             Description = folder.Description;
             ParentFolderId = folder.ParentFolderId;
+            Podcast = folder.Podcast;
+            PosterId = folder.PosterId;
+            PodcastCategory = folder.PodcastCategory;
+            PodcastSubCategory = folder.PodcastSubCategory;
         }
 
         public bool IsOwner(IPrincipal User)

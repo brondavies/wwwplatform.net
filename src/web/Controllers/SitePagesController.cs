@@ -14,7 +14,7 @@ using wwwplatform.Shared.Extensions;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Editors, Roles.Administrators)]
+    [Extensions.Attributes.Authorize(Roles.Editors, Roles.Administrators)]
     public class SitePagesController : BaseController
     {
         const string AllowedFields = "Id,Name,Order,Description,PubDate,Layout,HTMLBody,ParentPageId,ShowInNavigation,HomePage,RedirectUrl";

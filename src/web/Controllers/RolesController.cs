@@ -14,7 +14,7 @@ using wwwplatform.Models.ViewModels;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators)]
+    [Extensions.Attributes.Authorize(Roles.Administrators)]
     public class RolesController : BaseController
     {
         // GET: Roles

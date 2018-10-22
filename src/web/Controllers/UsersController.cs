@@ -12,7 +12,7 @@ using Microsoft.AspNet.Identity;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators)]
+    [Extensions.Attributes.Authorize(Roles.Administrators)]
     public class UsersController : BaseAccountController
     {
         private const string AllowedFields = "ConFirmPassword,Email,EmailConfirmed,FirstName,LastName,LockoutEnabled,LockoutEndDateUtc,Password,PhoneNumber,PhoneNumberConfirmed,TwoFactorEnabled,UserName";

@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml-stylesheet type="text/xsl" href="/Content/xsl/rss/display.xsl" ?>
+<?xml-stylesheet type="text/css" href="/Content/xsl/rss/display.css" ?>
+@using wwwplatform.Models;
+@model SharedFolder
+@helper Link (string url)
+{
+WriteLiteral("<link>");
+WriteLiteral(url);
+WriteLiteral("</link>");
+}
+<rss xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:atom="http://www.w3.org/2005/Atom" version="2.0" xml:lang="en-US">
+    <channel>
+        <title>@Model.Name</title>
+        <link>@Request.Url.OriginalString.ToLower()</link>
+        <atom:link href="@Request.Url.OriginalString.ToLower()" rel="self" type="application/rss+xml" />
+        <description>@Model.Description</description>
+        <itunes:owner>
+            <itunes:name>@Settings.SiteOwner</itunes:name>
+            <itunes:email>@Settings.EmailDefaultFrom</itunes:email>
+        </itunes:owner>
+        <itunes:author>@Model.UpdatedBy</itunes:author>
+        <itunes:explicit>no</itunes:explicit>
+        <itunes:category text="@Model.PodcastCategory">
+            <itunes:category text="@Model.PodcastSubCategory" />
+        </itunes:category>
+        <copyright>Copyright @(DateTime.Now.Year) @(Settings.SiteOwner). All rights reserved.</copyright>
+        <itunes:image href="@(Model.Poster?.GetUrl(Settings))" />
+        @foreach (var file in Model.Files.Where(f => f.GetFileType() == FileType.Audio).OrderByDescending(f => f.DisplayDate ?? f.UpdatedAt))
+        {
+        <item>
+            <title>@file.Name</title>
+            <itunes:author />
+            <itunes:summary>@file.Description</itunes:summary>
+            <itunes:image href="@file.GetPreviewUrl(Settings)" />
+            <itunes:keywords />
+            @Link(file.GetUrl(Settings))
+            <enclosure url="@file.GetUrl(Settings)" type="@file.GetMimeType()" length="@file.Size" />
+            <guid isPermaLink="true">@file.GetUrl(Settings)</guid>
+            <pubDate>@((file.DisplayDate ?? file.UpdatedAt).ToUniversalTime().ToString("R"))</pubDate>
+        </item>
+        }
+    </channel>
+</rss>

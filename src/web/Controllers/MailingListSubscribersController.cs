@@ -14,7 +14,7 @@ using wwwplatform.Extensions.Email;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators, Roles.ListManagers)]
+    [Extensions.Attributes.Authorize(Roles.Administrators, Roles.ListManagers)]
     public class MailingListSubscribersController : BaseController
     {
         private const string AllowedFields = "Id,FirstName,LastName,Email,Enabled";

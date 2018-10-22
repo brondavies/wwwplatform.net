@@ -14,7 +14,7 @@ using wwwplatform.Shared.Helpers;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize(Roles.Administrators)]
+    [Extensions.Attributes.Authorize(Roles.Administrators)]
     public class AppSettingsController : BaseController
     {
         // GET: AppSettings

@@ -28,7 +28,7 @@ using System.Web.ModelBinding;
 
 namespace wwwplatform.Controllers
 {
-    [Extensions.Authorize]
+    [Extensions.Attributes.Authorize]
     [Serializer(typeof(WebFileSerializer))]
     public class WebFilesController : BaseController
     {
@@ -221,7 +221,7 @@ namespace wwwplatform.Controllers
                 }
                 else
                 {
-                    return new HttpUnauthorizedResult("Permission denied");
+                    throw new Exception("Permission denied");
                 }
             }
             catch (Exception ex)
