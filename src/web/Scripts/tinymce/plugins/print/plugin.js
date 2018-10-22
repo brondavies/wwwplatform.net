@@ -1,32 +1,38 @@
-/**
- * plugin.js
- *
- * Released under LGPL License.
- * Copyright (c) 1999-2015 Ephox Corp. All rights reserved
- *
- * License: http://www.tinymce.com/license
- * Contributing: http://www.tinymce.com/contributing
- */
+(function () {
+var print = (function () {
+  'use strict';
 
-/*global tinymce:true */
+  var global = tinymce.util.Tools.resolve('tinymce.PluginManager');
 
-tinymce.PluginManager.add('print', function(editor) {
-	editor.addCommand('mcePrint', function() {
-		editor.getWin().print();
-	});
+  var register = function (editor) {
+    editor.addCommand('mcePrint', function () {
+      editor.getWin().print();
+    });
+  };
+  var $_6xny5djkjm0ofzuk = { register: register };
 
-	editor.addButton('print', {
-		title: 'Print',
-		cmd: 'mcePrint'
-	});
+  var register$1 = function (editor) {
+    editor.addButton('print', {
+      title: 'Print',
+      cmd: 'mcePrint'
+    });
+    editor.addMenuItem('print', {
+      text: 'Print',
+      cmd: 'mcePrint',
+      icon: 'print'
+    });
+  };
+  var $_9tduozjljm0ofzul = { register: register$1 };
 
-	editor.addShortcut('Meta+P', '', 'mcePrint');
+  global.add('print', function (editor) {
+    $_6xny5djkjm0ofzuk.register(editor);
+    $_9tduozjljm0ofzul.register(editor);
+    editor.addShortcut('Meta+P', '', 'mcePrint');
+  });
+  function Plugin () {
+  }
 
-	editor.addMenuItem('print', {
-		text: 'Print',
-		cmd: 'mcePrint',
-		icon: 'print',
-		shortcut: 'Meta+P',
-		context: 'file'
-	});
-});
+  return Plugin;
+
+}());
+})();

@@ -39,7 +39,7 @@ namespace wwwplatform.Controllers.Tests
             var context = CreateMockContext(controller, "Create");
             controller.db = db;
             controller.RoleManager = CreateRoleManager();
-            var mockUser = CreateMockUser("jethro");
+            var mockUser = CreateMockUser("jethro", Roles.Administrators);
             db.CurrentUser = mockUser;
             context.HttpContext.Setup(r => r.User).Returns(mockUser); //(new Mock<IPrincipal>().Object);
             var mockFile = new Mock<HttpPostedFileBase>();
