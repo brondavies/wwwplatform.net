@@ -1,13 +1,14 @@
 ﻿$(function () {
     'use strict';
 
-    $(".check-box.bootstrap-switch")
-        .not($(".check-box.bootstrap-switch.yes-no").bootstrapSwitch({
-            onText: 'YES',
-            offText: 'NO'
-        }))
-        .bootstrapSwitch();
-
+    if ($(document).bootstrapSwitch) {
+        $(".check-box.bootstrap-switch")
+            .not($(".check-box.bootstrap-switch.yes-no").bootstrapSwitch({
+                onText: 'YES',
+                offText: 'NO'
+            }))
+            .bootstrapSwitch();
+    }
     var failure = '_failure';
     var success = '_success';
     var failureMessage = $.cookie(failure);
@@ -52,10 +53,11 @@
     $(document).on('click', '[data-href]', function (event) {
         var href = $(this).data('href');
         var target = $(this).data('target') || '_self';
-        if (event.target.tagName != 'A' && href) {
+        if (event.target.tagName !== 'A' && href) {
             window.open(href, target, true);
         }
     }).on('click', '[data-event]', function (event) {
+        event.preventDefault();
         var $this = $(this);
         var eventname = $this.data('event');
         $(window).trigger(eventname, [this, $this.data(), event]);
