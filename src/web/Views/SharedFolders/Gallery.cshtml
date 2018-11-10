@@ -1,0 +1,65 @@
+﻿@using wwwplatform.Models;
+@using wwwplatform.Models.ViewModels;
+@using wwwplatform.Extensions.Helpers;
+@using wwwplatform.Shared.Extensions;
+
+@model wwwplatform.Models.SharedFolder
+
+@{
+    ViewBag.Title = Model.Name;
+    var slug = Model.Slug;
+    var isAdmin = User.IsInRole(wwwplatform.Models.Roles.Administrators);
+    var isFolderOwner = isAdmin || Model.UpdatedBy == User.Identity.Name;
+    var canUpload = isFolderOwner || UserInAnyRole(Settings.RolesWithUploadPermission.Split(','));
+    var hasParent = Model.ParentFolderId.HasValue;
+    var parentlink = hasParent ? "/Shared/" + Model.ParentFolder.Slug : "/SharedFolders";
+    var parentName = hasParent ? Model.ParentFolder.Name : "";
+}
+@helper ViewerUrl(WebFile file)
+{
+    WriteLiteral(string.Format("/Downloads/{0}/{1}", file.Id, file.GetFileName()));
+}
+@section head {
+    <link href="//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" rel="stylesheet">
+}
+
+<h2>
+    @ViewBag.Title
+    <span class="h3 text-muted">
+        @Model.Description
+    </span>
+</h2>
+
+@if (Model.Files.Count() == 0 && Model.SubFolders.Count() == 0)
+{
+    <section class="jumbotron text-center"><h3 class="text-muted">No files here</h3></section>
+}
+else
+{
+    <section class="photo-gallery">
+        <div class="row text-center">
+            <div class="col-md-12">
+                @foreach (var file in Model.Files.Where(f => f.GetFileType() == FileType.Image).OrderByDescending(f => f.DisplayDate ?? f.UpdatedAt))
+                {
+                <a href="@ViewerUrl(file)" data-toggle="lightbox" data-gallery="@slug" class="img-thumbnail" title="@file.Name" data-description="@file.Description">
+                    <div class="thumbnail" style="background-image:url(@(file.GetPreviewUrl(Settings)))"></div>
+                </a>
+                }
+            </div>
+        </div>
+    </section>
+}
+@using (Html.BeginScriptContext())
+{
+    Html.AddScriptFile("//cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.min.js");
+    Html.AddScriptBlock(
+@<script type="text/javascript">
+    $(function () {
+        $(document).on('click', '[data-toggle="lightbox"]', function (event) {
+            event.preventDefault();
+            $(this).ekkoLightbox();
+        });
+     });
+</script>
+);
+}

@@ -100,9 +100,13 @@ switch (file.GetFileType())
             @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
         }
     }
-    @if (Model.Podcast)
+    @if(Model.Podcast)
     {
         @Html.ActionLink("Podcast", "Podcast", null, new { @class = "btn btn-default" })
+    }
+    @if (Model.PhotoGallery)
+    {
+        @Html.ActionLink("Gallery", "Gallery", null, new { @class = "btn btn-default" })
     }
     </div>
 </section>

@@ -56,6 +56,7 @@ namespace wwwplatform.Controllers
         }
 
         // GET: WebFiles/Details/5
+        // GET: Downloads/5/{extra}
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         [OutputCache(Location = System.Web.UI.OutputCacheLocation.Client, Duration = 3600)]
         [AllowAnonymous]
@@ -148,7 +149,7 @@ namespace wwwplatform.Controllers
                                 ModelState["Name"]?.Errors?.Clear();
                                 if (ImageHelper.IsImageFile(uploadedFile))
                                 {
-                                    file = UploadFile(uploadedFile, results, db, HttpContext, Settings);
+                                    file = UploadImage(uploadedFile, results);
                                 }
                                 else
                                 if ((VideoHelper.IsVideoFile(uploadedFile) || VideoHelper.IsAudioFile(uploadedFile)))

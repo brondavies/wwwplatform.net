@@ -22,85 +22,94 @@
 @using (Html.BeginForm())
 {
     @SimpleAntiForgeryToken()
-    <div class="form-horizontal">
-        <div class="row">
-            <div class="col-sm-9">
-                <h4 class="no-margin">@(Model.Name ?? "New Shared Folder")</h4>
-            </div>
-            <div class="col-sm-3 text-right">
-                <input type="submit" value="Save" class="btn btn-default" />
-                @Html.ActionLink("Cancel", "Index")
-            </div>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-9">
+            <h4 class="no-margin">@(Model.Name ?? "New Shared Folder")</h4>
         </div>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @if (Model.Id > 0)
-        {
-            Html.HiddenFor(model => model.Id);
-        }
-
-        @Html.HiddenFor(model => model.ParentFolderId)
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+        <div class="col-sm-3 text-right">
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Index")
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <div class="col-md-10 col-md-offset-2">
-                <label>
-                    @Html.EditorFor(model => model.Podcast)
-                    Publish Podcast
-                </label>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="input-group">
-                    @Html.HiddenFor(model => model.PosterId)
-                    <input name="Poster" type="text" value="@(Model.Poster?.GetFileName())" readonly class="form-control" />
-                    @UploadDialogButton(new SelectFileOptions { name = "Poster_" + Model.Slug, text = "Upload", eventName = "Poster_upload", className = "input-group-addon", singleSelect = true })
-                </div>
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PodcastCategory, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PodcastCategory, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PodcastCategory, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PodcastSubCategory, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PodcastSubCategory, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.PodcastSubCategory, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Permissions</label>
-            <div class="col-md-10">
-                @RoleButtonGroup(permissions)
-            </div>
-        </div>
-
     </div>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @if (Model.Id > 0)
+    {
+        Html.HiddenFor(model => model.Id);
+    }
+
+    @Html.HiddenFor(model => model.ParentFolderId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+            <label>
+                @Html.EditorFor(model => model.Podcast)
+                Publish Podcast
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-10 col-md-offset-2">
+            <label>
+                @Html.EditorFor(model => model.PhotoGallery)
+                Enable Photo Gallery View
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="input-group">
+                @Html.HiddenFor(model => model.PosterId)
+                <input name="Poster" type="text" value="@(Model.Poster?.GetFileName())" readonly class="form-control" />
+                @UploadDialogButton(new SelectFileOptions { name = "Poster_" + Model.Slug, text = "Upload", eventName = "Poster_upload", className = "input-group-addon", singleSelect = true })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PodcastCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PodcastCategory, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PodcastCategory, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PodcastSubCategory, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PodcastSubCategory, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.PodcastSubCategory, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Permissions</label>
+        <div class="col-md-10">
+            @RoleButtonGroup(permissions)
+        </div>
+    </div>
+
+</div>
 }
 @using (Html.BeginScriptContext())
 {

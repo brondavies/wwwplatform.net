@@ -368,7 +368,7 @@ table.dataTable thead>tr>td.sorting {
     /*color:#fff;*/
     display:initial;
     left: 0;
-    overflow: visible;
+    overflow: hidden;
     position: absolute;
     right: 0;
     top: 8px;
@@ -387,6 +387,9 @@ table.dataTable thead>tr>td.sorting {
     position: absolute;
     right: 10px;
     top: 8px;
+}
+.js-uploader.uploading form {
+    visibility: hidden;
 }
 @keyframes animatedBackground {
     0% { background-position: 0 0; }
@@ -496,4 +499,11 @@ ul > li:empty {
 }
 .SitePageBody.out {
     pointer-events: none;
+}
+.photo-gallery .thumbnail {
+    background-position: center;
+    background-size: cover;
+    height: 225px;
+    margin: 0;
+    width: 300px;
 }

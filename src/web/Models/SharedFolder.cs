@@ -18,6 +18,8 @@ namespace wwwplatform.Models
 
         public bool Podcast { get; set; }
 
+        public bool PhotoGallery { get; set; }
+
         [DisplayName("Podcast Category")]
         public string PodcastCategory { get; set; }
 

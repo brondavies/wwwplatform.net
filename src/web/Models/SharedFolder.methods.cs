@@ -31,6 +31,7 @@ namespace wwwplatform.Models
             Description = folder.Description;
             ParentFolderId = folder.ParentFolderId;
             Podcast = folder.Podcast;
+            PhotoGallery = folder.PhotoGallery;
             PosterId = folder.PosterId;
             PodcastCategory = folder.PodcastCategory;
             PodcastSubCategory = folder.PodcastSubCategory;

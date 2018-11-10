@@ -902,6 +902,7 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-mobile.woff" />
+    <Content Include="Views\SharedFolders\Gallery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Scripts\tinymce\langs\" />

@@ -16,7 +16,7 @@ namespace wwwplatform.Controllers
     [Extensions.Attributes.Authorize]
     public class SharedFoldersController : BaseController
     {
-        private const string AllowedFields = "Id,Name,Description,ParentFolderId,Podcast,PosterId,PodcastCategory,PodcastSubCategory";
+        private const string AllowedFields = "Id,Name,Description,ParentFolderId,Podcast,PhotoGallery,PosterId,PodcastCategory,PodcastSubCategory";
 
         // GET: SharedFolders
         [AllowAnonymous]
@@ -131,6 +131,18 @@ namespace wwwplatform.Controllers
         [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
         [AllowAnonymous]
         public async Task<ActionResult> Display(string slug)
+        {
+            var folder = await FindFolderWithSlug(slug, true);
+            if (folder == null)
+            {
+                return HttpNotFound();
+            }
+            return View(folder);
+        }
+
+        [AcceptVerbs(HttpVerbs.Get | HttpVerbs.Head)]
+        [AllowAnonymous]
+        public async Task<ActionResult> Gallery(string slug)
         {
             var folder = await FindFolderWithSlug(slug, true);
             if (folder == null)
