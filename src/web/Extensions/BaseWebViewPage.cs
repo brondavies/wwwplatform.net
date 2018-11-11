@@ -268,8 +268,26 @@ namespace wwwplatform.Extensions
         {
             get
             {
-                return SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, true, true).Include(p => p.SubPages).ToList();
+                var pages = SitePage.GetAvailablePages(db, User, UserManager, RoleManager, true, false, true, true).ToList();
+                for (var i = 0; i < pages.Count; i++)
+                {
+                    var page = pages[i];
+                    if (page.SubPages != null)
+                    {
+                        FilterSubPages(page, pages);
+                    }
+                }
+                return pages.Where(p => p.ParentPageId == null).ToList();
             }
+        }
+
+        private void FilterSubPages(SitePage page, List<SitePage> pages)
+        {
+            page.SubPages = page.SubPages
+                               .Where(sp => pages.Any(p => p.Id == sp.Id))
+                               .Where(sp => sp.ShowInNavigation == true)
+                               .Where(sp => sp.PubDate < DateTime.UtcNow)
+                               .ToList();
         }
 
         #endregion

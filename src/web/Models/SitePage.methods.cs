@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
 using System.Web;
@@ -28,7 +29,7 @@ namespace wwwplatform.Models
             return "~/".ResolveUrl(context) + Slug;
         }
 
-        internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false)
+        internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false, bool includeSubPages = false)
         {
             var pages = Permission.GetPermissible<SitePage>(db, User, UserManager, RoleManager);
             if (showInNavigation)
@@ -42,6 +43,10 @@ namespace wwwplatform.Models
             if (published)
             {
                 pages = pages.Where(p => p.PubDate < DateTime.UtcNow);
+            }
+            if (includeSubPages)
+            {
+                pages = pages.Include(p => p.SubPages);
             }
 
             return pages.OrderBy(p => p.ParentPageId).OrderBy(p => p.Order);
