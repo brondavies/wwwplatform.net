@@ -25,12 +25,38 @@
 			</div>
 			<dl style="padding-right:1em">
 				<xsl:for-each select="channel/item">
-					<xsl:if test="enclosure/@type = 'image/png'">
+          <dd>
+            <xsl:element name="a">
+              <xsl:attribute name="href">
+                <xsl:value-of select="link"/>
+              </xsl:attribute>
+              <xsl:value-of select="title"/>
+            </xsl:element>
+          </dd>
+          <dt>
+            <xsl:value-of select="description" />
+            <br />
+            <span class="comments">
+              <xsl:value-of select="pubDate" />
+            </span>
+          </dt>
+					<xsl:if test="enclosure/@type='audio/mpeg'">
+						<audio controls="true" style="width:25%; margin:2em 0;">
+							<xsl:element name="source">
+                <xsl:attribute name="src">
+								  <xsl:value-of select="enclosure/@url"/>
+                </xsl:attribute>
+                <xsl:attribute name="type">audio/mpeg</xsl:attribute>
+							</xsl:element>
+						</audio>
+            <br />
+					</xsl:if>
+					<xsl:if test="enclosure/@type='image/png'">
 						<xsl:element name="img">
 							<xsl:attribute name="src">
 								<xsl:value-of select="enclosure/@url"/>
 							</xsl:attribute>
-							<xsl:attribute name="style">float:left; width:25%; margin:2em 0;</xsl:attribute>
+							<xsl:attribute name="style">float:left; width:320px; margin:2em 0;</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
 					<xsl:if test="itunes:image">
@@ -38,21 +64,9 @@
 							<xsl:attribute name="src">
 								<xsl:value-of select="itunes:image/@href"/>
 							</xsl:attribute>
-							<xsl:attribute name="style">float:left; width:25%; margin:2em 0;</xsl:attribute>
+							<xsl:attribute name="style">float:left; width:320px; margin:2em 0;</xsl:attribute>
 						</xsl:element>
 					</xsl:if>
-					<dd>
-						<xsl:element name="a">
-							<xsl:attribute name="href">
-								<xsl:value-of select="link"/>
-							</xsl:attribute>
-							<xsl:value-of select="title"/>
-						</xsl:element>
-					</dd>
-					<dt>
-						<xsl:value-of select="description" /><br />
-						<span class="comments"><xsl:value-of select="pubDate" /></span>
-					</dt>
 				</xsl:for-each>
 			</dl>
 		</div>

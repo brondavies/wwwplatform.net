@@ -25,6 +25,7 @@ using System.Drawing;
 using ImageProcessor;
 using wwwplatform.Shared.Extensions.System;
 using System.Web.ModelBinding;
+using System.Text.RegularExpressions;
 
 namespace wwwplatform.Controllers
 {
@@ -86,8 +87,32 @@ namespace wwwplatform.Controllers
                 string filename = webFile.Name.Replace(" ", "-") + Path.GetExtension(location);
                 Response.Headers["Content-Disposition"] = inline + ";filename=" + filename;
             }
-            return File(System.IO.File.OpenRead(ReconcileFileToDownload(extra, filepath)), contentType);
-            //return File(filepath, contentType, filename);
+            var fileToDownload = ReconcileFileToDownload(extra, filepath);
+            if (Request.Headers.AllKeys.Contains("Range"))
+            {
+                var range = Request.Headers["Range"];
+                if (!string.IsNullOrEmpty(range))
+                {
+                    var replace = new Regex(@"[^\d]");
+                    var byte_range = replace.Replace(range, " ").Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (byte_range.Length == 2)
+                    {
+                        var start = long.Parse(byte_range[0]);
+                        var end   = long.Parse(byte_range[1]);
+                        using (var stream = System.IO.File.OpenRead(fileToDownload))
+                        {
+                            stream.Seek(start, SeekOrigin.Begin);
+                            var bytes = new byte[end-start];
+                            stream.Read(bytes, 0, bytes.Length);
+                            Response.StatusCode = 206;
+                            Response.StatusDescription = "Partial Content";
+                            Response.Headers["Content-Range"] = $"bytes {start}-{end}/{stream.Length}";
+                            return File(bytes, contentType);
+                        }
+                    }
+                }
+            }
+            return File(System.IO.File.OpenRead(fileToDownload), contentType);
         }
 
         private string ReconcileFileToDownload(string prefferedName, string filename)
