@@ -11,22 +11,26 @@
     }
     var failure = '_failure';
     var success = '_success';
-    var failureMessage = $.cookie(failure);
-    if (failureMessage) {
-        $.removeCookie(failure);
-        $.removeCookie(failure, { path: '/' });
-        $('#messages, .messages').first().append(
-            $('<p></p>').html(failureMessage).addClass('bg-danger text-danger')
-        );
+    function showToastMessages() {
+        var failureMessage = $.cookie(failure);
+        if (failureMessage) {
+            $.removeCookie(failure);
+            $.removeCookie(failure, { path: '/' });
+            $('#messages, .messages').first().append(
+                $('<p></p>').html(failureMessage).addClass('bg-danger text-danger')
+            );
+        }
+        var successMessage = $.cookie(success);
+        if (successMessage) {
+            $.removeCookie(success);
+            $.removeCookie(success, { path: '/' });
+            $('#messages, .messages').first().append(
+                $('<p></p>').html(successMessage).addClass('bg-success text-success')
+            );
+        }
     }
-    var successMessage = $.cookie(success);
-    if (successMessage) {
-        $.removeCookie(success);
-        $.removeCookie(success, { path: '/' });
-        $('#messages, .messages').first().append(
-            $('<p></p>').html(successMessage).addClass('bg-success text-success')
-        );
-    }
+    showToastMessages();
+    $(window).bind('toastmessages.show', showToastMessages);
 
     $('#messages, .messages').click(function () {
         $('p', this).animate({ opacity: 0 },

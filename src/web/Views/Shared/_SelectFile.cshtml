@@ -312,7 +312,9 @@
                             } else {
                                 var id = $('[data-role="file-id"]', modal).val();
                                 var url = $('[data-role="file-url"]', modal).val();
-                                if (datatable) {
+                                if (singleSelect) {
+                                    id = JSON.parse(id).pop();
+                                } else if (datatable) {
                                     var rows = datatable.rows('.selected');
                                     if (rows.indexes().length) {
                                         id = [];
@@ -329,6 +331,7 @@
                                     callback && callback(url, result);
                                     eventName && $(window).trigger(eventName, result);
                                 }
+                                $(window).trigger('toastmessages.show');
                             }
                         });
 

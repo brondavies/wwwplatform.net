@@ -507,3 +507,6 @@ ul > li:empty {
     margin: 0;
     width: 300px;
 }
+.input-group-addon:not(:first-child):not(:last-child) {
+    border-left: 0;
+}

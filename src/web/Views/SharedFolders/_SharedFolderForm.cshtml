@@ -78,9 +78,10 @@
     <div class="form-group">
         @Html.LabelFor(model => model.Poster, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
+            @Html.HiddenFor(model => model.PosterId)
             <div class="input-group">
-                @Html.HiddenFor(model => model.PosterId)
                 <input name="Poster" type="text" value="@(Model.Poster?.GetFileName())" readonly class="form-control" />
+                <a href="#" onclick="event.preventDefault();$('[name=Poster],[name=PosterId]').val('')" class="btn btn-default input-group-addon"><i class="fa fa-remove fa-times"></i></a>
                 @UploadDialogButton(new SelectFileOptions { name = "Poster_" + Model.Slug, text = "Upload", eventName = "Poster_upload", className = "input-group-addon", singleSelect = true })
             </div>
         </div>
