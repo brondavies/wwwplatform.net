@@ -106,7 +106,7 @@ namespace wwwplatform.Controllers
                 success = false;
             }
 
-            return View(new SentEmailMessageModel { SentCount = SentCount, TotalCount = TotalCount, Subject = model.subject, To = mailingList.Name, Success = success });
+            return View(new SentEmailMessageModel { SentCount = SentCount, TotalCount = TotalCount, Subject = model.subject, To = mailingList.Name, MailingListId = mailingList.Id, Success = success });
         }
 
         // POST: MailingLists/Create

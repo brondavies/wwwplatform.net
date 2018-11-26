@@ -15,6 +15,7 @@ namespace wwwplatform.Models
         [DisplayName("Number of Subscribers")]
         public int TotalCount { get; set; }
 
+        public long MailingListId { get; set; }
         public string To { get; set; }
         public string Subject { get; set; }
         public bool Success { get; set; }

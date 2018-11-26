@@ -1,21 +1,37 @@
-﻿@model wwwplatform.Models.WebFile
+﻿@using wwwplatform.Extensions.Helpers.Bootstrap;
+
+@model wwwplatform.Models.WebFile
 
 @{
     ViewBag.Title = "Details";
+    var columns = new[] { new { sm = 8 }, new { sm = 4 } };
 }
 
 <h2>Details</h2>
 
 <div>
-    <h4>WebFile</h4>
+    @Html.Row(columns
+        ).Column(
+        ).Add(
+        @<h4 class="no-margin">
+            @Model.Name
+        </h4>
+        ).Column(htmlAttributes: new { @class = "text-right" }
+        ).Add(@<div class="btn-group">
+                @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+            </div>
+        ).Add(
+            Html.ActionLink("Cancel", "Index")
+        )
     <hr />
     <dl class="dl-horizontal">
+
         <dt>
-            @Html.DisplayNameFor(model => model.Name)
+            File Name
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Name)
+            @Html.DisplayFor(model => model.GetFileName())
         </dd>
 
         <dt>
@@ -36,7 +52,3 @@
 
     </dl>
 </div>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
