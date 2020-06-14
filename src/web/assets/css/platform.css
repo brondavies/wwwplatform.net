@@ -271,7 +271,8 @@ span.btn {
 body>.modal-backdrop {
     z-index: 65536;
 }
-body>.modal {
+body>.modal, 
+body>.content>.modal {
     z-index: 65537;
 }
 table.clickable>tbody>tr {

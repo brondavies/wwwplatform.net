@@ -166,7 +166,7 @@ namespace wwwplatform.Extensions
 
         public IHtmlString MailingListAdminLink()
         {
-            if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Administrators))
+            if (User.Identity.IsAuthenticated && (User.IsInRole(Roles.Administrators) || User.IsInRole(Roles.ListManagers)))
             {
                 return LI(Html.ActionLink("Mailing Lists", "Index", "MailingLists"));
             }
