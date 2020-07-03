@@ -20,12 +20,14 @@
             @Model.Name
         </h4>
         ).Column(htmlAttributes: new { @class = "text-right" }
-        ).Add(@<div class="btn-group">
+        ).Add(@<div>
+            @Html.ActionLink("New Message", "Compose", new { id = Model.Id }, new { @class = "btn btn-success" })
+            <div class="btn-group">
             @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
             @Html.ActionLink("Subscribe", "Create", "MailingListSubscribers", new { id = Model.Id }, new { @class = "btn btn-default" })
+            </div>
+            @Html.ActionLink("Cancel", "Index")
         </div>
-        ).Add(
-            Html.ActionLink("Cancel", "Index")
         )
 </div>
 <hr />

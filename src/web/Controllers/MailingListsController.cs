@@ -12,6 +12,10 @@ using wwwplatform.Extensions;
 using wwwplatform.Extensions.Email;
 using wwwplatform.Extensions.Logging;
 using wwwplatform.Models.ViewModels;
+using OfficeOpenXml;
+using wwwplatform.Extensions.Actions;
+using wwwplatform.Extensions.Export;
+using wwwplatform.Shared.Extensions.System;
 
 namespace wwwplatform.Controllers
 {
@@ -203,6 +207,26 @@ namespace wwwplatform.Controllers
             }
 
             return View(new MailingListSubscriber { MailingList = mailingList });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ExportList(long? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            MailingList mailingList = await db.ActiveMailingLists.Include(m => m.Subscribers).FindAsync(id);
+            if (mailingList == null)
+            {
+                return HttpNotFound();
+            }
+
+            var package = new ExcelPackage();
+            var worksheet = package.Workbook.Worksheets.Add(mailingList.Name);
+            mailingList.Subscribers.Export(worksheet);
+
+            return new EPPlusResult(package, $"{mailingList.Name.CleanFileName()}-Subscribers.xlsx");
         }
     }
 }

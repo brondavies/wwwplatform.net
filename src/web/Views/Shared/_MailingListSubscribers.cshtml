@@ -4,7 +4,10 @@
 
 <div>
     <h4 class="inline">Subscribers</h4>
-    @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class = "btn btn-success pull-right" })
+    <div class="pull-right inline">
+        @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class = "btn btn-success" })
+        @Html.ActionLink("Export", "ExportList", new { id = ViewBag.Id }, new { @class = "btn btn-success" })
+    </div>
 </div>
 <table class="table table-striped auto-datatable clickable">
     <thead>

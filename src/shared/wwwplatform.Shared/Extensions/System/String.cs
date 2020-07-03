@@ -115,7 +115,7 @@ namespace wwwplatform.Shared.Extensions.System
         public static string CleanFileName(this string value)
         {
             if (string.IsNullOrEmpty(value)) { return value; }
-            Regex regex = new Regex("[^a-zA-Z0-9]", RegexOptions.IgnoreCase);
+            Regex regex = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase);
             return string.Join("-", regex.Replace(value, "-").Split("-".ToCharArray(), StringSplitOptions.RemoveEmptyEntries));
         }
 
