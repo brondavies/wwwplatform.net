@@ -22,7 +22,7 @@ namespace wwwplatform.Controllers
     [Extensions.Attributes.Authorize(Roles.Administrators, Roles.ListManagers)]
     public class MailingListsController : BaseController
     {
-        private const string AllowedFields = "Id,Name,Description,EmailAddress";
+        private const string AllowedFields = "Id,Name,Description,EmailAddress,AllowSubscribe";
 
         // GET: MailingLists
         public async Task<ActionResult> Index()

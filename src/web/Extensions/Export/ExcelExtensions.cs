@@ -1,6 +1,7 @@
 ﻿using OfficeOpenXml;
 using System.Collections.Generic;
 using wwwplatform.Models;
+using OfficeOpenXml.Style;
 
 namespace wwwplatform.Extensions.Export
 {
@@ -8,7 +9,8 @@ namespace wwwplatform.Extensions.Export
     {
         public static void Export(this IEnumerable<MailingListSubscriber> subscribers, ExcelWorksheet worksheet)
         {
-            worksheet.Row(1).Style.Fill.BackgroundColor.SetColor(0xFF, 0x3F, 0x51, 0xB5);
+            worksheet.Row(1).Style.Fill.PatternType = ExcelFillStyle.Solid;
+            worksheet.Row(1).Style.Fill.BackgroundColor.SetColor(0xFF, 0x44, 0x72, 0xC4);
             worksheet.Row(1).Style.Font.Color.SetColor(0xFF, 0xFF, 0xFF, 0xFF);
             var col = 1;
             var row = 1;

@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace wwwplatform.Models
 {
@@ -24,6 +20,9 @@ namespace wwwplatform.Models
 
         [DisplayName("List Owner")]
         public ApplicationUser Owner { get; set; }
+
+        [DisplayName("Allow Subscribe"), DefaultValue(true)]
+        public bool AllowSubscribe { get; set; } = true;
 
         public virtual ICollection<MailingListSubscriber> Subscribers { get; set; }
     }

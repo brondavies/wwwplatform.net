@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Net;
-using System.Web;
 using System.Web.Mvc;
 using wwwplatform.Models;
 using wwwplatform.Extensions;
-using System.Web.Routing;
 using wwwplatform.Extensions.Email;
 
 namespace wwwplatform.Controllers
@@ -23,7 +19,7 @@ namespace wwwplatform.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> Create(long id)
         {
-            var mailinglist = await db.ActiveMailingLists.FindAsync(id);
+            var mailinglist = await db.ActiveMailingLists.Where(m => m.AllowSubscribe).FindAsync(id);
             if (mailinglist == null)
             {
                 return HttpNotFound();
@@ -39,7 +35,7 @@ namespace wwwplatform.Controllers
         {
             if (ModelState.IsValid)
             {
-                var mailinglist = await db.ActiveMailingLists.FindAsync(id);
+                var mailinglist = await db.ActiveMailingLists.Where(m => m.AllowSubscribe).FindAsync(id);
                 if (mailinglist != null)
                 {
                     MailingListSubscriber existing = await db.ActiveMailingListSubscribers.FirstOrDefaultAsync(s => s.Email == mailingListSubscriber.Email && s.MailingList.Id == mailinglist.Id);

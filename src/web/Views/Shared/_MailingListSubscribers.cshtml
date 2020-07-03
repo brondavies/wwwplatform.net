@@ -1,12 +1,14 @@
 ﻿@using wwwplatform.Models.ViewModels;
 
 @model IEnumerable<wwwplatform.Models.MailingListSubscriber>
-
+@{ 
+    var exportlist = Url.Action("ExportList", new { id = ViewBag.Id });
+}
 <div>
     <h4 class="inline">Subscribers</h4>
     <div class="pull-right inline">
         @Html.ActionLink("Add New", "AddSubscriber", new { id = ViewBag.Id }, new { @class = "btn btn-success" })
-        @Html.ActionLink("Export", "ExportList", new { id = ViewBag.Id }, new { @class = "btn btn-success" })
+        <a href="@exportlist" class="btn btn-default"><i class="fa fa-file-excel-o"></i> Export</a>
     </div>
 </div>
 <table class="table table-striped auto-datatable clickable">
