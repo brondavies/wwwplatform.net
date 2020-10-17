@@ -19,6 +19,7 @@
         ).Column(htmlAttributes: new { @class = "text-right" }
         ).Add(@<div class="btn-group">
                 @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class = "btn btn-default" })
+                @Html.ActionLink("Make a Copy", "Copy", new { Model.Id }, new { @class = "btn btn-default" })
             </div>
         ).Add(
             Html.ActionLink("Cancel", "Index")

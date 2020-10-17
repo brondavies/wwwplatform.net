@@ -121,6 +121,7 @@ namespace wwwplatform.Controllers
         {
             var sharedFolders = SharedFolder.GetEditableFolders(db, User);
             SharedFolder sharedFolder = await sharedFolders.Include(f => f.Permissions).Include(f => f.Files).FindAsync(id);
+            db.Permissions.RemoveRange(sharedFolder.Permissions);
             db.SharedFolders.Remove(sharedFolder);
             await db.SaveChangesAsync();
             SetSuccessMessage(string.Format("Folder {0} was deleted successfully!", sharedFolder.Name));

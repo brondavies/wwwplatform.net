@@ -3,5 +3,9 @@
 @{
     ViewBag.Title = Model.Name;
 }
+@section head
+{
+    @Html.Raw(Model.HTMLHeaders)
+}
 <h2>@Model.Name</h2>
 @Html.Raw(Model.HTMLBody)

@@ -12,6 +12,7 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using wwwplatform.Extensions.Helpers;
 using System.Data.Entity.Validation;
+using System.IO;
 
 namespace wwwplatform.Extensions
 {
@@ -209,6 +210,23 @@ namespace wwwplatform.Extensions
                 exception = exception.InnerException;
             }
             return list.Count > 0 ? string.Join("\r\n", list.ToArray()) : null;
+        }
+
+        protected string RenderRazorViewToString(string viewName, object model)
+        {
+            var tempModel = ViewData.Model;
+            var result = "";
+            ViewData.Model = model;
+            using (var sw = new StringWriter())
+            {
+                var viewResult = ViewEngines.Engines.FindView(ControllerContext, "Index", viewName);
+                var viewContext = new ViewContext(ControllerContext, viewResult.View, ViewData, TempData, sw);
+                viewResult.View.Render(viewContext, sw);
+                viewResult.ViewEngine.ReleaseView(ControllerContext, viewResult.View);
+                result = sw.GetStringBuilder().ToString();
+            }
+            ViewData.Model = tempModel;
+            return result;
         }
 
         private const string failureCookie = "_failure";

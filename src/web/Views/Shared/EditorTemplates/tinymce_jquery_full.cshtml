@@ -54,10 +54,12 @@
                 }
 
                 function getContentCss() {
-                    var css = [];
-                    $('link[rel="stylesheet"], link[type="text/css"]').each(function (i, elm) {
-                        css.push(elm.href);
-                    });
+                    var css = window.MCE_STYLESHEETS || [];
+                    if (!css.length) {
+                        $('link[rel="stylesheet"], link[type="text/css"]').each(function (i, elm) {
+                            css.push(elm.href);
+                        });
+                    }
                     return css;
                 }
 
