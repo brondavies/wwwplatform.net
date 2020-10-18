@@ -39,6 +39,10 @@ namespace wwwplatform.Models
         [DisplayName("Page Body")]
         public string HTMLBody { get; set; }
 
+        [DataType(DataType.MultilineText), AllowHtml]
+        [DisplayName("Headers")]
+        public string HTMLHeaders { get; set; }
+
         public int Order { get; set; }
 
         [MaxLength(150)]

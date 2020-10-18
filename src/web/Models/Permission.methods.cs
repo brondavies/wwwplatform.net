@@ -41,7 +41,7 @@ namespace wwwplatform.Models
             return items;
         }
 
-        internal static void Apply(ApplicationDbContext db, IPrincipal User, ApplicationRoleManager RoleManager, Permissible permissible, string[] permissions = null)
+        internal static void Apply(ApplicationDbContext db, IPrincipal User, ApplicationRoleManager RoleManager, Permissible permissible, IEnumerable<string> permissions = null)
         {
             if (permissions == null)
             {

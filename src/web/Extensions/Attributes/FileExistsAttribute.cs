@@ -18,7 +18,7 @@ namespace wwwplatform.Extensions.Attributes
             this.required = required;
             this.mustExist = !mustNotExist;
             this.mustNotExist = mustNotExist;
-            ErrorMessage = mustExist ? "The file specified does not exist" : "The file specified already exists";
+            ErrorMessage = mustExist ? "The file specified does not exist." : "The file specified already exists.";
         }
 
         public override bool RequiresValidationContext => false;

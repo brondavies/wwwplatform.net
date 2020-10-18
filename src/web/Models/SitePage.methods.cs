@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
 using System.Security.Principal;
@@ -10,11 +11,31 @@ namespace wwwplatform.Models
 {
     public partial class SitePage : Auditable, Permissible
     {
-        internal void Update(SitePage sitePage, int? timeZoneOffset)
+        public SitePage CreateCopy()
+        {
+            var newname = Name + " (Copy)";
+            return new SitePage
+            {
+                Description = Description,
+                HTMLBody = HTMLBody,
+                HTMLHeaders = HTMLHeaders,
+                Layout = Layout,
+                Name = newname,
+                Order = Order,
+                ParentPageId = ParentPageId,
+                PubDate = PubDate,
+                RedirectUrl = RedirectUrl,
+                ShowInNavigation = ShowInNavigation,
+                Slug = newname.CleanFileName(),
+            };
+        }
+
+        public void Update(SitePage sitePage, int? timeZoneOffset)
         {
             Description = sitePage.Description;
             HomePage = sitePage.HomePage;
             HTMLBody = sitePage.HTMLBody;
+            HTMLHeaders = sitePage.HTMLHeaders;
             Layout = sitePage.Layout;
             Name = sitePage.Name;
             Order = sitePage.Order;
@@ -22,6 +43,7 @@ namespace wwwplatform.Models
             PubDate = (timeZoneOffset.HasValue) ? sitePage.PubDate.FromTimezone(timeZoneOffset.Value) : sitePage.PubDate;
             RedirectUrl = sitePage.RedirectUrl;
             ShowInNavigation = sitePage.ShowInNavigation;
+            Slug = sitePage.Slug;
         }
 
         public string AppRelativeUrl(HttpContextBase context = null)
@@ -29,7 +51,7 @@ namespace wwwplatform.Models
             return "~/".ResolveUrl(context) + Slug;
         }
 
-        internal static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false, bool includeSubPages = false)
+        public static IQueryable<SitePage> GetAvailablePages(ApplicationDbContext db, IPrincipal User, ApplicationUserManager UserManager, ApplicationRoleManager RoleManager, bool published = true, bool isParent = true, bool showInNavigation = false, bool includeSubPages = false)
         {
             var pages = Permission.GetPermissible<SitePage>(db, User, UserManager, RoleManager);
             if (showInNavigation)

@@ -1,5 +1,5 @@
 ﻿@model wwwplatform.Models.SitePage
-
+@using System.Web.Mvc
 @{ 
     List<string> permissions = new List<string>();
     if (Model.Id > 0 && Model.Permissions != null)
@@ -21,136 +21,177 @@
     var RedirectUrlChecked = useRedirect ? "checked" : "";
     var RedirectUrlAttributes = new Dictionary<string, object> { ["class"] = "form-control" };
     if (!useRedirect) { RedirectUrlAttributes["disabled"] = "disabled"; }
+    var stylesheets = "";
+    if (ViewBag.StylesheetsFromLayout != null)
+    {
+        stylesheets = string.Format("window.MCE_STYLESHEETS = {0};", ViewBag.StylesheetsFromLayout);
+    }
 }
 @using (Html.BeginForm())
 {
     @SimpleAntiForgeryToken()
-    <div class="form-horizontal">
-        <div class="row">
-            <div class="col-sm-9">
-                <h4 class="no-margin">@(Model.Name ?? "New Page")</h4>
-            </div>
-            <div class="col-sm-3 text-right">
-                <input type="submit" value="Save" class="btn btn-default" />
-                @Html.ActionLink("Cancel", "Index")
-            </div>
+<div class="form-horizontal">
+    <div class="row">
+        <div class="col-sm-9">
+            <h4 class="no-margin">@(Model.Name ?? "New Page")</h4>
         </div>
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @if (Model.Id > 0)
-        {
-            Html.HiddenFor(model => model.Id);
-        }
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-2">Display</label>
-            @if (Model.HomePage)
+        <div class="col-sm-3 text-right">
+            @if (Model.Id > 0)
             {
-                @Html.HiddenFor(model => model.HomePage)
+                @Html.ActionLink("Make a Copy", "Copy", new { Model.Id }, new { @class = "btn btn-default" })
             }
-            else
-            {
-                <div class="col-sm-2">
-                    <label>
-                        @Html.EditorFor(model => model.HomePage)
-                        Set as home page
-                    </label>
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Cancel", "Index")
+        </div>
+    </div>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @if (Model.Id > 0)
+    {
+        Html.HiddenFor(model => model.Id);
+    }
+    <div class="row">
+        <div class="col-md-8">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-3" })
+                <div class="col-md-9">
+                    @Html.EditorFor(model => model.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
                 </div>
-            }
-            <div class="col-sm-3">
-                <label>
-                    @Html.EditorFor(model => model.ShowInNavigation)
-                    Show in navigation
-                </label>
             </div>
         </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-xs-2" })
-            <div class="col-xs-2">
-                @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-md-2">Permissions</label>
-            <div class="col-md-10">
-                @RoleButtonGroup(permissions)
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.PubDate, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.PubDate, new { htmlAttributes = new { @class = "form-control datetimepicker" } })
-                @Html.ValidationMessageFor(model => model.PubDate, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            @Html.LabelFor(model => model.ParentPage, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.ParentPageId, GetParentPageSelectList(Model.Id, Model.ParentPageId), new { @class = "form-control" })
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label class="control-label col-sm-2">
-                Redirect To
-                <input @(RedirectUrlChecked) class="check-box" id="RedirectUrlEnabled" name="RedirectUrlEnabled" type="checkbox" value="true">
-            </label>
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.RedirectUrl, new { htmlAttributes = RedirectUrlAttributes })
-                @Html.ValidationMessageFor(model => model.RedirectUrl, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group SitePageBody fade @(SitePageBodyClass)">
-            @Html.LabelFor(model => model.Layout, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Layout, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Layout, "", new { @class = "text-danger" })
-            </div>
-        </div>
-
-        <div class="form-group SitePageBody fade @(SitePageBodyClass)">
-            @Html.LabelFor(model => model.HTMLBody, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.HTMLBody, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.HTMLBody, "", new { @class = "text-danger" })
+        <div class="col-md-4">
+            <div class="form-group">
+                @Html.LabelFor(model => model.Slug, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Slug, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Slug, "", new { @class = "text-danger" })
+                </div>
             </div>
         </div>
     </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Description, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">Display</label>
+        @if (Model.HomePage)
+        {
+            @Html.HiddenFor(model => model.HomePage)
+        }
+        else
+        {
+            <div class="col-sm-2">
+                <label>
+                    @Html.EditorFor(model => model.HomePage)
+                    Set as home page
+                </label>
+            </div>
+        }
+        <div class="col-sm-3">
+            <label>
+                @Html.EditorFor(model => model.ShowInNavigation)
+                Show in navigation
+            </label>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.Order, htmlAttributes: new { @class = "control-label col-xs-2" })
+        <div class="col-xs-3 col-sm-2">
+            @Html.EditorFor(model => model.Order, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Order, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-md-2">Permissions</label>
+        <div class="col-md-10">
+            @RoleButtonGroup(permissions)
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.PubDate, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.PubDate, new { htmlAttributes = new { @class = "form-control datetimepicker" } })
+            @Html.ValidationMessageFor(model => model.PubDate, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.ParentPage, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.ParentPageId, GetParentPageSelectList(Model.Id, Model.ParentPageId), new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label col-sm-2">
+            Redirect To
+            <input @(RedirectUrlChecked) class="check-box" id="RedirectUrlEnabled" name="RedirectUrlEnabled" type="checkbox" value="true">
+        </label>
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.RedirectUrl, new { htmlAttributes = RedirectUrlAttributes })
+            @Html.ValidationMessageFor(model => model.RedirectUrl, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group SitePageBody fade @(SitePageBodyClass)">
+        @Html.LabelFor(model => model.Layout, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Layout, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Layout, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group SitePageBody fade @(SitePageBodyClass)">
+        @Html.LabelFor(model => model.HTMLHeaders, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HTMLHeaders, new { htmlAttributes = new { @class = "form-control", style = "max-width:100%;min-width:100%" } })
+            @Html.ValidationMessageFor(model => model.HTMLHeaders, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group SitePageBody fade @(SitePageBodyClass)">
+        @Html.LabelFor(model => model.HTMLBody, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.HTMLBody, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.HTMLBody, "", new { @class = "text-danger" })
+        </div>
+    </div>
+</div>
 }
 @using (Html.BeginScriptContext())
 {
     Html.AddScriptBlock(
     @<script>
+        @Html.Raw(stylesheets)
         $(function () {
             $('#RedirectUrlEnabled').change(function () {
                 $('.SitePageBody').toggleClass('in out');
-                var text = $('#RedirectUrl');
-                if (this.checked) {
+            var text = $('#RedirectUrl');
+            if (this.checked) {
                     text.removeAttr('disabled').focus();
                 } else {
                     text.attr('disabled', 'disabled').val('');
                 }
+            });
+            $('#Name').change(function () {
+                var text = $(this).val();
+                var slug = text.split(/[^\w]/);
+                var a = [];
+                for (var s in slug) if (slug[s]) a.push(slug[s]);
+                $('#Slug').val(a.join('-'));
+            });
+            $('#Layout').change(function () {
+                $('#Layout+span').text('Save changes to load the new layout')
             });
         });
     </script>

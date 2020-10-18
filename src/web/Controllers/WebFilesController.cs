@@ -473,6 +473,7 @@ namespace wwwplatform.Controllers
             }
             db.SaveChanges();
 
+            db.Permissions.RemoveRange(webFile.Permissions);
             db.WebFiles.Remove(webFile);
             await db.SaveChangesAsync();
 
