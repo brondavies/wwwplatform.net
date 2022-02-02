@@ -1,5 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Web;
@@ -9,11 +8,28 @@ namespace wwwplatform.Models.Support
 {
     public class SkinDefinition
     {
-        public static string LayoutCacheKey { get { return "SkinDefLayout"; } }
+        private Dictionary<string, string> _layouts = new Dictionary<string, string>();
+
+        public static string LayoutCacheKey => "SkinDefLayout";
 
         public Dictionary<string, List<string>> scripts { get; set; }
         public Dictionary<string, List<string>> css { get; set; }
         public string layout { get; set; }
+        public Dictionary<string, string> layouts
+        {
+            get { return _layouts; }
+            set
+            {
+                if (value == null)
+                {
+                    _layouts = new Dictionary<string, string>();
+                }
+                else
+                {
+                    _layouts = value;
+                }
+            }
+        }
 
         public static SkinDefinition Load(string skinFile)
         {

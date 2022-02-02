@@ -32,5 +32,9 @@
       "~/assets/css/platform.css"
     ]
   },
-  "layout": null
+  "layout": null,
+  "layouts": {
+    "Default": "",
+    "Admin": "~/Views/Shared/_Layout.cshtml"
+  }
 }

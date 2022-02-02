@@ -1,5 +1,5 @@
 ﻿@model wwwplatform.Models.SitePage
-@using System.Web.Mvc
+@using wwwplatform.Models.Support
 @{ 
     List<string> permissions = new List<string>();
     if (Model.Id > 0 && Model.Permissions != null)
@@ -26,6 +26,7 @@
     {
         stylesheets = string.Format("window.MCE_STYLESHEETS = {0};", ViewBag.StylesheetsFromLayout);
     }
+    var SkinLayouts = SkinDefinition.Load(Context).layouts.Select(l => new SelectListItem { Text = l.Key, Value = l.Value });
 }
 @using (Html.BeginForm())
 {
@@ -146,7 +147,7 @@
     <div class="form-group SitePageBody fade @(SitePageBodyClass)">
         @Html.LabelFor(model => model.Layout, htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-            @Html.EditorFor(model => model.Layout, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.DropDownListFor(model => model.Layout, SkinLayouts, new { @class = "form-control" })
             @Html.ValidationMessageFor(model => model.Layout, "", new { @class = "text-danger" })
         </div>
     </div>
