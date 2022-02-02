@@ -15,10 +15,10 @@
         <div class="form-group">
             @Html.Label("Name", "Name", new { @class = "col-sm-4 control-label" })
             <div class="col-sm-4">
-                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.FirstName).ToString() })
+                @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.FirstName) })
             </div>
             <div class="col-sm-4">
-                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.LastName).ToString() })
+                @Html.TextBoxFor(m => m.LastName, new { @class = "form-control", placeholder = Html.DisplayNameFor(m => m.LastName) })
             </div>
         </div>
         <div class="form-group">
